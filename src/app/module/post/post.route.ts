@@ -15,4 +15,19 @@ router.post(
   PostController.createPost
 );
 
+// router.get('/', PostController.getAllPosts); Querybuilder
+
+router.delete(
+  '/:id',
+  checkAuth(...Object.values(Role)),
+  PostController.deletePost
+);
+router.patch(
+  '/:id',
+  checkAuth(...Object.values(Role)),
+  // multerUpload.array('files'),
+  // validateRequest(updateTourZodSchema),
+  PostController.updatePost
+);
+
 export const PostRoutes = router;

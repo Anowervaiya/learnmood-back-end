@@ -15,4 +15,17 @@ router.post(
   commentController.createcomment
 );
 
+router.delete(
+  '/:id',
+  checkAuth(...Object.values(Role)),
+  commentController.deleteComment
+);
+router.patch(
+  '/:id',
+  checkAuth(...Object.values(Role)),
+  // multerUpload.array('files'),
+  // validateRequest(updateTourZodSchema),
+  commentController.updateComment
+);
+
 export const CommentRoutes = router;
