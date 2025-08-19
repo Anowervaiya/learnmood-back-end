@@ -1,5 +1,11 @@
-import { model, Schema } from "mongoose";
-import { type IAuthProvider, IsActive, type IUser, Role } from "./user.interfaces";
+import { model, Schema, Types } from 'mongoose';
+import {
+  type IAuthProvider,
+  type IFollowers,
+  IsActive,
+  type IUser,
+  Role,
+} from './user.interfaces';
 
 const authProviderSchema = new Schema<IAuthProvider>(
   {
@@ -11,11 +17,34 @@ const authProviderSchema = new Schema<IAuthProvider>(
     _id: false,
   }
 );
+
+const followers = new Schema<IFollowers>(
+  {
+    user: { type: Schema.ObjectId, ref: 'User' },
+  },
+  {
+    versionKey: false,
+    _id: false,
+  }
+);
+const followings = new Schema<IFollowers>(
+  {
+    user: { type: Schema.ObjectId, ref: 'User' },
+  },
+  {
+    versionKey: false,
+    _id: false,
+  }
+);
+
 const userSchema = new Schema<IUser>(
   {
     name: { type: String, required: true },
     email: { type: String, required: true, unique: true },
     password: { type: String },
+    bio: { type: String, default: '' },
+    followers: [followers],
+    followings: [followings],
     role: {
       type: String,
       enum: Object.values(Role),
@@ -28,9 +57,7 @@ const userSchema = new Schema<IUser>(
       default: IsActive.ACTIVE,
     },
     isVerified: { type: Boolean, default: false },
-
     isDeleted: { type: Boolean, default: false },
-
     phone: { type: String },
     picture: { type: String },
     address: { type: String },

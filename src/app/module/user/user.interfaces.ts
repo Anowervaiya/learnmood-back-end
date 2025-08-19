@@ -4,6 +4,9 @@ export interface IAuthProvider {
   provider: 'google' | 'credentials'; // "Google", "Credential"
   providerId: string;
 }
+export interface IFollowers {
+  user: Types.ObjectId;
+}
 export enum IsActive {
   ACTIVE = 'ACTIVE',
   INACTIVE = 'INACTIVE',
@@ -13,15 +16,17 @@ export enum IsActive {
 
 export enum Role {
   USER = 'USER',
- 
   ADMIN = 'ADMIN',
   MODERATOR = 'MODERATOR',
 
 }
 export interface IUser {
   _id?: Types.ObjectId;
+  bio?: string;
   name: string;
   email: string;
+  followers?: IFollowers[];
+  followings?: IFollowers[];
   password?: string;
   phone?: string;
   picture?: string;
@@ -29,7 +34,7 @@ export interface IUser {
   isDeleted?: string;
   isActive?: IsActive;
   isVerified?: boolean;
-  role: Role;
-  auths: IAuthProvider[];
+  role?: Role;
+  auths?: IAuthProvider[];
   createdAt?: Date;
 }

@@ -1,0 +1,18 @@
+import { Router } from "express";
+import { checkAuth } from "../../middlewares/checkAuth";
+import { Role } from "../user/user.interfaces";
+import { validateRequest } from "../../middlewares/validateRequest";
+import { commentController } from "./comment.controller";
+
+
+const router = Router()
+
+router.post(
+  '/create',
+  checkAuth(...Object.values(Role)),
+  // multerUpload.array('files'),
+  // validateRequest(createPostZodValidation),
+  commentController.createcomment
+);
+
+export const CommentRoutes = router;
