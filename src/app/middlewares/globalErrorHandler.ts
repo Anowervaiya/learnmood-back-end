@@ -3,10 +3,11 @@ import AppError from "../errorHelpers/appError";
 import { success } from "zod";
 import { envVars } from "../config/env";
 // import { TErrorSources } from "../interfaces/error.types";
-import { handlerDuplicateError } from "../helpers/handleDuplicateError";
-import { handleCastError } from "../helpers/handleCastError";
-import { handlerValidationError } from "../helpers/handleValidationError";
+import { handlerDuplicateError } from "../errorHelpers/handleDuplicateError";
+import { handleCastError } from "../errorHelpers/handleCastError";
+import { handlerValidationError } from "../errorHelpers/handleValidationError";
 import type { TErrorSources } from "../interfaces/error.types";
+import { handlerZodError } from "../errorHelpers/handlerZodError";
 
 export const globalErrorHandler = (err: any, req: Request, res: Response, next: NextFunction) => {
   let errorSources: TErrorSources[] = [];
@@ -24,6 +25,11 @@ export const globalErrorHandler = (err: any, req: Request, res: Response, next: 
     const simplifiedError = handleCastError(err);
     statusCode = simplifiedError.statusCode;
     message = simplifiedError.message;
+  } else if (err.name === 'ZodError') {
+    const simplifiedError = handlerZodError(err);
+    statusCode = simplifiedError.statusCode;
+    message = simplifiedError.message;
+    errorSources = simplifiedError.errorSources as TErrorSources[];
   }
   //Mongoose Validation Error
   else if (err.name === 'ValidationError') {

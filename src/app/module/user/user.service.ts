@@ -6,17 +6,18 @@ import bcryptjs from "bcryptjs"
 import httpStatus from "http-status-codes"
 import { User } from "./user.model";
 import { Role, type IAuthProvider, type IUser,  } from "./user.interfaces";
+import type { JwtPayload } from "jsonwebtoken";
 
 const createUser = async (payload: Partial<IUser>) => {
   const { email, password, role, ...rest } = payload;
   const capitalizedRole = role?.toUpperCase()
-  if (capitalizedRole === Role.ADMIN) {
+  if (capitalizedRole === Role.ADMIN ) {
     throw new AppError(
       httpStatus.FORBIDDEN,
-      "you can't register as a admin , please register as a sender or reciever"
+      "you can't register as a admin "
     );
   }
-console.log(password);
+
  const isUserExist = await User.findOne({ email });
 
  if (isUserExist) {
@@ -45,7 +46,62 @@ console.log(password);
   return user;
 
 };
+// const updateUser = async (
+//   userId: string,
+//   payload: Partial<IUser>,
+//   decodedToken: JwtPayload
+// ) => {
+//   if (decodedToken.role === Role.USER || decodedToken.role === Role.GUIDE) {
+//     if (userId !== decodedToken.userId) {
+//       throw new AppError(401, 'You are not authorized');
+//     }
+//   }
 
+//   const ifUserExist = await User.findById(userId);
+
+//   if (!ifUserExist) {
+//     throw new AppError(httpStatus.NOT_FOUND, 'User Not Found');
+//   }
+
+//   if (
+//     decodedToken.role === Role.ADMIN &&
+//     ifUserExist.role === Role.SUPER_ADMIN
+//   ) {
+//     throw new AppError(401, 'You are not authorized');
+//   }
+
+//   /**
+//    * email - can not update
+//    * name, phone, password address
+//    * password - re hashing
+//    *  only admin superadmin - role, isDeleted...
+//    *
+//    * promoting to superadmin - superadmin
+//    */
+
+//   if (payload.role) {
+//     if (decodedToken.role === Role.USER || decodedToken.role === Role.MODERATOR) {
+//       throw new AppError(httpStatus.FORBIDDEN, 'You are not authorized');
+//     }
+
+//     // if (payload.role === Role.SUPER_ADMIN && decodedToken.role === Role.ADMIN) {
+//     //     throw new AppError(httpStatus.FORBIDDEN, "You are not authorized");
+//     // }
+//   }
+
+//   if (payload.isActive || payload.isDeleted || payload.isVerified) {
+//     if (decodedToken.role === Role.USER || decodedToken.role === Role.GUIDE) {
+//       throw new AppError(httpStatus.FORBIDDEN, 'You are not authorized');
+//     }
+//   }
+
+//   const newUpdatedUser = await User.findByIdAndUpdate(userId, payload, {
+//     new: true,
+//     runValidators: true,
+//   });
+
+//   return newUpdatedUser;
+// };
 
 
 const getAllUsers = async () => {
@@ -59,33 +115,17 @@ const getAllUsers = async () => {
   };
 };
 
-const blockUser = async (id: string, status: boolean) => {
-  
-  const user = await User.findById(id);
-  
-  if (!user) {
-    throw new AppError(httpStatus.BAD_REQUEST, 'user does not exist');
-  }
-
-  if (user.isBlock === status) {
-   throw new AppError(403, `user is already ${user.isBlock === true ? 'blocked' : 'unblock'}`)
- }
-
-  
-
-
-  const changableUser = await User.findByIdAndUpdate(
-    id,
-    {
-      $set: {
-        isBlock: status,
-      },
-      
-    },
-    { new: true, runValidators: true }
-  );
-
-  return changableUser;
+const getMe = async (userId: string) => {
+  const user = await User.findById(userId).select('-password');
+  return {
+    data: user,
+  };
+};
+const getSingleUser = async (id: string) => {
+  const user = await User.findById(id).select('-password');
+  return {
+    data: user,
+  };
 };
 
 const deleteUser = async (id: string,) => {
@@ -103,6 +143,7 @@ const deleteUser = async (id: string,) => {
 export const UserServices = {
   createUser,
   getAllUsers,
-  blockUser,
+  getMe,
   deleteUser,
+  getSingleUser,
 };

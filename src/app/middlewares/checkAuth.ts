@@ -1,5 +1,3 @@
-
-
 import httpStatus from 'http-status-codes';
 import AppError from '../errorHelpers/appError';
 import { verifyToken } from '../utils/jwt';
@@ -8,7 +6,7 @@ import { envVars } from '../config/env';
 import { User } from '../module/user/user.model';
 import type { JwtPayload } from 'jsonwebtoken';
 import type { NextFunction, Request, Response } from 'express';
-
+import { IsActive } from '../module/user/user.interfaces';
 
 export const checkAuth =
   (...authRoles: string[]) =>
@@ -30,12 +28,24 @@ export const checkAuth =
       if (!isUserExist) {
         throw new AppError(httpStatus.BAD_REQUEST, 'User does not exist');
       }
-      if (isUserExist.isBlock) {
-        throw new AppError(httpStatus.BAD_REQUEST, `User is block`);
+      // if (!isUserExist.isVerified) {
+      //   throw new AppError(httpStatus.BAD_REQUEST, 'User is not verified');
+      // }
+      if (
+        isUserExist.isActive === IsActive.BLOCKED ||
+        isUserExist.isActive === IsActive.INACTIVE
+      ) {
+        throw new AppError(
+          httpStatus.BAD_REQUEST,
+          `User is ${isUserExist.isActive}`
+        );
       }
+
+
       if (isUserExist.isDeleted) {
         throw new AppError(httpStatus.BAD_REQUEST, 'User is deleted');
       }
+      
       if (!authRoles.includes(verifiedToken.role)) {
         throw new AppError(403, 'You are not permitted to view this route!!!');
       }

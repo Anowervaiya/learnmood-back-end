@@ -6,6 +6,8 @@ import passport from 'passport';
 import expressSession from 'express-session';
 import './app/config/passport';
 import { mainRoutes } from './app/mainRoutes/mainRoutes';
+import { globalErrorHandler } from './app/middlewares/globalErrorHandler';
+import notFound from './app/middlewares/notFound';
 const app = express();
 
 // for passport configeration
@@ -33,6 +35,6 @@ app.get('/', (req: Request, res: Response) => {
   });
 });
 
-// app.use(globalErrorHandler);
-// app.use(notFound);
+app.use(globalErrorHandler);
+app.use(notFound);
 export default app;

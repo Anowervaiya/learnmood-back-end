@@ -5,6 +5,7 @@ import { sendResponse } from "../../utils/sendResponse";
 
 import httpStatus from 'http-status-codes'
 import type { NextFunction, Request, Response } from "express";
+import type { JwtPayload } from "jsonwebtoken";
 
 const createUser = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
   const user = await UserServices.createUser(req.body)
@@ -16,20 +17,32 @@ const createUser = catchAsync(async (req: Request, res: Response, next: NextFunc
     data: user
   })
 })
-const blockUser = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
-  const Id = req.params.id as string;
-  const status = req.body.isBlock;
+// const updateUser = catchAsync(
+//   async (req: Request, res: Response, next: NextFunction) => {
+//     const userId = req.params.id;
+//     const verifiedToken = req.user;
+//     const payload = req.body;
+//     const user = await UserServices.updateUser(
+//       userId,
+//       payload,
+//       verifiedToken as JwtPayload
+//     );
+
+//     // res.status(httpStatus.CREATED).json({
+//     //     message: "User Created Successfully",
+//     //     user
+//     // })
+
+//     sendResponse(res, {
+//       success: true,
+//       statusCode: httpStatus.CREATED,
+//       message: 'User Updated Successfully',
+//       data: user,
+//     });
+//   }
+// );
 
 
-  const user = await UserServices.blockUser(Id, status);
-
-  sendResponse(res, {
-    success: true,
-    statusCode: httpStatus.CREATED,
-    message: "User status is changed Successfully",
-    data: user
-  })
-})
 const deleteUser = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
   const Id = req.params.id as string;
 
@@ -57,10 +70,36 @@ const getAllUsers = catchAsync(
     });
   }
 );
+const getMe = catchAsync(
+  async (req: Request, res: Response, next: NextFunction) => {
+    const decodedToken = req.user as JwtPayload;
+    const result = await UserServices.getMe(decodedToken.userId);
 
+  
+    sendResponse(res, {
+      success: true,
+      statusCode: httpStatus.CREATED,
+      message: 'Your profile Retrieved Successfully',
+      data: result.data,
+    });
+  }
+);
+const getSingleUser = catchAsync(
+  async (req: Request, res: Response, next: NextFunction) => {
+    const id = req.params.id as string;
+    const result = await UserServices.getSingleUser(id);
+    sendResponse(res, {
+      success: true,
+      statusCode: httpStatus.CREATED,
+      message: 'User Retrieved Successfully',
+      data: result.data,
+    });
+  }
+);
 export const UserControllers = {
   createUser,
   getAllUsers,
-  blockUser,
+  getMe,
   deleteUser,
+  getSingleUser,
 };
