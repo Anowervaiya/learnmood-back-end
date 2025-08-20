@@ -5,24 +5,12 @@ import type { Types } from "mongoose";
 import type { Role } from "../user/user.interfaces";
 import AppError from "../../errorHelpers/appError";
 import httpStatus from 'http-status-codes'
- interface IPayload {
-  userId: string;
-  email?: string;
-  role?: Role;
-  iat?: number;
-  exp?: number;
-  content: string;
-  visibility: VISIBILITY;
-}
 
 
-const createPost = async (payload: IPayload) => {
-
+const createPost = async (payload: IPost) => {
 
   const post = await Post.create({
-    user: payload.userId,
-     ...payload
-
+    ...payload
   })
 
   return post;

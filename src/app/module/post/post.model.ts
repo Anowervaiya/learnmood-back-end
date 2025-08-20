@@ -4,7 +4,7 @@ import { reactSchema } from '../Reacts/react.model';
 
 const MediaSchema = new Schema(
   {
-    url: { type: String, required: true },
+    url: { type: [String], required: true },
     type: { type: String, enum: ['image', 'video'], default: 'image' },
   },
   { _id: false }

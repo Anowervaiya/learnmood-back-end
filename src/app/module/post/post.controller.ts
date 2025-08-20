@@ -2,21 +2,25 @@ import type { Request, Response } from "express";
 import { catchAsync } from "../../utils/catchAsync";
 import { PostServices } from "./post.service";
 import { sendResponse } from "../../utils/sendResponse";
-import type { IPost } from "./post.interface";
+import type { IMedia, IPost } from "./post.interface";
+import type { JwtPayload } from "jsonwebtoken";
 
 
 const createPost = catchAsync(async (req: Request, res: Response) => {
-  const payload = {
-    ...req.user,
-    ...req.body
-    // images: (req.files as Express.Multer.File[]).map(file => file.path),
+
+  const decodedToken = req.user as JwtPayload;
+
+  const payload: IPost = {
+    user: decodedToken?.userId,
+    ...req.body,
+    media: { url: (req.files as Express.Multer.File[])?.map(file => file.path) , type: "image"},
   };
   const result = await PostServices.createPost(payload);
   sendResponse(res, {
     statusCode: 201,
     success: true,
-    message: 'Post created successfully',
-    data: result,
+    message: 'Post is created successfully',
+    data:result
   });
 });
 

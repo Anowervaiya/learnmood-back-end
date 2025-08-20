@@ -4,13 +4,14 @@ import { Role } from "../user/user.interfaces";
 import { validateRequest } from "../../middlewares/validateRequest";
 import { PostController } from "./post.controller";
 import { createPostZodValidation } from "./post.validation";
+import { multerUpload } from "../../config/multer.config";
 
 const router = Router()
 
 router.post(
   '/create',
   checkAuth(...Object.values(Role)),
-  // multerUpload.array('files'),
+  multerUpload.array('files'),
   validateRequest(createPostZodValidation),
   PostController.createPost
 );

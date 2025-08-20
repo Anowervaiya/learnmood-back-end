@@ -3,7 +3,7 @@ import type { IReact } from '../Reacts/react.interface';
 import type { IComments } from '../comments/comment.interface';
 
 export interface IMedia {
-  url: string;
+  url: string[];
   type: 'image' | 'video';
 }
 

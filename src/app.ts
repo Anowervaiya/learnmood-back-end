@@ -23,6 +23,7 @@ app.use(passport.session());
 
 app.set('trust proxy', 1);
 
+app.use(express.urlencoded({ extended: true }));//form data handler
 app.use(cors());
 app.use(cookieParser());
 app.use(express.json());

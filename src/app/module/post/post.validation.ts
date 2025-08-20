@@ -1,7 +1,7 @@
 import { z } from 'zod';
 
 const mediaSchema = z.object({
-  url: z.url(),
+  url: z.array(z.url()),
   type: z.enum(['image', 'video']),
 });
 
