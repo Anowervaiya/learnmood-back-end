@@ -1,6 +1,7 @@
 import { Server } from 'http';
 import mongoose from 'mongoose';
 import app from './app';
+import { connectRedis } from './app/config/redis.config';
 let server: Server;
 
 const startServer = async () => {
@@ -18,7 +19,10 @@ const startServer = async () => {
   }
 };
 
-startServer();
+(() => {
+  startServer();
+  connectRedis()
+})()
 
 /**
  * unhandled rejection error

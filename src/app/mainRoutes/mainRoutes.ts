@@ -4,6 +4,7 @@ import { AuthRoutes } from '../module/auth/auth.route';
 import { PostRoutes } from '../module/post/post.route';
 import { CommentRoutes } from '../module/comments/comment.route';
 import { ReactRoutes } from '../module/reacts/react.route';
+import { OtpRoutes } from '../module/otp/otp.route';
 
 
 export const mainRoutes = Router();
@@ -33,6 +34,10 @@ const moduleRoutes = [
   {
       path: "/react",
       route: ReactRoutes
+  },
+  {
+      path: "/otp",
+      route: OtpRoutes
   },
 ];
 
