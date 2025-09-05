@@ -1,20 +1,21 @@
 import { Schema, model, Types } from 'mongoose';
 import { VISIBILITY } from '../../constant/constant';
 
+
 const MediaSchema = new Schema(
   {
-    url: { type: [String], required: true },
+    url: { type: String, required: true },
     type: { type: String, enum: ['image', 'video'], default: 'image' },
   },
   { _id: false }
 );
 
-const PostSchema = new Schema(
+const StorySchema = new Schema(
   {
     user: { type: Types.ObjectId, ref: 'User', required: true, index: true },
     content: { type: String, default: '' },
-    media: { type: [MediaSchema], default: [] },
-    tags: { type: [String], default: [] },
+    media: { type: MediaSchema, default: {} },
+    tag: { type: [Types.ObjectId], default: [] },
     reacts: [{ type: Types.ObjectId, ref: 'React' }],
     comments: [{ type: Types.ObjectId, ref: 'Comment' }],
     visibility: {
@@ -26,4 +27,4 @@ const PostSchema = new Schema(
   { timestamps: true }
 );
 
-export const Post = model('Post', PostSchema);
+export const Story = model('Story', StorySchema);

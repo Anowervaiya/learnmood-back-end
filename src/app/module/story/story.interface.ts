@@ -9,12 +9,12 @@ export interface IMedia {
 }
 
 
-export interface IPost {
+export interface IStory {
   _id?: Types.ObjectId;
   user: Types.ObjectId;
   content: string;
   media?: IMedia[];
-  tags?: string[];
+  tags?: Types.ObjectId[];
   reacts?: IReact[];
   comments?: IComments[];
   visibility: VISIBILITY;

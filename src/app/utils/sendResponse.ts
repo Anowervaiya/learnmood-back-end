@@ -9,8 +9,10 @@ interface TResponse<T> {
   success: boolean;
   message: string;
   data: T;
-  meta?: TMeta;
+  meta?: TMeta; 
 }
+
+// TResponse<T>.meta?: TMeta | undefined
 
 export const sendResponse = <T>(res: Response, data: TResponse<T>) => {
   res.status(data.statusCode).json({
