@@ -1,6 +1,6 @@
 import type { Types } from 'mongoose';
-import type { IReact } from '../Reacts/react.interface';
 import type { IComments } from '../comments/comment.interface';
+import type { IReact } from '../reacts/react.interface';
 
 export interface IMedia {
   url: string[];

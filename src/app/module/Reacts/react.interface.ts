@@ -5,3 +5,8 @@ export interface IReact {
   post: Types.ObjectId; // which post
   createdAt: Date;
 }
+export interface IReactType {
+ type : string
+ 
+}
+

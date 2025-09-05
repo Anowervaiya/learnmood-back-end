@@ -3,6 +3,7 @@ import { UserRoutes } from '../module/user/user.routes';
 import { AuthRoutes } from '../module/auth/auth.route';
 import { PostRoutes } from '../module/post/post.route';
 import { CommentRoutes } from '../module/comments/comment.route';
+import { ReactRoutes } from '../module/reacts/react.route';
 
 
 export const mainRoutes = Router();
@@ -29,10 +30,10 @@ const moduleRoutes = [
   },
  
 
-  // {
-  //     path: "/tour",
-  //     route: TourRoutes
-  // },
+  {
+      path: "/react",
+      route: ReactRoutes
+  },
 ];
 
 moduleRoutes.forEach(route => {

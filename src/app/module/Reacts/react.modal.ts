@@ -1,7 +1,26 @@
 import { model, Schema } from 'mongoose';
-import type { IReact } from './react.interface';
+import type { IReact, IReactType } from './react.interface';
 
- export const reactSchema = new Schema<IReact>(
+const reactTypeSchema = new Schema<IReactType>(
+  {
+    type: { type: String, required: true, unique: true },
+  },
+  {
+    timestamps: true,
+  }
+);
+
+export const ReactType = model<IReactType>('ReactType', reactTypeSchema);
+
+
+
+
+
+
+
+
+
+export const reactSchema = new Schema<IReact>(
   {
     user: { type: Schema.Types.ObjectId, ref: 'User', required: true },
     post: { type: Schema.Types.ObjectId, ref: 'Post', required: true },
