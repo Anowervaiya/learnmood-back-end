@@ -7,6 +7,7 @@ import { ReactRoutes } from '../module/reacts/react.route';
 import { OtpRoutes } from '../module/otp/otp.route';
 import { StoryRoutes } from '../module/story/story.route';
 import { ChallengeRoutes } from '../module/challenge/challenge.route';
+import { PageRoutes } from '../module/page/page.routes';
 
 
 export const mainRoutes = Router();
@@ -21,6 +22,10 @@ const moduleRoutes = [
   {
     path: '/auth',
     route: AuthRoutes,
+  },
+  {
+    path: '/page',
+    route: PageRoutes,
   },
   {
     path: '/post',
