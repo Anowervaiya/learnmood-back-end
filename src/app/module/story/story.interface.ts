@@ -14,8 +14,6 @@ export interface IStory {
   user: Types.ObjectId;
   content: string;
   media?: IMedia[];
-  tags?: Types.ObjectId[];
-  reacts?: IReact[];
-  comments?: IComments[];
+  tag?: Types.ObjectId[];
   visibility: VISIBILITY;
 }

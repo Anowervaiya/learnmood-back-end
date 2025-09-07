@@ -1,11 +1,12 @@
 import { Router } from "express";
 import { checkAuth } from "../../middlewares/checkAuth";
-import { Role } from "../user/user.interfaces";
+
 import { validateRequest } from "../../middlewares/validateRequest";
 
 import { createStoryZodValidation } from "./story.validation";
 import { multerUpload } from "../../config/multer.config";
 import { StoryController } from "./story.controller";
+import { Role } from "../user/user.constant";
 
 const router = Router()
 

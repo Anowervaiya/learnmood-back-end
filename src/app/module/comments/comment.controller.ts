@@ -6,13 +6,16 @@ import { sendResponse } from '../../utils/sendResponse';
 
 import { CommentServices } from './comment.service';
 import type { IComments } from './comment.interface';
+import type { JwtPayload } from 'jsonwebtoken';
 
 const createcomment = catchAsync(async (req: Request, res: Response) => {
+  const user = req.user as JwtPayload
   const payload = {
-    ...req.user,
+    user: user.userId,
     ...req.body,
     // images: (req.files as Express.Multer.File[]).map(file => file.path),
   };
+ 
   const result = await CommentServices.createComment(payload);
   sendResponse(res, {
     statusCode: 201,

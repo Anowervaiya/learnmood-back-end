@@ -1,34 +1,29 @@
-import { model, Schema } from 'mongoose';
-import type { IReact, IReactType } from './react.interface';
+import { Schema, model, Types } from 'mongoose';
+import type { IReact } from './react.interface';
+import { ReactType   } from './react.contant';
+import { EntityType } from '../../constant/constant';
 
-const reactTypeSchema = new Schema<IReactType>(
+
+
+
+
+const ReactSchema = new Schema<IReact>(
   {
-    type: { type: String, required: true, unique: true },
-  },
-  {
-    timestamps: true,
-  }
-);
-
-export const ReactType = model<IReactType>('ReactType', reactTypeSchema);
-
-
-
-
-
-
-
-
-
-export const reactSchema = new Schema<IReact>(
-  {
+    entityId: { type: Schema.Types.ObjectId, required: true, index: true },
+    entityType: {
+      type: String,
+      enum: Object.values(EntityType), // Add more entity names if needed
+      required: true,
+    },
     user: { type: Schema.Types.ObjectId, ref: 'User', required: true },
-    post: { type: Schema.Types.ObjectId, ref: 'Post', required: true },
+    reactType: {
+      type: String,
+      enum: Object.values(ReactType),
+      default: ReactType.LIKE,
+    },
   },
-  { timestamps: { createdAt: true, updatedAt: false } }
+  { timestamps: true }
 );
 
-// Prevent duplicate reacts by same user on same post
-reactSchema.index({ user: 1, post: 1 }, { unique: true });
 
-export const React = model<IReact>('React', reactSchema);
+export const React = model<IReact>('React', ReactSchema);

@@ -1,12 +1,13 @@
-import type { Types } from 'mongoose';
+import type { Types } from "mongoose";
+import type { ReactType } from "./react.contant";
+import type { EntityType,  } from "../../constant/constant";
+
+
 
 export interface IReact {
-  user: Types.ObjectId; // who reactd
-  post: Types.ObjectId; // which post
-  createdAt: Date;
-}
-export interface IReactType {
- type : string
- 
+  entityId: Types.ObjectId;
+  entityType: EntityType;
+  user: Types.ObjectId;
+  reactType: ReactType;
 }
 

@@ -14,7 +14,7 @@ const setPassword = async (userId: string, plainPassword: string) => {
 
   if (
     user.password &&
-    user.auths.some(providerObject => providerObject.provider === 'google')
+    user.auths?.some(providerObject => providerObject.provider === 'google')
   ) {
     throw new AppError(
       httpStatus.BAD_REQUEST,
@@ -32,7 +32,7 @@ const setPassword = async (userId: string, plainPassword: string) => {
     providerId: user.email,
   };
 
-  const auths: IAuthProvider[] = [...user.auths, credentialProvider];
+  const auths: IAuthProvider[] = [...user.auths!, credentialProvider];
 
   user.password = hashedPassword;
 

@@ -1,4 +1,6 @@
 import { Types } from 'mongoose';
+import type { IsActive, Role } from './user.constant';
+
 
 export interface IAuthProvider {
   provider: 'google' | 'credentials'; // "Google", "Credential"
@@ -7,19 +9,7 @@ export interface IAuthProvider {
 export interface IFollowers {
   user: Types.ObjectId;
 }
-export enum IsActive {
-  ACTIVE = 'ACTIVE',
-  INACTIVE = 'INACTIVE',
-  BLOCKED = 'BLOCKED',
-}
 
-
-export enum Role {
-  USER = 'USER',
-  ADMIN = 'ADMIN',
-  MODERATOR = 'MODERATOR',
-
-}
 export interface IUser {
   _id?: Types.ObjectId;
   bio?: string;

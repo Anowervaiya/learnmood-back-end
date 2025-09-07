@@ -1,5 +1,6 @@
 import { Schema, model, Types } from 'mongoose';
 import { VISIBILITY } from '../../constant/constant';
+import type { IStory } from './story.interface';
 
 
 const MediaSchema = new Schema(
@@ -10,14 +11,17 @@ const MediaSchema = new Schema(
   { _id: false }
 );
 
-const StorySchema = new Schema(
+const StorySchema = new Schema<IStory>(
   {
-    user: { type: Types.ObjectId, ref: 'User', required: true, index: true },
+    user: {
+      type: Schema.Types.ObjectId,
+      ref: 'User',
+      required: true,
+      index: true,
+    },
     content: { type: String, default: '' },
     media: { type: MediaSchema, default: {} },
-    tag: { type: [Types.ObjectId], default: [] },
-    reacts: [{ type: Types.ObjectId, ref: 'React' }],
-    comments: [{ type: Types.ObjectId, ref: 'Comment' }],
+    tag: { type: [Schema.Types.ObjectId], default: [] },
     visibility: {
       type: String,
       enum: [...Object.values(VISIBILITY)],

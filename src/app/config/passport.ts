@@ -11,7 +11,8 @@ import { Strategy as LocalStrategy } from 'passport-local';
 
 import { envVars } from './env';
 import { User } from '../module/user/user.model';
-import { Role } from '../module/user/user.interfaces';
+import { Role } from '../module/user/user.constant';
+
 
 
 passport.use(
@@ -28,7 +29,7 @@ passport.use(
           return done('User does not exist');
         }
 
-        const isGoogleAuthenticated = isUserExist.auths.some(
+        const isGoogleAuthenticated = isUserExist?.auths?.some(
           providerObjects => providerObjects.provider == 'google'
         );
 

@@ -4,3 +4,8 @@ export enum VISIBILITY {
   FRIENDS = 'FRIENDS',
   ONLY_ME = 'ONLY_ME',
 }
+export enum EntityType {
+  POST = 'POST',
+  CHALLENGE = 'CHALLENGE',
+  STORY='STORY'
+}

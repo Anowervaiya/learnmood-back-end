@@ -1,13 +1,20 @@
-import { Schema, model, Types } from 'mongoose';
+import { Schema, model } from 'mongoose';
+import { EntityType } from '../../constant/constant';
+import type { IComments } from './comment.interface';
 
-const CommentSchema = new Schema(
+const CommentSchema = new Schema<IComments>(
   {
-    post: { type: Types.ObjectId, ref: 'Post', required: true, index: true },
-    user: { type: Types.ObjectId, ref: 'User', required: true },
+    entityId: { type: Schema.Types.ObjectId, required: true, index: true },
+    entityType: {
+      type: String,
+      enum: Object.values(EntityType),
+      required: true,
+    },
+    user: { type: Schema.Types.ObjectId, ref: 'User', required: true },
     content: { type: String, required: true },
-  
+
   },
   { timestamps: true }
 );
 
-export const Comment=  model('Comment', CommentSchema);
+export const Comment = model('Comment', CommentSchema);

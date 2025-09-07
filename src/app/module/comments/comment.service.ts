@@ -1,44 +1,21 @@
 import type { JwtPayload } from 'jsonwebtoken';
 
 import type { Types } from 'mongoose';
-import type { Role } from '../user/user.interfaces';
-import type { VISIBILITY } from '../post/post.interface';
 import { Comment } from './comment.model';
 import AppError from '../../errorHelpers/appError';
 import { Post } from '../post/post.model';
 import type { IComments } from './comment.interface';
-import httpStatus from 'http-status-codes'
-interface IPayload {
-  userId: Types.ObjectId;
-  post: Types.ObjectId;
-  email?: string;
-  role?: Role;
-  iat?: number;
-  exp?: number;
-  content: string;
-}
+import httpStatus from 'http-status-codes';
+import type { Role } from '../user/user.constant';
 
-const createComment = async (payload: IPayload) => {
-  const comment = await Comment.create({
-    user: payload.userId,
-    content: payload.content,
-    post: payload.post,
-  });
-  if (!comment) {
-    throw new AppError(401, 'some is wrong');
-  }
 
-  await Post.findByIdAndUpdate(
-    comment.post,
-    {
-      $push: {
-        comments: comment._id,
-      },
-    },
-    { new: true }
-  );
+const createComment = async (payload: IComments) => {
+  // console.log(payload);
+ return await Comment.create(payload);
 
-  return comment;
+
+
+ 
 };
 
 const updateComment = async (id: string, payload: Partial<IComments>) => {

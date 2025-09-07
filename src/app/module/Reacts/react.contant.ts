@@ -1,0 +1,9 @@
+export enum ReactType {
+  LIKE = 'LIKE',
+  LOVE = 'LOVE',
+  MOTIVATED = 'MOTIVATED',
+  QUESTION = 'QUESTION',
+  AGREE = 'AGREE',
+  HELPFUL = 'HELPFUL',
+  THANKS = 'THANKS',
+}

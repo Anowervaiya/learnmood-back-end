@@ -9,11 +9,13 @@ export interface IMedia {
 }
 
 
-export interface IPost {
+export interface IChallenge {
   _id?: Types.ObjectId;
   user: Types.ObjectId;
   content: string;
   media?: IMedia[];
-  tag?: string[];
+  tags?: string[];
+  reacts?: IReact[];
+  comments?: IComments[];
   visibility: VISIBILITY;
 }

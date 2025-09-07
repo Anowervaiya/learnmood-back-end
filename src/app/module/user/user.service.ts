@@ -1,41 +1,38 @@
+import { envVars } from '../../config/env';
+import AppError from '../../errorHelpers/appError';
 
-import { envVars } from "../../config/env";
-import AppError from "../../errorHelpers/appError";
-
-import bcryptjs from "bcryptjs"
-import httpStatus from "http-status-codes"
-import { User } from "./user.model";
-import { Role, type IAuthProvider, type IUser,  } from "./user.interfaces";
-import type { JwtPayload } from "jsonwebtoken";
+import bcryptjs from 'bcryptjs';
+import httpStatus from 'http-status-codes';
+import { User } from './user.model';
+import { type IAuthProvider, type IUser } from './user.interfaces';
+import type { JwtPayload } from 'jsonwebtoken';
+import { Role } from './user.constant';
 
 const createUser = async (payload: Partial<IUser>) => {
   const { email, password, role, ...rest } = payload;
-  const capitalizedRole = role?.toUpperCase()
-  if (capitalizedRole === Role.ADMIN ) {
-    throw new AppError(
-      httpStatus.FORBIDDEN,
-      "you can't register as a admin "
-    );
+  const capitalizedRole = role?.toUpperCase();
+  if (capitalizedRole === Role.ADMIN) {
+    throw new AppError(httpStatus.FORBIDDEN, "you can't register as a admin ");
   }
 
- const isUserExist = await User.findOne({ email });
+  const isUserExist = await User.findOne({ email });
 
- if (isUserExist) {
-   throw new AppError(httpStatus.BAD_REQUEST, 'User Already Exist');
+  if (isUserExist) {
+    throw new AppError(httpStatus.BAD_REQUEST, 'User Already Exist');
   }
   if (!password) {
-    throw new AppError(401,'password does not exist')
+    throw new AppError(401, 'password does not exist');
   }
 
-    const hashedPassword = await bcryptjs.hash(
-      password,
-      Number(envVars.BCRYPT_SALT_ROUND)
-    );
+  const hashedPassword = await bcryptjs.hash(
+    password,
+    Number(envVars.BCRYPT_SALT_ROUND)
+  );
 
-   const authProvider: IAuthProvider = {
-     provider: 'credentials',
-     providerId: email as string,
-   };
+  const authProvider: IAuthProvider = {
+    provider: 'credentials',
+    providerId: email as string,
+  };
   const user = await User.create({
     email,
     password: hashedPassword,
@@ -44,7 +41,6 @@ const createUser = async (payload: Partial<IUser>) => {
     ...rest,
   });
   return user;
-
 };
 // const updateUser = async (
 //   userId: string,
@@ -103,7 +99,6 @@ const createUser = async (payload: Partial<IUser>) => {
 //   return newUpdatedUser;
 // };
 
-
 const getAllUsers = async () => {
   const users = await User.find({});
   const totalUsers = await User.countDocuments();
@@ -128,15 +123,14 @@ const getSingleUser = async (id: string) => {
   };
 };
 
-const deleteUser = async (id: string,) => {
+const deleteUser = async (id: string) => {
+  const user = await User.findById(id);
 
-  const user = await User.findById(id)
-
- if (!user) {
-      throw new AppError(httpStatus.BAD_REQUEST, 'user does not exist');
+  if (!user) {
+    throw new AppError(httpStatus.BAD_REQUEST, 'user does not exist');
   }
 
-  const result = await User.findOneAndDelete({_id : id})
+  const result = await User.findOneAndDelete({ _id: id });
   return result;
 };
 

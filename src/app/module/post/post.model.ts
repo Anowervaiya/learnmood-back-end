@@ -1,5 +1,6 @@
 import { Schema, model, Types } from 'mongoose';
 import { VISIBILITY } from '../../constant/constant';
+import type { IPost } from './post.interface';
 
 const MediaSchema = new Schema(
   {
@@ -9,19 +10,18 @@ const MediaSchema = new Schema(
   { _id: false }
 );
 
-const PostSchema = new Schema(
+const PostSchema = new Schema<IPost>(
   {
-    user: { type: Types.ObjectId, ref: 'User', required: true, index: true },
+    user: { type: Schema.Types.ObjectId, ref: 'User', required: true, index: true },
     content: { type: String, default: '' },
     media: { type: [MediaSchema], default: [] },
-    tags: { type: [String], default: [] },
-    reacts: [{ type: Types.ObjectId, ref: 'React' }],
-    comments: [{ type: Types.ObjectId, ref: 'Comment' }],
+    tag: { type: [String], default: [] },
     visibility: {
       type: String,
       enum: [...Object.values(VISIBILITY)],
       default: VISIBILITY.PUBLIC,
     },
+    
   },
   { timestamps: true }
 );

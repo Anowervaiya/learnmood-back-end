@@ -1,7 +1,4 @@
-import type { JwtPayload } from 'jsonwebtoken';
 
-import type { Types } from 'mongoose';
-import type { Role } from '../user/user.interfaces';
 import AppError from '../../errorHelpers/appError';
 import httpStatus from 'http-status-codes';
 import { Story } from './story.model';

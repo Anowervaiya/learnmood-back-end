@@ -2,10 +2,9 @@ import { model, Schema, Types } from 'mongoose';
 import {
   type IAuthProvider,
   type IFollowers,
-  IsActive,
   type IUser,
-  Role,
 } from './user.interfaces';
+import { IsActive, Role } from './user.constant';
 
 const authProviderSchema = new Schema<IAuthProvider>(
   {
@@ -20,7 +19,7 @@ const authProviderSchema = new Schema<IAuthProvider>(
 
 const followers = new Schema<IFollowers>(
   {
-    user: { type: Schema.ObjectId, ref: 'User' },
+    user: { type: Schema.Types.ObjectId, ref: 'User' },
   },
   {
     versionKey: false,
@@ -29,7 +28,7 @@ const followers = new Schema<IFollowers>(
 );
 const followings = new Schema<IFollowers>(
   {
-    user: { type: Schema.ObjectId, ref: 'User' },
+    user: { type: Schema.Types.ObjectId, ref: 'User' },
   },
   {
     versionKey: false,

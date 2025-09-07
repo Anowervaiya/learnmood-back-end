@@ -1,10 +1,12 @@
 import { Router } from 'express';
 import { checkAuth } from '../../middlewares/checkAuth';
+
 import { validateRequest } from '../../middlewares/validateRequest';
-import { PostController } from './post.controller';
-import { createPostZodValidation } from './post.validation';
+
 import { multerUpload } from '../../config/multer.config';
 import { Role } from '../user/user.constant';
+import { ChallengeController } from './challenge.controller';
+import { createChallengeZodValidation } from './challenge.validation';
 
 const router = Router();
 
@@ -12,23 +14,23 @@ router.post(
   '/create',
   checkAuth(...Object.values(Role)),
   multerUpload.array('files'),
-  validateRequest(createPostZodValidation),
-  PostController.createPost
+  validateRequest(createChallengeZodValidation),
+  ChallengeController.createChallenge
 );
 
-// router.get('/', PostController.getAllPosts); Querybuilder
+// router.get('/', ChallengeController.getAllChallenges); Querybuilder
 
 router.delete(
   '/:id',
   checkAuth(...Object.values(Role)),
-  PostController.deletePost
+  ChallengeController.deleteChallenge
 );
 router.patch(
   '/:id',
   checkAuth(...Object.values(Role)),
   // multerUpload.array('files'),
   // validateRequest(updateTourZodSchema),
-  PostController.updatePost
+  ChallengeController.updateChallenge
 );
 
-export const PostRoutes = router;
+export const ChallengeRoutes = router;

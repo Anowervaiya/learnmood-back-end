@@ -1,77 +1,63 @@
-import AppError from "../../errorHelpers/appError";
-import type { IReactType } from "./react.interface";
-import { ReactType } from "./react.modal";
+
+
+import AppError from '../../errorHelpers/appError';
+
+
+import httpStatus from 'http-status-codes';
+import type { IReact } from './react.interface';
+import { React} from './react.modal';
+
+
+const createReact = async (payload: IReact) => {
+
+ return await React.create(payload);
 
 
 
-
-const createReactType = async (payload: IReactType) => {
-  const existingReactType = await ReactType.findOne({ type: payload.type });
-
-  if (existingReactType) {
-    throw new Error('React type already exists.');
-  }
-
-  return await ReactType.create(payload);
-
-  
+ 
 };
-const getAllReactTypes = async () => {
-  // const queryBuilder = new QueryBuilder(ReactType.find(), query);
+const getAllReact = async () => {
 
-  const ReactTypes = await ReactType.find()
-
-  if (ReactTypes.length === 0) {
-    throw new AppError(401, "NO REACT TYPE FOUND")
-  }
-  // const ReactTypes = await queryBuilder
-  //   .search(ReactTypeSearchableFields)
-  //   .filter()
-  //   .sort()
-  //   .fields()
-  //   .paginate();
-
-  // const [data, meta] = await Promise.all([
-  //   ReactTypes.build(),
-  //   queryBuilder.getMeta(),
-  // ]);
-
+  const react = await React.find();
+  const reactCount = await React.countDocuments()
   return {
-    ReactTypes
-  
-  };
-};
-const getSingleReactType = async (id: string) => {
-  const ReactTypes = await ReactType.findById(id);
-  return {
-    data: ReactTypes,
-  };
-};
-const updateReactType = async (id: string, payload: IReactType) => {
-  const existingReactType = await ReactType.findById(id);
-  if (!existingReactType) {
-    throw new Error('React type not found.');
+    data: react,
+    meta: {
+      total: reactCount
+    }
   }
-  const updatedReactType = await ReactType.findByIdAndUpdate(id, payload, {
+
+
+
+ 
+};
+
+const updateReact = async (id: string, payload: Partial<IReact>) => {
+  const isReactExist = await React.findById(id);
+
+  if (!isReactExist) {
+    throw new Error('React does not exist.');
+  }
+
+  const updatedReact = await React.findByIdAndUpdate(id, payload, {
     new: true,
   });
-  return updatedReactType;
+  return updatedReact;
 };
-const deleteReactType = async (id: string) => {
-  const existingReactType = await ReactType.findById(id);
-  if (!existingReactType) {
-    throw new Error('React type not found.');
+
+const deleteReact = async (id: string) => {
+  const isReactExist = await React.findById(id);
+  if (!isReactExist) {
+    throw new AppError(httpStatus.BAD_REQUEST, "React doesn't exist");
   }
 
-  return await ReactType.findByIdAndDelete(id);
+  return await React.findByIdAndDelete(id);
 };
 
-export const ReactService = {
-
-  createReactType,
-  deleteReactType,
-  updateReactType,
-  getAllReactTypes,
-  getSingleReactType,
-
+export const ReactServices = {
+  createReact,
+  updateReact,
+  deleteReact,
+  getAllReact,
+ 
 };

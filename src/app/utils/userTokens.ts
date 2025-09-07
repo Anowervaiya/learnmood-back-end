@@ -2,11 +2,11 @@ import httpStatus from 'http-status-codes';
 import { type JwtPayload } from 'jsonwebtoken';
 
 import { generateToken, verifyToken } from './jwt';
-// import { type IUser } from '../modules/user/user.interfaces';
 import AppError from '../errorHelpers/appError';
 import { envVars } from '../config/env';
-import { IsActive, type IUser } from '../module/user/user.interfaces';
+import { type IUser } from '../module/user/user.interfaces';
 import { User } from '../module/user/user.model';
+import { IsActive } from '../module/user/user.constant';
 
 export const createUserTokens = (user: Partial<IUser>) => {
   const jwtPayload = {
@@ -46,24 +46,23 @@ export const createNewAccessTokenWithRefreshToken = async (
   if (!isUserExist) {
     throw new AppError(httpStatus.BAD_REQUEST, 'User does not exist');
   }
-   if (
-     isUserExist.isActive === IsActive.BLOCKED ||
-     isUserExist.isActive === IsActive.INACTIVE
-   ) {
-     throw new AppError(
-       httpStatus.BAD_REQUEST,
-       `User is ${isUserExist.isActive}`
-     );
-   }
-   
-   
-     if (isUserExist.isDeleted) {
-       throw new AppError(httpStatus.BAD_REQUEST, 'User is deleted');
-     }
-   
-     if (!isUserExist.isVerified) {
-       throw new AppError(httpStatus.BAD_REQUEST, 'User is not verified');
-     }
+  if (
+    isUserExist.isActive === IsActive.BLOCKED ||
+    isUserExist.isActive === IsActive.INACTIVE
+  ) {
+    throw new AppError(
+      httpStatus.BAD_REQUEST,
+      `User is ${isUserExist.isActive}`
+    );
+  }
+
+  if (isUserExist.isDeleted) {
+    throw new AppError(httpStatus.BAD_REQUEST, 'User is deleted');
+  }
+
+  if (!isUserExist.isVerified) {
+    throw new AppError(httpStatus.BAD_REQUEST, 'User is not verified');
+  }
   const jwtPayload = {
     userId: isUserExist._id,
     email: isUserExist.email,

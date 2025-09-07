@@ -1,37 +1,43 @@
+import { Router } from "express";
 import { checkAuth } from "../../middlewares/checkAuth";
-import { Role } from "../user/user.interfaces";
-import { Router } from 'express'
+import { Role } from "../user/user.constant";
 import { ReactController } from "./react.controller";
 
-const router = Router()
+
+const router = Router();
+
 
 /* ------------------ React TYPE ROUTES -------------------- */
-router.get('/react-type',
-  ReactController.getAllReactTypes
-);
 
 router.post(
-  '/create-react-type',
-  checkAuth(Role.ADMIN),
-  // validateRequest(createReactTypeZodSchema),
-  ReactController.createReactType
+  '/create',
+  checkAuth(...Object.values(Role)),
+  // multerUpload.array('files'),
+  // validateRequest(createPostZodValidation),
+  ReactController.createReact
 );
-
-router.get('/react-type/:id',
-  ReactController.getSingleReactType
-);
-
-router.patch(
-  '/react-type/:id',
-  checkAuth(Role.ADMIN),
-  // validateRequest(createReactTypeZodSchema),
-  ReactController.updateReactType
+router.get(
+  '/allreact',
+  checkAuth(...Object.values(Role)),
+  // multerUpload.array('files'),
+  // validateRequest(createPostZodValidation),
+  ReactController.getAllReact
 );
 
 router.delete(
-  '/react-type/:id',
-  checkAuth(Role.ADMIN),
-  ReactController.deleteReactType
+  '/:id',
+  checkAuth(...Object.values(Role)),
+  ReactController.deleteReact
+);
+router.patch(
+  '/:id',
+  checkAuth(...Object.values(Role)),
+  // multerUpload.array('files'),
+  // validateRequest(updateTourZodSchema),
+  ReactController.updateReact
 );
 
-export const ReactRoutes =  router;
+
+
+
+export const ReactRoutes = router;

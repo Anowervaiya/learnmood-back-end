@@ -1,11 +1,10 @@
-import { Router } from "express";
-import { checkAuth } from "../../middlewares/checkAuth";
-import { Role } from "../user/user.interfaces";
-import { validateRequest } from "../../middlewares/validateRequest";
-import { commentController } from "./comment.controller";
+import { Router } from 'express';
+import { checkAuth } from '../../middlewares/checkAuth';
+import { validateRequest } from '../../middlewares/validateRequest';
+import { commentController } from './comment.controller';
+import { Role } from '../user/user.constant';
 
-
-const router = Router()
+const router = Router();
 
 router.post(
   '/create',
