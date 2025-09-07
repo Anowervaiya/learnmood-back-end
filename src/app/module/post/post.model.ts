@@ -1,8 +1,9 @@
 import { Schema, model, Types } from 'mongoose';
 import { VISIBILITY } from '../../constant/constant';
 import type { IPost } from './post.interface';
+import type { IMedia } from '../../interfaces/global.interfaces';
 
-const MediaSchema = new Schema(
+const MediaSchema = new Schema<IMedia>(
   {
     url: { type: [String], required: true },
     type: { type: String, enum: ['image', 'video'], default: 'image' },

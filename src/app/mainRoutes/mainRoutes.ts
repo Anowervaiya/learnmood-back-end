@@ -6,6 +6,7 @@ import { CommentRoutes } from '../module/comments/comment.route';
 import { ReactRoutes } from '../module/reacts/react.route';
 import { OtpRoutes } from '../module/otp/otp.route';
 import { StoryRoutes } from '../module/story/story.route';
+import { ChallengeRoutes } from '../module/challenge/challenge.route';
 
 
 export const mainRoutes = Router();
@@ -42,6 +43,10 @@ const moduleRoutes = [
   {
     path: '/story',
     route: StoryRoutes,
+  },
+  {
+    path: '/challenge',
+    route: ChallengeRoutes,
   },
 ];
 

@@ -2,7 +2,7 @@ import type { Request, Response } from "express";
 import { catchAsync } from "../../utils/catchAsync";
 import { PostServices } from "./post.service";
 import { sendResponse } from "../../utils/sendResponse";
-import type { IMedia, IPost } from "./post.interface";
+import type {  IPost } from "./post.interface";
 import type { JwtPayload } from "jsonwebtoken";
 
 

@@ -1,21 +1,38 @@
 import { z } from 'zod';
+import { CHALLENGE_CATEGORY, CHALLENGE_STATUS } from './challenge.contant';
 
+// Media schema
 const mediaSchema = z.object({
-  url: z.array(z.url()),
-  type: z.enum(['image', 'video']),
+  url: z.string().url(),
+  type: z.enum(['image', 'video']), // adjust types if needed
 });
 
+// Participant schema
+const participantSchema = z.object({
+  user: z.any(), // Mongoose ObjectId can be string or object
+  joinedAt: z.string().optional(), // ISO date string
+  progress: z.number().min(0).max(100).optional(),
+  completed: z.boolean().optional(),
+});
 
- 
+// Challenge schema
 export const createChallengeZodValidation = z.object({
-   
-  _id: z.any().optional(), // Mongoose ObjectId is a string or an object, z.any() is a safe bet
-  user: z.any(), // Same as above, for Mongoose ObjectId
-  content: z.string().min(1),
+  _id: z.any().optional(), // Optional for updates
+  title: z.string().min(1, 'Title is required'),
+  description: z.string().optional(),
+  category: z.enum(Object.values(CHALLENGE_CATEGORY)),
+  durationDays: z.number().min(1).default(30),
+  createdBy: z.any(),
+  participants: z.array(participantSchema).optional(),
+  startsAt: z.string().optional(), // ISO date string
+  endsAt: z.string().optional(), // ISO date string
+  rewardPoints: z.number().optional().default(100),
+  badges: z.array(z.string()).optional().default([]),
+  ratings: z.number().optional().default(0),
+  isPublic: z.boolean().optional().default(true),
+  status: z
+    .enum(Object.values(CHALLENGE_STATUS))
+    .optional()
+    .default(CHALLENGE_STATUS.ongoing),
   media: z.array(mediaSchema).optional(),
-  tags: z.array(z.string()).optional(),
-  reacts: z.array(z.any()).optional(), // Assuming IReact is a separate schema
-  comments: z.array(z.any()).optional(), // Assuming IComments is a separate schema
-  visibility: z.enum(['PUBLIC', 'FOLLOWERS', 'FRIENDS', 'ONLY_ME']),
 });
-

@@ -15,6 +15,7 @@ const createChallenge = catchAsync(async (req: Request, res: Response) => {
     ...req.body,
     media: { url: (req.files as Express.Multer.File[])?.map(file => file.path) , type: "image"},
   };
+  console.log(payload);
   const result = await ChallengeServices.createChallenge(payload);
   sendResponse(res, {
     statusCode: 201,
@@ -50,8 +51,8 @@ const updateChallenge = catchAsync(async (req: Request, res: Response) => {
 });
 
 const deleteChallenge = catchAsync(async (req: Request, res: Response) => {
-  const { id} = req.params ;
-  const result = await ChallengeServices.deleteChallenge(id as string);
+  const id = req.params.id as string;
+  const result = await ChallengeServices.deleteChallenge(id );
   sendResponse(res, {
     statusCode: 200,
     success: true,

@@ -1,40 +1,28 @@
-import type { JwtPayload } from "jsonwebtoken";
+import type { JwtPayload } from 'jsonwebtoken';
 
-
-import type { Types } from "mongoose";
-import AppError from "../../errorHelpers/appError";
-import httpStatus from 'http-status-codes'
-import { Challenge } from "./challenge.model";
-import type { IChallenge } from "./challenge.interface";
-
+import type { Types } from 'mongoose';
+import AppError from '../../errorHelpers/appError';
+import httpStatus from 'http-status-codes';
+import { Challenge } from './challenge.model';
+import type { IChallenge } from './challenge.interface';
 
 const createChallenge = async (payload: IChallenge) => {
-
-  return await Challenge.create({
-    ...payload
-  })
-
- 
-
-  }
+  return await Challenge.create(payload);
+};
 
 const getAllChallenges = async (query: Record<string, string>) => {
   // const queryBuilder = new QueryBuilder(Tour.find(), query);
-
   // const tours = await queryBuilder
   //   .search(tourSearchableFields)
   //   .filter()
   //   .sort()
   //   .fields()
   //   .paginate();
-
   // // const meta = await queryBuilder.getMeta()
-
   // const [data, meta] = await Promise.all([
   //   tours.build(),
   //   queryBuilder.getMeta(),
   // ]);
-
   // return {
   //   data,
   //   meta,
@@ -46,7 +34,6 @@ const updateChallenge = async (id: string, payload: Partial<IChallenge>) => {
   if (!isChallengeExist) {
     throw new Error('Challenge does not exist.');
   }
-
 
   // if (
   //   payload.images &&
@@ -74,7 +61,9 @@ const updateChallenge = async (id: string, payload: Partial<IChallenge>) => {
   //   payload.images = [...restDBImages, ...updatedPayloadImages];
   // }
 
-  const updatedChallenge = await Challenge.findByIdAndUpdate(id, payload, { new: true });
+  const updatedChallenge = await Challenge.findByIdAndUpdate(id, payload, {
+    new: true,
+  });
 
   // if (
   //   payload.deleteImages &&
@@ -90,7 +79,6 @@ const updateChallenge = async (id: string, payload: Partial<IChallenge>) => {
   return updatedChallenge;
 };
 const deleteChallenge = async (id: string) => {
-
   const isChallengeExist = await Challenge.findById(id);
   if (!isChallengeExist) {
     throw new AppError(httpStatus.BAD_REQUEST, "Challenge doesn't exist");
