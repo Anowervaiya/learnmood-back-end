@@ -1,7 +1,7 @@
 import { z } from 'zod';
-import { PAGE_CATEGORY } from './page.constant';
+import { PAGE_CATEGORY, PAGE_ROLE } from './page.constant';
 
-export const createPageZodSchema = z.object({
+export const createPageZodValidation = z.object({
   name: z.string().trim().min(1, { message: 'Page name is required' }),
   description: z.string().trim().optional(),
   owner: z.string().min(1, { message: 'Owner ID is required' }), // You might want to use a more specific validation for ObjectId strings if you have a custom utility for that.
@@ -9,4 +9,12 @@ export const createPageZodSchema = z.object({
   logo: z.string().optional(),
   coverImage: z.string().optional(),
   isPublic: z.boolean().default(true),
+});
+
+export const createPageMemberZodValidation = z.object({
+  page: z.string({ error: 'Page ID is required' }),
+  user: z.string({ error: 'User ID is required' }),
+  bio: z.string().trim().optional(),
+  role: z.enum(PAGE_ROLE).default(PAGE_ROLE.user), // Sets a default role if not provided
+  joinedAt: z.date().default(() => new Date()), // Sets a default joinedAt date
 });

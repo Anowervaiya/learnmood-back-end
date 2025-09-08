@@ -26,6 +26,20 @@ const createPage = catchAsync(async (req: Request, res: Response, next: NextFunc
     data: Page
   })
 })
+const createPageMember = catchAsync(
+  async (req: Request, res: Response, next: NextFunction) => {
+   
+
+    const PageMember = await PageServices.createPageMember(req.body);
+
+    sendResponse(res, {
+      success: true,
+      statusCode: httpStatus.CREATED,
+      message: 'Page Member Created Successfully',
+      data: PageMember,
+    });
+  }
+);
 
 
 // const updatePage = catchAsync(
@@ -67,6 +81,20 @@ const deletePage = catchAsync(async (req: Request, res: Response, next: NextFunc
    data: null
   })
 })
+const deletePageMember = catchAsync(
+  async (req: Request, res: Response, next: NextFunction) => {
+    const Id = req.params.id as string;
+
+   const result =  await PageServices.deletePageMember(Id);
+
+    sendResponse(res, {
+      success: true,
+      statusCode: httpStatus.CREATED,
+      message: 'Page  member is deleted Successfully',
+      data: result,
+    });
+  }
+);
 
 const getAllPages = catchAsync(
   async (req: Request, res: Response, next: NextFunction) => {
@@ -109,8 +137,10 @@ const getSinglePage = catchAsync(
 );
 export const PageControllers = {
   createPage,
+  createPageMember,
   getAllPages,
   getMe,
   deletePage,
   getSinglePage,
+  deletePageMember,
 };

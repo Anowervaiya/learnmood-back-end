@@ -1,5 +1,5 @@
 import type { Types } from "mongoose";
-import type { PAGE_CATEGORY } from "./page.constant";
+import type { PAGE_CATEGORY, PAGE_ROLE } from "./page.constant";
 
 export interface IPage {
   name: string;
@@ -9,4 +9,12 @@ export interface IPage {
   logo?: string;
   coverImage?: string;
   isPublic: boolean;
+}
+
+export interface IPageMember {
+  page: Types.ObjectId;
+  user: Types.ObjectId;
+  bio?: string;
+  role: PAGE_ROLE;
+  joinedAt?: Date;
 }

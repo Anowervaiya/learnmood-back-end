@@ -8,6 +8,7 @@ import { OtpRoutes } from '../module/otp/otp.route';
 import { StoryRoutes } from '../module/story/story.route';
 import { ChallengeRoutes } from '../module/challenge/challenge.route';
 import { PageRoutes } from '../module/page/page.routes';
+import { ServiceRoutes } from '../module/service/service.routes';
 
 
 export const mainRoutes = Router();
@@ -52,6 +53,10 @@ const moduleRoutes = [
   {
     path: '/challenge',
     route: ChallengeRoutes,
+  },
+  {
+    path: '/service',
+    route: ServiceRoutes,
   },
 ];
 

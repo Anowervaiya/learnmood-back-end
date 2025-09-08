@@ -1,6 +1,25 @@
 import { Schema, model, Types } from 'mongoose';
-import { PAGE_CATEGORY } from './page.constant';
-import type { IPage } from './page.interfaces';
+import { PAGE_CATEGORY, PAGE_ROLE } from './page.constant';
+import type { IPage, IPageMember } from './page.interfaces';
+
+
+const PageMemberSchema = new Schema<IPageMember>(
+  {
+    page: { type: Schema.Types.ObjectId, ref: 'Page', required: true },
+    user: { type: Schema.Types.ObjectId, ref: 'User', required: true },
+    bio: {type: String, trim: true},
+    role: {
+      type: String,
+      enum: Object.values(PAGE_ROLE),
+      default: PAGE_ROLE.user,
+    },
+    joinedAt: { type: Date, default: Date.now },
+  },
+  { timestamps: true }
+);
+
+export const PageMember = model('PageMember', PageMemberSchema);
+
 
 const PageSchema = new Schema<IPage>(
   {

@@ -3,14 +3,17 @@ import AppError from '../../errorHelpers/appError';
 
 import bcryptjs from 'bcryptjs';
 import httpStatus from 'http-status-codes';
-import { Page } from './page.model';
-import type { IPage } from './page.interfaces';
+import { Page, PageMember } from './page.model';
+import type { IPage, IPageMember } from './page.interfaces';
 
 
 const createPage = async (payload: IPage) => {
  
   return  await Page.create(payload);
 
+};
+const createPageMember = async (payload: IPageMember) => {
+  return await PageMember.create(payload);
 };
 
 const getAllPages = async () => {
@@ -47,11 +50,23 @@ const deletePage = async (id: string) => {
   const result = await Page.findOneAndDelete({ _id: id });
   return result;
 };
+const deletePageMember = async (id: string) => {
+  const pageMember = await PageMember.findById(id);
+
+  if (!pageMember) {
+    throw new AppError(httpStatus.BAD_REQUEST, 'Page member does not exist');
+  }
+
+  return await PageMember.findOneAndDelete({ _id: id });
+ 
+};
 
 export const PageServices = {
   createPage,
   getAllPages,
   getMe,
   deletePage,
+  deletePageMember,
   getSinglePage,
+  createPageMember,
 };

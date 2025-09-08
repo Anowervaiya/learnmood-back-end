@@ -7,5 +7,6 @@ export enum VISIBILITY {
 export enum EntityType {
   POST = 'POST',
   CHALLENGE = 'CHALLENGE',
-  STORY='STORY'
+  STORY='STORY',
+  SERVICE='SERVICE'
 }
