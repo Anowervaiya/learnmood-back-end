@@ -1,30 +1,34 @@
 import { Types } from 'mongoose';
-import type { IsActive, Role } from './user.constant';
-
+import type {  AUTHPROVIDER, GENDER, IsActive, LANGUAGE, PRONOUN, Role } from './user.constant';
+import type {  IFollowers, IImage } from '../../interfaces/global.interfaces';
 
 export interface IAuthProvider {
-  provider: 'google' | 'credentials'; // "Google", "Credential"
+  provider: AUTHPROVIDER; // "Google", "Credential"
   providerId: string;
 }
-export interface IFollowers {
-  user: Types.ObjectId;
-}
+
+
 
 export interface IUser {
   _id?: Types.ObjectId;
   bio?: string;
   name: string;
+  nickname?: string;
   email: string;
-  followers?: IFollowers[];
-  followings?: IFollowers[];
+  blood: string;
   password?: string;
   phone?: string;
-  picture?: string;
+  image: IImage;
   address?: string;
   isDeleted?: string;
-  isActive?: IsActive;
   isVerified?: boolean;
   role?: Role;
+  dob?: Date;
+  isActive?: IsActive;
+  gender: GENDER;
+  pronoun?: PRONOUN;
+  followers?: IFollowers[];
+  followings?: IFollowers[];
+  languages?: LANGUAGE[];
   auths?: IAuthProvider[];
-  createdAt?: Date;
 }

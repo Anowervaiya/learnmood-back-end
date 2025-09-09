@@ -6,7 +6,8 @@ import httpStatus from 'http-status-codes';
 import { User } from './user.model';
 import { type IAuthProvider, type IUser } from './user.interfaces';
 import type { JwtPayload } from 'jsonwebtoken';
-import { Role } from './user.constant';
+import { AUTHPROVIDER, Role } from './user.constant';
+import { deleteImageFromCLoudinary } from '../../config/cloudinary.config';
 
 const createUser = async (payload: Partial<IUser>) => {
   const { email, password, role, ...rest } = payload;
@@ -30,7 +31,7 @@ const createUser = async (payload: Partial<IUser>) => {
   );
 
   const authProvider: IAuthProvider = {
-    provider: 'credentials',
+    provider: AUTHPROVIDER.credentials,
     providerId: email as string,
   };
   const user = await User.create({
@@ -42,62 +43,32 @@ const createUser = async (payload: Partial<IUser>) => {
   });
   return user;
 };
-// const updateUser = async (
-//   userId: string,
-//   payload: Partial<IUser>,
-//   decodedToken: JwtPayload
-// ) => {
-//   if (decodedToken.role === Role.USER || decodedToken.role === Role.GUIDE) {
-//     if (userId !== decodedToken.userId) {
-//       throw new AppError(401, 'You are not authorized');
-//     }
-//   }
 
-//   const ifUserExist = await User.findById(userId);
+const updateUser = async(id : string, payload : IUser ) => {
 
-//   if (!ifUserExist) {
-//     throw new AppError(httpStatus.NOT_FOUND, 'User Not Found');
-//   }
 
-//   if (
-//     decodedToken.role === Role.ADMIN &&
-//     ifUserExist.role === Role.SUPER_ADMIN
-//   ) {
-//     throw new AppError(401, 'You are not authorized');
-//   }
+  const ifUserExist = await User.findById(id);
 
-//   /**
-//    * email - can not update
-//    * name, phone, password address
-//    * password - re hashing
-//    *  only admin superadmin - role, isDeleted...
-//    *
-//    * promoting to superadmin - superadmin
-//    */
+  if (!ifUserExist) {
+    throw new AppError(httpStatus.NOT_FOUND, 'User Not Found');
+  }
+  
 
-//   if (payload.role) {
-//     if (decodedToken.role === Role.USER || decodedToken.role === Role.MODERATOR) {
-//       throw new AppError(httpStatus.FORBIDDEN, 'You are not authorized');
-//     }
+  const updatedUser = await User.findByIdAndUpdate(id, payload, {
+    new: true,
+    runValidators: true,
+  });
 
-//     // if (payload.role === Role.SUPER_ADMIN && decodedToken.role === Role.ADMIN) {
-//     //     throw new AppError(httpStatus.FORBIDDEN, "You are not authorized");
-//     // }
-//   }
+     if (payload.image.profile && ifUserExist.image.profile) {
+       await deleteImageFromCLoudinary(ifUserExist.image.profile);
+     }
+     if (payload.image.banner && ifUserExist.image.banner) {
+       await deleteImageFromCLoudinary(ifUserExist.image.banner);
+     }
 
-//   if (payload.isActive || payload.isDeleted || payload.isVerified) {
-//     if (decodedToken.role === Role.USER || decodedToken.role === Role.GUIDE) {
-//       throw new AppError(httpStatus.FORBIDDEN, 'You are not authorized');
-//     }
-//   }
+  return updatedUser;
 
-//   const newUpdatedUser = await User.findByIdAndUpdate(userId, payload, {
-//     new: true,
-//     runValidators: true,
-//   });
-
-//   return newUpdatedUser;
-// };
+};
 
 const getAllUsers = async () => {
   const users = await User.find({});
@@ -140,4 +111,5 @@ export const UserServices = {
   getMe,
   deleteUser,
   getSingleUser,
+  updateUser,
 };

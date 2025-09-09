@@ -8,6 +8,7 @@ import type { JwtPayload } from "jsonwebtoken";
 import { ServiceServices } from "./service.service";
 
 const createService = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
+  
   const decodedToken = req.user as JwtPayload;
   const payload = {
     user: decodedToken?.userId,

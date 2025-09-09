@@ -15,11 +15,7 @@ export const deleteImageFromCLoudinary = async (url: string) => {
     //https://res.cloudinary.com/djzppynpk/image/upload/v1753126572/ay9roxiv8ue-1753126570086-download-2-jpg.jpg.jpg
 
     const regex = /\/v\d+\/(.*?)\.(jpg|jpeg|png|gif|webp)$/i;
-
     const match = url.match(regex);
-
-    console.log({ match });
-
     if (match && match[1]) {
       const public_id = match[1];
       await cloudinary.uploader.destroy(public_id);

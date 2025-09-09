@@ -1,12 +1,15 @@
 import { model, Schema, Types } from 'mongoose';
 import {
+ 
+
   type IAuthProvider,
-  type IFollowers,
   type IUser,
 } from './user.interfaces';
-import { IsActive, Role } from './user.constant';
+import { GENDER, IsActive, LANGUAGE, PRONOUN, Role } from './user.constant';
+import { followers, imageSchema } from '../../Schema/global.schema';
 
-const authProviderSchema = new Schema<IAuthProvider>(
+
+export const authProviderSchema = new Schema<IAuthProvider>(
   {
     provider: { type: String, required: true },
     providerId: { type: String, required: true },
@@ -17,37 +20,38 @@ const authProviderSchema = new Schema<IAuthProvider>(
   }
 );
 
-const followers = new Schema<IFollowers>(
-  {
-    user: { type: Schema.Types.ObjectId, ref: 'User' },
-  },
-  {
-    versionKey: false,
-    _id: false,
-  }
-);
-const followings = new Schema<IFollowers>(
-  {
-    user: { type: Schema.Types.ObjectId, ref: 'User' },
-  },
-  {
-    versionKey: false,
-    _id: false,
-  }
-);
+
 
 const userSchema = new Schema<IUser>(
   {
     name: { type: String, required: true },
+    blood: { type: String, required: true },
+    dob: { type: Date, },
     email: { type: String, required: true, unique: true },
+    nickname: { type: String },
     password: { type: String },
-    bio: { type: String, default: '' },
+    phone: { type: String },
+    image:  imageSchema,
+    address: { type: String },
+    bio: { type: String },
     followers: [followers],
-    followings: [followings],
+    followings: [followers],
     role: {
       type: String,
       enum: Object.values(Role),
       default: Role.USER,
+    },
+    gender: {
+      type: String,
+      enum: Object.values(GENDER),
+    },
+    pronoun: {
+      type: String,
+      enum: Object.values(PRONOUN),
+    },
+    languages: {
+      type: [String],
+      enum: Object.values(LANGUAGE),
     },
 
     isActive: {
@@ -57,9 +61,6 @@ const userSchema = new Schema<IUser>(
     },
     isVerified: { type: Boolean, default: false },
     isDeleted: { type: Boolean, default: false },
-    phone: { type: String },
-    picture: { type: String },
-    address: { type: String },
     auths: [authProviderSchema],
   },
   {
