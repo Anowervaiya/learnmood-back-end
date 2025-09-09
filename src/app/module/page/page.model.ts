@@ -1,6 +1,7 @@
 import { Schema, model, Types } from 'mongoose';
 import { PAGE_CATEGORY, PAGE_ROLE } from './page.constant';
 import type { IPage, IPageMember } from './page.interfaces';
+import { imageSchema } from '../../Schema/global.schema';
 
 
 const PageMemberSchema = new Schema<IPageMember>(
@@ -32,8 +33,7 @@ const PageSchema = new Schema<IPage>(
       default: PAGE_CATEGORY.other,
     },
     // Branding
-    logo: { type: String, default: '' },
-    coverImage: { type: String, default: '' },
+    image: imageSchema,
     isPublic: { type: Boolean, default: true },
   },
   { timestamps: true }

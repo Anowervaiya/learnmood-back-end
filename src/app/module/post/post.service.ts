@@ -5,6 +5,8 @@ import { Post } from "./post.model";
 
 import httpStatus from 'http-status-codes'
 import AppError from "../../errorHelpers/appError";
+import type { IMedia } from "../../interfaces/global.interfaces";
+import { deleteImageFromCLoudinary } from "../../config/cloudinary.config";
 
 
 const createPost = async (payload: IPost) => {
@@ -39,52 +41,20 @@ const getAllPosts = async (query: Record<string, string>) => {
   //   meta,
   // };
 };
-const updatePost = async (id: string, payload: Partial<IPost>) => {
+const updatePost = async (id: string, payload: IPost) => {
   const isPostExist = await Post.findById(id);
 
   if (!isPostExist) {
     throw new Error('Post does not exist.');
   }
 
-
-  // if (
-  //   payload.images &&
-  //   payload.images.length > 0 &&
-  //   existingTour.images &&
-  //   existingTour.images.length > 0
-  // ) {
-  //   payload.images = [...payload.images, ...existingTour.images];
-  // }
-
-  // if (
-  //   payload.deleteImages &&
-  //   payload.deleteImages.length > 0 &&
-  //   existingTour.images &&
-  //   existingTour.images.length > 0
-  // ) {
-  //   const restDBImages = existingTour.images.filter(
-  //     imageUrl => !payload.deleteImages?.includes(imageUrl)
-  //   );
-
-  //   const updatedPayloadImages = (payload.images || [])
-  //     .filter(imageUrl => !payload.deleteImages?.includes(imageUrl))
-  //     .filter(imageUrl => !restDBImages.includes(imageUrl));
-
-  //   payload.images = [...restDBImages, ...updatedPayloadImages];
-  // }
-
   const updatedPost = await Post.findByIdAndUpdate(id, payload, { new: true });
 
-  // if (
-  //   payload.deleteImages &&
-  //   payload.deleteImages.length > 0 &&
-  //   existingTour.images &&
-  //   existingTour.images.length > 0
-  // ) {
-  //   await Promise.all(
-  //     payload.deleteImages.map(url => deleteImageFromCLoudinary(url))
-  //   );
-  // }
+  if (payload.media && isPostExist.media) {
+    await Promise.all(
+      isPostExist.media.map((media: IMedia) => deleteImageFromCLoudinary(media.url))
+    );
+  }
 
   return updatedPost;
 };

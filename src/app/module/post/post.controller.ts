@@ -39,11 +39,15 @@ const getAllPosts = catchAsync(async (req: Request, res: Response) => {
   // });
 });
 const updatePost = catchAsync(async (req: Request, res: Response) => {
+  const id = req.params.id as string
   const payload: IPost = {
     ...req.body,
-    // images: (req.files as Express.Multer.File[]).map(file => file.path),
+    media: (req.files as Express.Multer.File[])?.map(file => ({
+      url: file.path, // make url an array
+      type: 'image',
+    })),
   };
-  const result = await PostServices.updatePost(req.params.id as string, payload);
+  const result = await PostServices.updatePost(id, payload);
   sendResponse(res, {
     statusCode: 200,
     success: true,

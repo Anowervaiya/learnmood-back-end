@@ -12,10 +12,10 @@ const createStory = catchAsync(async (req: Request, res: Response) => {
   const payload: IStory = {
     user: decodedToken?.userId,
     ...req.body,
-    media: {
-      url: req.file?.path as string,
+    media: (req.files as Express.Multer.File[])?.map(file => ({
+      url: file.path, 
       type: 'image',
-    },
+    })),
   };
   const result = await StoryServices.createStory(payload);
   sendResponse(res, {
@@ -40,12 +40,14 @@ const getAllStories = catchAsync(async (req: Request, res: Response) => {
 });
 const updateStory = catchAsync(async (req: Request, res: Response) => {
   const id = req.params.id as string;
+
   const payload: IStory = {
     ...req.body,
     media: (req.files as Express.Multer.File[])?.map(file => ({
       url: file.path, // make url an array
       type: 'image',
     })),
+    
   };
   const result = await StoryServices.updateStory(id, payload);
   sendResponse(res, {

@@ -14,3 +14,4 @@ export const createPostZodValidation = z.object({
   visibility: z.enum(Object.values(VISIBILITY))
 });
 
+export const updatePostZodValidation = createPostZodValidation.partial();

@@ -7,10 +7,12 @@ import { Post } from '../post/post.model';
 import type { IComments } from './comment.interface';
 import httpStatus from 'http-status-codes';
 import type { Role } from '../user/user.constant';
+import { deleteImageFromCLoudinary } from '../../config/cloudinary.config';
+import type { IMedia } from '../../interfaces/global.interfaces';
 
 
 const createComment = async (payload: IComments) => {
-  // console.log(payload);
+  
  return await Comment.create(payload);
 
 
@@ -19,7 +21,7 @@ const createComment = async (payload: IComments) => {
 };
 
 const updateComment = async (id: string, payload: Partial<IComments>) => {
-  const isCommentExist = await Comment.findById(id);
+  const isCommentExist = await Comment.findById({_id: id});
 
   if (!isCommentExist) {
     throw new Error('Comment does not exist.');
@@ -28,6 +30,14 @@ const updateComment = async (id: string, payload: Partial<IComments>) => {
   const updatedComment = await Comment.findByIdAndUpdate(id, payload, {
     new: true,
   });
+
+  if (payload.media && isCommentExist.media) {
+      await Promise.all(
+        isCommentExist.media.map((media: IMedia) => deleteImageFromCLoudinary(media.url))
+      );
+    }
+
+
   return updatedComment;
 };
 

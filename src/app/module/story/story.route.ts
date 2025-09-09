@@ -3,7 +3,7 @@ import { checkAuth } from "../../middlewares/checkAuth";
 
 import { validateRequest } from "../../middlewares/validateRequest";
 
-import { createStoryZodValidation } from "./story.validation";
+import { createStoryZodValidation, updateStoryZodValidation } from "./story.validation";
 import { multerUpload } from "../../config/multer.config";
 import { StoryController } from "./story.controller";
 import { Role } from "../user/user.constant";
@@ -13,7 +13,7 @@ const router = Router()
 router.post(
   '/create',
   checkAuth(...Object.values(Role)),
-  multerUpload.single('file'),
+  multerUpload.array('files'),
   validateRequest(createStoryZodValidation),
   StoryController.createStory
 );
@@ -28,8 +28,8 @@ router.delete(
 router.patch(
   '/:id',
   checkAuth(...Object.values(Role)),
-  // multerUpload.single('file'),
-  // validateRequest(updateTourZodSchema),
+  multerUpload.array('files'),
+  validateRequest(updateStoryZodValidation),
   StoryController.updateStory
 );
 

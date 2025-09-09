@@ -6,7 +6,7 @@ import { validateRequest } from '../../middlewares/validateRequest';
 import { multerUpload } from '../../config/multer.config';
 import { Role } from '../user/user.constant';
 import { ChallengeController } from './challenge.controller';
-import { createChallengeZodValidation } from './challenge.validation';
+import { createChallengeZodValidation, updateChallengeZodValidation } from './challenge.validation';
 
 const router = Router();
 
@@ -28,8 +28,8 @@ router.delete(
 router.patch(
   '/:id',
   checkAuth(...Object.values(Role)),
-  // multerUpload.array('files'),
-  // validateRequest(updateTourZodSchema),
+  multerUpload.array('files'),
+  validateRequest(updateChallengeZodValidation),
   ChallengeController.updateChallenge
 );
 

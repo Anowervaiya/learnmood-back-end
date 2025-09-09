@@ -32,3 +32,5 @@ export const createChallengeZodValidation = z.object({
     .default(CHALLENGE_STATUS.ongoing),
   media: z.array(mediaZodValidation).optional(),
 });
+
+export const updateChallengeZodValidation = createChallengeZodValidation.partial();

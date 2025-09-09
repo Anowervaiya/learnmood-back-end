@@ -8,6 +8,7 @@ import { Role } from '../user/user.constant';
 import {
   createPageMemberZodValidation,
   createPageZodValidation,
+  updatePageZodValidatoin,
 } from './page.validation';
 import { multerUpload } from '../../config/multer.config';
 import { PAGE_ROLE } from './page.constant';
@@ -15,33 +16,40 @@ import { PAGE_ROLE } from './page.constant';
 const router = Router();
 router.post(
   '/create',
-  // multerUpload.single("file"),
+
+  checkAuth(...Object.values(Role)),
+  multerUpload.fields([
+    { name: 'profile', maxCount: 1 },
+    { name: 'banner', maxCount: 1 },
+  ]),
   validateRequest(createPageZodValidation),
   PageControllers.createPage
 );
 
 router.post(
   '/member/create',
-  // checkAuth(PAGE_ROLE.user),
+
+  checkAuth(...Object.values(Role)),
   validateRequest(createPageMemberZodValidation),
   PageControllers.createPageMember
 );
 
 router.get('/all-pages', checkAuth(Role.ADMIN), PageControllers.getAllPages);
-router.get('/me', checkAuth(...Object.values(Role)), PageControllers.getMe);
-router.get(
+
+router.patch(
   '/:id',
   checkAuth(...Object.values(Role)),
-  PageControllers.getSinglePage
+  multerUpload.fields([
+    { name: 'profile', maxCount: 1 },
+    { name: 'banner', maxCount: 1 },
+  ]),
+  validateRequest(updatePageZodValidatoin),
+  PageControllers.updatePage
 );
-// router.patch(
-//   '/:id',
-//   validateRequest(updatePageZodSchema),
-//   checkAuth(...Object.values(Role)),
-//   PageControllers.updatePage
-// );
 
-router.delete('/:id', checkAuth(Role.ADMIN), PageControllers.deletePage);
+router.delete('/:id',
+  // checkAuth(Role.ADMIN),
+  PageControllers.deletePage);
 router.delete(
   '/member/:id',
   checkAuth(Role.USER),

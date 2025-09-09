@@ -14,7 +14,7 @@ const createChallenge = catchAsync(async (req: Request, res: Response) => {
     user: decodedToken?.userId,
     ...req.body,
     media: (req.files as Express.Multer.File[])?.map(file => ({
-      url: file.path, // make url an array
+      url: file.path, 
       type: 'image',
     })),
   };
@@ -40,14 +40,15 @@ const getAllChallenges = catchAsync(async (req: Request, res: Response) => {
   // });
 });
 const updateChallenge = catchAsync(async (req: Request, res: Response) => {
+  const id = req.params.id as string
   const payload: IChallenge = {
     ...req.body,
     media: (req.files as Express.Multer.File[])?.map(file => ({
-      url: file.path, // make url an array
+      url: file.path, 
       type: 'image',
     })),
   };
-  const result = await ChallengeServices.updateChallenge(req.params.id as string, payload);
+  const result = await ChallengeServices.updateChallenge(id, payload);
   sendResponse(res, {
     statusCode: 200,
     success: true,

@@ -10,10 +10,13 @@ import type { JwtPayload } from 'jsonwebtoken';
 
 const createcomment = catchAsync(async (req: Request, res: Response) => {
   const user = req.user as JwtPayload
-  const payload = {
+  const payload : IComments = {
     user: user.userId,
     ...req.body,
-    // images: (req.files as Express.Multer.File[]).map(file => file.path),
+    media: (req.files as Express.Multer.File[])?.map(file => ({
+      url: file.path, // make url an array
+      type: 'image',
+    })),
   };
  
   const result = await CommentServices.createComment(payload);
@@ -26,15 +29,15 @@ const createcomment = catchAsync(async (req: Request, res: Response) => {
 });
 
 const updateComment = catchAsync(async (req: Request, res: Response) => {
-
+  const id = req.params.id as string;
   const payload: IComments = {
     ...req.body,
-    // images: (req.files as Express.Multer.File[]).map(file => file.path),
+    media: (req.files as Express.Multer.File[])?.map(file => ({
+      url: file.path, // make url an array
+      type: 'image',
+    })),
   };
-  const result = await CommentServices.updateComment(
-    req.params.id as string,
-    payload
-  );
+  const result = await CommentServices.updateComment(id,payload);
 
   sendResponse(res, {
     statusCode: 200,

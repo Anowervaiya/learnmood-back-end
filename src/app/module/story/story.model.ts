@@ -14,7 +14,7 @@ const StorySchema = new Schema<IStory>(
       index: true,
     },
     content: { type: String, default: '' },
-    media: { type: [MediaSchema], default: {} },
+    media: { type: [MediaSchema], default: [] },
     tag: { type: [Schema.Types.ObjectId], default: [] },
     visibility: {
       type: String,

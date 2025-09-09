@@ -2,7 +2,7 @@ import { Router } from 'express';
 import { checkAuth } from '../../middlewares/checkAuth';
 import { validateRequest } from '../../middlewares/validateRequest';
 import { PostController } from './post.controller';
-import { createPostZodValidation } from './post.validation';
+import { createPostZodValidation, updatePostZodValidation } from './post.validation';
 import { multerUpload } from '../../config/multer.config';
 import { Role } from '../user/user.constant';
 
@@ -26,8 +26,8 @@ router.delete(
 router.patch(
   '/:id',
   checkAuth(...Object.values(Role)),
-  // multerUpload.array('files'),
-  // validateRequest(updateTourZodSchema),
+  multerUpload.array('files'),
+  validateRequest(updatePostZodValidation),
   PostController.updatePost
 );
 
