@@ -1,10 +1,8 @@
 import z from "zod";
 import { COURSE_LEVEL, SERVICE_CATEGORY } from "./service.constant";
+import { mediaZodValidation } from "../../zod/global.zod";
 
-const mediaSchema = z.object({
-  url: z.array(z.url()),
-  type: z.enum(['image', 'video']),
-});
+
 
 // Zod schema for the entire service model
 export const createServiceZodSchema = z.object({
@@ -15,9 +13,11 @@ export const createServiceZodSchema = z.object({
   category: z.enum(SERVICE_CATEGORY, {
     error: 'Service type is required',
   }),
-  media: z.array(mediaSchema).optional(),
+  media: z.array(mediaZodValidation).optional(),
   price: z.number().nonnegative().optional(),
   duration: z.string().optional(),
   level: z.enum(COURSE_LEVEL).optional(),
   participants: z.array(z.string()).optional(),
 });
+
+export const updateServiceZodSchema = createServiceZodSchema.partial();

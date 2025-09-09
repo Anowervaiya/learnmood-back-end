@@ -1,7 +1,7 @@
 import { Schema, model, Types } from 'mongoose'; // same levels you defined
 import { COURSE_LEVEL, SERVICE_CATEGORY } from './service.constant';
-import type { IService } from './service.interfaces';
-import { MediaSchema } from '../post/post.model';
+import type { IService } from './service.interfaces'
+import { MediaSchema } from '../../Schema/global.schema';
 
 
 

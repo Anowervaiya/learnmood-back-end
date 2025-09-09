@@ -2,14 +2,8 @@ import { Schema, model } from 'mongoose';
 import { CHALLENGE_CATEGORY, CHALLENGE_STATUS } from './challenge.contant';
 import type { IChallenge, IParticipant } from './challenge.interface';
 import type { IMedia } from '../../interfaces/global.interfaces';
-// media schema
-const MediaSchema = new Schema<IMedia>(
-  {
-    url: { type: [String], required: true },
-    type: { type: String, enum: ['image', 'video'], default: 'image' },
-  },
-  { _id: false }
-);
+import { MediaSchema } from '../../Schema/global.schema';
+
 // participant Schema
 const ParticipantSchema = new Schema<IParticipant>(
   {

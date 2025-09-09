@@ -2,7 +2,7 @@ import type { Request, Response } from 'express';
 import { catchAsync } from '../../utils/catchAsync';
 import { StoryServices } from './story.service';
 import { sendResponse } from '../../utils/sendResponse';
-import type { IMedia, IStory } from './story.interface';
+import type {  IStory } from './story.interface';
 import type { JwtPayload } from 'jsonwebtoken';
 import AppError from '../../errorHelpers/appError';
 
@@ -42,10 +42,10 @@ const updateStory = catchAsync(async (req: Request, res: Response) => {
   const id = req.params.id as string;
   const payload: IStory = {
     ...req.body,
-    media: {
-      url: req.file?.path as string,
+    media: (req.files as Express.Multer.File[])?.map(file => ({
+      url: file.path, // make url an array
       type: 'image',
-    },
+    })),
   };
   const result = await StoryServices.updateStory(id, payload);
   sendResponse(res, {

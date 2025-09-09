@@ -1,7 +1,7 @@
 import type { Types } from "mongoose";
 
 export interface IMedia {
-  url: string[];
+  url: string;
   type: 'image' | 'video';
 }
 export interface IFollowers {

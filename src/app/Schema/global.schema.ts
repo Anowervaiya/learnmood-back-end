@@ -1,5 +1,5 @@
 import { Schema } from "mongoose";
-import type {  IFollowers, IImage } from "../interfaces/global.interfaces";
+import type {  IFollowers, IImage, IMedia } from "../interfaces/global.interfaces";
 
 
 
@@ -23,3 +23,12 @@ export const imageSchema = new Schema<IImage>(
     _id: false,
   }
 );
+
+export  const MediaSchema = new Schema<IMedia>(
+  {
+    url: { type: String, required: true },
+    type: { type: String, enum: ['image', 'video'], default: 'image' },
+  },
+  { _id: false }
+);
+

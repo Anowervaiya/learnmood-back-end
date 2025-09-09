@@ -9,9 +9,9 @@ import AppError from "../../errorHelpers/appError";
 
 const createPost = async (payload: IPost) => {
 
-  const post = await Post.create({
-    ...payload
-  })
+  const post = await Post.create(
+    payload
+  )
 
   return post;
 

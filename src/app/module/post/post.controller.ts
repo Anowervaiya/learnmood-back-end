@@ -13,7 +13,10 @@ const createPost = catchAsync(async (req: Request, res: Response) => {
   const payload: IPost = {
     user: decodedToken?.userId,
     ...req.body,
-    media: { url: (req.files as Express.Multer.File[])?.map(file => file.path) , type: "image"},
+    media: (req.files as Express.Multer.File[])?.map(file => ({
+      url: file.path, // make url an array
+      type: 'image',
+    })),
   };
   const result = await PostServices.createPost(payload);
   sendResponse(res, {

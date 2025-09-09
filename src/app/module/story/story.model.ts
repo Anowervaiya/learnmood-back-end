@@ -1,15 +1,9 @@
 import { Schema, model, Types } from 'mongoose';
 import { VISIBILITY } from '../../constant/constant';
 import type { IStory } from './story.interface';
+import { MediaSchema } from '../../Schema/global.schema';
 
 
-const MediaSchema = new Schema(
-  {
-    url: { type: String, required: true },
-    type: { type: String, enum: ['image', 'video'], default: 'image' },
-  },
-  { _id: false }
-);
 
 const StorySchema = new Schema<IStory>(
   {
@@ -20,7 +14,7 @@ const StorySchema = new Schema<IStory>(
       index: true,
     },
     content: { type: String, default: '' },
-    media: { type: MediaSchema, default: {} },
+    media: { type: [MediaSchema], default: {} },
     tag: { type: [Schema.Types.ObjectId], default: [] },
     visibility: {
       type: String,

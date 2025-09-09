@@ -1,11 +1,7 @@
 import { z } from 'zod';
 import { CHALLENGE_CATEGORY, CHALLENGE_STATUS } from './challenge.contant';
+import { mediaZodValidation } from '../../zod/global.zod';
 
-// Media schema
-const mediaSchema = z.object({
-  url: z.string().url(),
-  type: z.enum(['image', 'video']), // adjust types if needed
-});
 
 // Participant schema
 const participantSchema = z.object({
@@ -34,5 +30,5 @@ export const createChallengeZodValidation = z.object({
     .enum(Object.values(CHALLENGE_STATUS))
     .optional()
     .default(CHALLENGE_STATUS.ongoing),
-  media: z.array(mediaSchema).optional(),
+  media: z.array(mediaZodValidation).optional(),
 });

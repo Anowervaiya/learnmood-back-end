@@ -7,7 +7,7 @@ import { validateRequest } from '../../middlewares/validateRequest';
 import { checkAuth } from '../../middlewares/checkAuth';
 import { Role } from '../user/user.constant';
 import { multerUpload } from '../../config/multer.config';
-import { createServiceZodSchema } from './service.validation';
+import { createServiceZodSchema, updateServiceZodSchema } from './service.validation';
 import { ServiceControllers } from './service.controller';
 
 const router = Router();
@@ -27,12 +27,14 @@ router.get(
   checkAuth(...Object.values(Role)),
   ServiceControllers.getSingleService
 );
-// router.patch(
-//   '/:id',
-//   validateRequest(updateServiceZodSchema),
-//   checkAuth(...Object.values(Role)),
-//   ServiceControllers.updateService
-// );
+router.patch(
+  '/:id',
+  checkAuth(...Object.values(Role)),
+  multerUpload.array('files'),
+  validateRequest(updateServiceZodSchema),
+  ServiceControllers.updateService
+);
+
 router.delete(
   '/:id',
   checkAuth(...Object.values(Role)),
