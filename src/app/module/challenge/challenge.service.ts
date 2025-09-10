@@ -7,28 +7,34 @@ import { Challenge } from './challenge.model';
 import type { IChallenge } from './challenge.interface';
 import { deleteImageFromCLoudinary } from '../../config/cloudinary.config';
 import type { IMedia } from '../../interfaces/global.interfaces';
+import { QueryBuilder } from '../../utils/QueryBuilder';
+import { userSearchableFields } from '../user/user.constant';
+import { ChallengeSearchableFields } from './challenge.contant';
 
 const createChallenge = async (payload: IChallenge) => {
   return await Challenge.create(payload);
 };
 
 const getAllChallenges = async (query: Record<string, string>) => {
-  // const queryBuilder = new QueryBuilder(Tour.find(), query);
-  // const tours = await queryBuilder
-  //   .search(tourSearchableFields)
-  //   .filter()
-  //   .sort()
-  //   .fields()
-  //   .paginate();
-  // // const meta = await queryBuilder.getMeta()
-  // const [data, meta] = await Promise.all([
-  //   tours.build(),
-  //   queryBuilder.getMeta(),
-  // ]);
-  // return {
-  //   data,
-  //   meta,
-  // };
+    const queryBuilder = new QueryBuilder(Challenge.find(), query)
+    
+    const challengeData = queryBuilder
+          .search(ChallengeSearchableFields)
+          .filter()
+          .sort()
+          .fields()
+          .paginate()
+    
+      const [data, meta] = await Promise.all([
+        challengeData.build(),
+        queryBuilder.getMeta(),
+      ]);
+  
+      return {
+        data,
+        meta,
+      };
+  
 };
 const updateChallenge = async (id: string, payload: Partial<IChallenge>) => {
   const isChallengeExist = await Challenge.findById({ _id: id });

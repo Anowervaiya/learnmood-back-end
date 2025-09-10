@@ -4,24 +4,33 @@ import { Story } from './story.model';
 import type { IStory } from './story.interface';
 import type { IMedia } from '../../interfaces/global.interfaces';
 import { deleteImageFromCLoudinary } from '../../config/cloudinary.config';
+import { QueryBuilder } from '../../utils/QueryBuilder';
 
 const createStory = async (payload: IStory) => {
 
   return await Story.create(payload);
 };
 
-const getAllStories = async () => {
-  const AllStory = await Story.find();
-  const totalStoryCount = await Story.countDocuments();
-  if (totalStoryCount === 0) {
-    throw new AppError(401, 'Story not available');
-  }
+const getAllStories = async (query: Record<string, string>) => {
+  const queryBuilder = new QueryBuilder(Story.find(), query);
+
+  const Stories = queryBuilder
+    // .search(StorieSearchableFields)
+    .filter()
+    .sort()
+    .fields()
+    .paginate();
+
+
+
+  const [data, meta] = await Promise.all([
+    Stories.build(),
+    queryBuilder.getMeta(),
+  ]);
 
   return {
-    data: AllStory,
-    meta: {
-      total: totalStoryCount,
-    },
+    data,
+    meta,
   };
 };
 const updateStory = async (id: string, payload: Partial<IStory>) => {

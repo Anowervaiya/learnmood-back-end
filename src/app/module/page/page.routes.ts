@@ -25,6 +25,9 @@ router.post(
   validateRequest(createPageZodValidation),
   PageControllers.createPage
 );
+router.get('/',
+  // checkAuth(Role.ADMIN),
+  PageControllers.getAllPages);
 
 router.post(
   '/member/create',
@@ -34,7 +37,12 @@ router.post(
   PageControllers.createPageMember
 );
 
-router.get('/all-pages', checkAuth(Role.ADMIN), PageControllers.getAllPages);
+router.get(
+  '/member',
+  // checkAuth(Role.ADMIN),
+  PageControllers.getAllPageMembers
+);
+
 
 router.patch(
   '/:id',

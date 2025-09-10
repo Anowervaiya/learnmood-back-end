@@ -71,7 +71,7 @@ const deletePage = catchAsync(
   async (req: Request, res: Response, next: NextFunction) => {
     const Id = req.params.id as string;
 
-   const result = await PageServices.deletePage(Id);
+    const result = await PageServices.deletePage(Id);
 
     sendResponse(res, {
       success: true,
@@ -98,7 +98,8 @@ const deletePageMember = catchAsync(
 
 const getAllPages = catchAsync(
   async (req: Request, res: Response, next: NextFunction) => {
-    const result = await PageServices.getAllPages();
+    const query = req.query as Record<string, string>;
+    const result = await PageServices.getAllPages(query);
 
     sendResponse(res, {
       success: true,
@@ -109,38 +110,27 @@ const getAllPages = catchAsync(
     });
   }
 );
-const getMe = catchAsync(
+const getAllPageMembers = catchAsync(
   async (req: Request, res: Response, next: NextFunction) => {
-    const decodedToken = req.user as JwtPayload;
-    const result = await PageServices.getMe(decodedToken.PageId);
+    const query = req.query as Record<string, string>;
+    const result = await PageServices.getAllPageMembers(query);
 
     sendResponse(res, {
       success: true,
       statusCode: httpStatus.CREATED,
-      message: 'Your profile Retrieved Successfully',
+      message: 'All Page Members Retrieved Successfully',
       data: result.data,
+      meta: result.meta,
     });
   }
 );
-const getSinglePage = catchAsync(
-  async (req: Request, res: Response, next: NextFunction) => {
-    const id = req.params.id as string;
-    const result = await PageServices.getSinglePage(id);
-    sendResponse(res, {
-      success: true,
-      statusCode: httpStatus.CREATED,
-      message: 'Page Retrieved Successfully',
-      data: result.data,
-    });
-  }
-);
+
 export const PageControllers = {
   createPage,
-  createPageMember,
   getAllPages,
-  getMe,
   deletePage,
-  getSinglePage,
-  deletePageMember,
   updatePage,
+  createPageMember,
+  getAllPageMembers,
+  deletePageMember,
 };

@@ -18,13 +18,17 @@ router.post(
   UserControllers.createUser
 );
 
-router.get('/all-users', checkAuth(Role.ADMIN), UserControllers.getAllUsers);
+router.get('/all-users',
+  // checkAuth(Role.ADMIN),
+  UserControllers.getAllUsers);
 router.get('/me', checkAuth(...Object.values(Role)), UserControllers.getMe);
-router.get(
-  '/:id',
-  checkAuth(...Object.values(Role)),
-  UserControllers.getSingleUser
-);
+
+// router.get(
+//   '/:id',
+//   checkAuth(...Object.values(Role)),
+//   UserControllers.getSingleUser
+// );
+
 router.patch(
   '/:id',
   checkAuth(...Object.values(Role)),

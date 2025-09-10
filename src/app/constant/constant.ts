@@ -10,3 +10,4 @@ export enum EntityType {
   STORY='STORY',
   SERVICE='SERVICE'
 }
+export const excludeField = ['searchTerm', 'sort', 'fields', 'page', 'limit'];

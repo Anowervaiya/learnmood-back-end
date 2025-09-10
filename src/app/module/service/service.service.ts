@@ -7,6 +7,7 @@ import { Service } from './service.model';
 import type { IService } from './service.interfaces';
 import { deleteImageFromCLoudinary } from '../../config/cloudinary.config';
 import type { IMedia } from '../../interfaces/global.interfaces';
+import { QueryBuilder } from '../../utils/QueryBuilder';
 
 const createService = async (payload: IService) => {
   //  console.log(payload);
@@ -34,17 +35,26 @@ if (payload.media && ifServicExist.media) {
 
   return updatedUser;
 };
-const getAllServices = async () => {
-  const Services = await Service.find({});
-  const totalServices = await Service.countDocuments();
+const getAllService = async (query: Record<string, string>) => {
+  const queryBuilder = new QueryBuilder(Service.find(), query);
+
+  const service = queryBuilder
+    // .search(postSearchableFields)
+    .filter()
+    .sort()
+    .fields()
+    .paginate();
+
+  const [data, meta] = await Promise.all([
+    service.build(),
+    queryBuilder.getMeta(),
+  ]);
+
   return {
-    data: Services,
-    meta: {
-      total: totalServices,
-    },
+    data,
+    meta,
   };
 };
-
 const getSingleService = async (id: string) => {
   const result = await Service.findById(id).select('-password');
   return {
@@ -64,7 +74,7 @@ const deleteService = async (id: string) => {
 
 export const ServiceServices = {
   createService,
-  getAllServices,
+  getAllService,
 
   deleteService,
   getSingleService,

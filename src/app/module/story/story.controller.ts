@@ -27,13 +27,13 @@ const createStory = catchAsync(async (req: Request, res: Response) => {
 });
 
 const getAllStories = catchAsync(async (req: Request, res: Response) => {
-  // const query = req.query;
-  const result = await StoryServices.getAllStories();
+  const query = req.query as Record<string , string>;
+  const result = await StoryServices.getAllStories(query);
 
   sendResponse(res, {
     statusCode: 200,
     success: true,
-    message: 'Story retrieved successfully',
+    message: 'All Story retrieved successfully',
     data: result.data,
     meta: result.meta,
   });

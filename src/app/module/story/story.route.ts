@@ -18,7 +18,7 @@ router.post(
   StoryController.createStory
 );
 
-router.get('/', StoryController.getAllStories); //Querybuilder
+router.get('/', StoryController.getAllStories); 
 
 router.delete(
   '/:id',

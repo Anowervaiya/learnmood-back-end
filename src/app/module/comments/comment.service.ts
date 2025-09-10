@@ -9,6 +9,8 @@ import httpStatus from 'http-status-codes';
 import type { Role } from '../user/user.constant';
 import { deleteImageFromCLoudinary } from '../../config/cloudinary.config';
 import type { IMedia } from '../../interfaces/global.interfaces';
+import { QueryBuilder } from '../../utils/QueryBuilder';
+import { CommentSearchableFields } from './comment.constant';
 
 
 const createComment = async (payload: IComments) => {
@@ -18,6 +20,26 @@ const createComment = async (payload: IComments) => {
 
 
  
+};
+const getAllComments = async (query: Record<string, string>) => {
+  const queryBuilder = new QueryBuilder(Comment.find(), query);
+
+  const commentData = queryBuilder
+    .search(CommentSearchableFields)
+    .filter()
+    .sort()
+    .fields()
+    .paginate();
+
+  const [data, meta] = await Promise.all([
+    commentData.build(),
+    queryBuilder.getMeta(),
+  ]);
+
+  return {
+    data,
+    meta,
+  };
 };
 
 const updateComment = async (id: string, payload: Partial<IComments>) => {
@@ -54,4 +76,5 @@ export const CommentServices = {
   createComment,
   updateComment,
   deleteComment,
+  getAllComments,
 };

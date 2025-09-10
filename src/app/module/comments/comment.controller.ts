@@ -28,6 +28,17 @@ const createcomment = catchAsync(async (req: Request, res: Response) => {
   });
 });
 
+const getAllComments = catchAsync(async (req: Request, res: Response) => {
+  const query = req.query as Record<string, string>;
+  const result = await CommentServices.getAllComments(query);
+  sendResponse(res, {
+    statusCode: 200,
+    success: true,
+    message: 'All Comment retrieved successfully',
+    data: result.data,
+    meta: result.meta,
+  });
+});
 const updateComment = catchAsync(async (req: Request, res: Response) => {
   const id = req.params.id as string;
   const payload: IComments = {
@@ -62,4 +73,5 @@ export const commentController = {
   createcomment,
   deleteComment,
   updateComment,
+  getAllComments,
 };

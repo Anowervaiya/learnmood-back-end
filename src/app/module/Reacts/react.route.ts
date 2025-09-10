@@ -17,10 +17,9 @@ router.post(
   ReactController.createReact
 );
 router.get(
-  '/allreact',
-  checkAuth(...Object.values(Role)),
-  // multerUpload.array('files'),
-  // validateRequest(createPostZodValidation),
+  '/',
+  // checkAuth(...Object.values(Role)),
+  
   ReactController.getAllReact
 );
 

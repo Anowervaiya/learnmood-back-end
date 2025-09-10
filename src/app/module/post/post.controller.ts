@@ -28,15 +28,15 @@ const createPost = catchAsync(async (req: Request, res: Response) => {
 });
 
 const getAllPosts = catchAsync(async (req: Request, res: Response) => {
-  // const query = req.query;
-  // const result = await PostServices.getAllPosts(query as Record<string, string>);
-  // sendResponse(res, {
-  //   statusCode: 200,
-  //   success: true,
-  //   message: 'Tours retrieved successfully',
-  //   data: result.data,
-  //   meta: result.meta,
-  // });
+  const query = req.query as Record<string, string>;
+  const result = await PostServices.getAllPosts(query);
+  sendResponse(res, {
+    statusCode: 200,
+    success: true,
+    message: 'All Posts retrieved successfully',
+    data: result.data,
+    meta: result.meta,
+  });
 });
 const updatePost = catchAsync(async (req: Request, res: Response) => {
   const id = req.params.id as string

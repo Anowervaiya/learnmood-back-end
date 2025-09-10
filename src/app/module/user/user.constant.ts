@@ -50,3 +50,5 @@ export enum PRONOUN {
   'SHE/HER' = 'she/her',
   'THEY/THEM' = 'they/them',
 }
+
+export const userSearchableFields = ['name', 'blood', 'address'];

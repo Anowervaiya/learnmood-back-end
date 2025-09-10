@@ -18,7 +18,7 @@ router.post(
   ChallengeController.createChallenge
 );
 
-// router.get('/', ChallengeController.getAllChallenges); Querybuilder
+router.get('/', ChallengeController.getAllChallenges)
 
 router.delete(
   '/:id',

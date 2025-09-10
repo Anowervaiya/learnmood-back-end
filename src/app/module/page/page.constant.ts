@@ -11,3 +11,5 @@ export enum PAGE_ROLE {
   moderator='moderator',
   user='user',
 }
+
+export const PageSearchableFields = ['name','category'];

@@ -6,6 +6,7 @@ import AppError from '../../errorHelpers/appError';
 import httpStatus from 'http-status-codes';
 import type { IReact } from './react.interface';
 import { React} from './react.modal';
+import { QueryBuilder } from '../../utils/QueryBuilder';
 
 
 const createReact = async (payload: IReact) => {
@@ -16,20 +17,25 @@ const createReact = async (payload: IReact) => {
 
  
 };
-const getAllReact = async () => {
+const getAllReact= async (query: Record<string, string>) => {
+  const queryBuilder = new QueryBuilder(React.find(), query);
 
-  const react = await React.find();
-  const reactCount = await React.countDocuments()
+  const ReactData = queryBuilder
+    // .search(ReactSearchableFields)
+    .filter()
+    .sort()
+    .fields()
+    .paginate();
+
+  const [data, meta] = await Promise.all([
+    ReactData.build(),
+    queryBuilder.getMeta(),
+  ]);
+
   return {
-    data: react,
-    meta: {
-      total: reactCount
-    }
-  }
-
-
-
- 
+    data,
+    meta,
+  };
 };
 
 const updateReact = async (id: string, payload: Partial<IReact>) => {

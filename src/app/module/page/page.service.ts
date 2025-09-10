@@ -6,6 +6,8 @@ import httpStatus from 'http-status-codes';
 import { Page, PageMember } from './page.model';
 import type { IPage, IPageMember } from './page.interfaces';
 import { deleteImageFromCLoudinary } from '../../config/cloudinary.config';
+import { QueryBuilder } from '../../utils/QueryBuilder';
+import { PageSearchableFields } from './page.constant';
 
 
 const createPage = async (payload: IPage) => {
@@ -43,29 +45,49 @@ const createPageMember = async (payload: IPageMember) => {
   return await PageMember.create(payload);
 };
 
-const getAllPages = async () => {
-  const Pages = await Page.find({});
-  const totalPages = await Page.countDocuments();
+const getAllPages = async (query: Record<string, string>) => {
+  const queryBuilder = new QueryBuilder(Page.find(), query);
+
+  const PageData = queryBuilder
+    .search(PageSearchableFields)
+    .filter()
+    .sort()
+    .fields()
+    .paginate();
+
+  const [data, meta] = await Promise.all([
+    PageData.build(),
+    queryBuilder.getMeta(),
+  ]);
+
   return {
-    data: Pages,
-    meta: {
-      total: totalPages,
-    },
+    data,
+    meta,
+  };
+};
+const getAllPageMembers = async (query: Record<string, string>) => {
+  const queryBuilder = new QueryBuilder(PageMember.find(), query);
+
+  const PageMemberData = queryBuilder
+    .filter()
+    .sort()
+    .fields()
+    .paginate();
+
+  const [data, meta] = await Promise.all([
+    PageMemberData.build(),
+    queryBuilder.getMeta(),
+  ]);
+
+  return {
+    data,
+    meta,
   };
 };
 
-const getMe = async (PageId: string) => {
-  const result = await Page.findById(PageId).select('-password');
-  return {
-    data: result,
-  };
-};
-const getSinglePage = async (id: string) => {
-  const result = await Page.findById(id).select('-password');
-  return {
-    data: result,
-  };
-};
+
+
+
 
 const deletePage = async (id: string) => {
   const page = await Page.findById(id);
@@ -91,10 +113,9 @@ const deletePageMember = async (id: string) => {
 export const PageServices = {
   createPage,
   getAllPages,
-  getMe,
   deletePage,
-  deletePageMember,
-  getSinglePage,
-  createPageMember,
   updatePage,
+  deletePageMember,
+  getAllPageMembers,
+  createPageMember,
 };

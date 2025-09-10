@@ -16,7 +16,7 @@ router.post(
   PostController.createPost
 );
 
-// router.get('/', PostController.getAllPosts); Querybuilder
+router.get('/', PostController.getAllPosts)
 
 router.delete(
   '/:id',

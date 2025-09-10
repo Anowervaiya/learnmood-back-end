@@ -29,15 +29,15 @@ const createChallenge = catchAsync(async (req: Request, res: Response) => {
 });
 
 const getAllChallenges = catchAsync(async (req: Request, res: Response) => {
-  // const query = req.query;
-  // const result = await ChallengeServices.getAllChallenges(query as Record<string, string>);
-  // sendResponse(res, {
-  //   statusCode: 200,
-  //   success: true,
-  //   message: 'Tours retrieved successfully',
-  //   data: result.data,
-  //   meta: result.meta,
-  // });
+  const query = req.query as Record<string, string>;
+  const result = await ChallengeServices.getAllChallenges(query );
+  sendResponse(res, {
+    statusCode: 200,
+    success: true,
+    message: 'All Challenge retrieved successfully',
+    data: result.data,
+    meta: result.meta,
+  });
 });
 const updateChallenge = catchAsync(async (req: Request, res: Response) => {
   const id = req.params.id as string

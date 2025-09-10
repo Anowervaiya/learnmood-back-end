@@ -5,9 +5,9 @@ import bcryptjs from 'bcryptjs';
 import httpStatus from 'http-status-codes';
 import { User } from './user.model';
 import { type IAuthProvider, type IUser } from './user.interfaces';
-import type { JwtPayload } from 'jsonwebtoken';
-import { AUTHPROVIDER, Role } from './user.constant';
+import { AUTHPROVIDER, Role, userSearchableFields } from './user.constant';
 import { deleteImageFromCLoudinary } from '../../config/cloudinary.config';
+import { QueryBuilder } from '../../utils/QueryBuilder';
 
 const createUser = async (payload: Partial<IUser>) => {
   const { email, password, role, ...rest } = payload;
@@ -70,15 +70,30 @@ const updateUser = async(id : string, payload : IUser ) => {
 
 };
 
-const getAllUsers = async () => {
-  const users = await User.find({});
-  const totalUsers = await User.countDocuments();
-  return {
-    data: users,
-    meta: {
-      total: totalUsers,
-    },
-  };
+const getAllUsers = async (query:Record<string,string>) => {
+
+
+  const queryBuilder = new QueryBuilder(User.find(), query)
+  
+  const userData = queryBuilder
+        .search(userSearchableFields)
+        .filter()
+        .sort()
+        .fields()
+        .paginate()
+  
+    const [data, meta] = await Promise.all([
+      userData.build(),
+      queryBuilder.getMeta(),
+    ]);
+
+    return {
+      data,
+      meta,
+    };
+
+
+
 };
 
 const getMe = async (userId: string) => {

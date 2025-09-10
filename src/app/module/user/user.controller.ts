@@ -73,7 +73,9 @@ const deleteUser = catchAsync(
 
 const getAllUsers = catchAsync(
   async (req: Request, res: Response, next: NextFunction) => {
-    const result = await UserServices.getAllUsers();
+    
+    const query = req.query as Record<string, string>
+    const result = await UserServices.getAllUsers(query);
 
     sendResponse(res, {
       success: true,

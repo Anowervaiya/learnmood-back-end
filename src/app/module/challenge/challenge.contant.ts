@@ -12,3 +12,4 @@ export enum CHALLENGE_STATUS {
   ongoing='ongoing',
   completed='completed',
 }
+export const ChallengeSearchableFields = ['title', 'description', 'category'];

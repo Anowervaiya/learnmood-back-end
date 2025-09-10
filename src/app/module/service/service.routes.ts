@@ -21,7 +21,11 @@ router.post(
 );
 
 
-router.get('/all-Services', checkAuth(Role.ADMIN), ServiceControllers.getAllServices);
+router.get(
+  '/',
+  // checkAuth(Role.ADMIN),
+  ServiceControllers.getAllService
+);
 router.get(
   '/:id',
   checkAuth(...Object.values(Role)),

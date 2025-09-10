@@ -28,8 +28,8 @@ const createReact = catchAsync(async (req: Request, res: Response) => {
   });
 });
 const getAllReact = catchAsync(async (req: Request, res: Response) => {
-
-  const result = await ReactServices.getAllReact();
+  const query = req.query as Record<string, string>;
+  const result = await ReactServices.getAllReact(query);
   sendResponse(res, {
     statusCode: 201,
     success: true,

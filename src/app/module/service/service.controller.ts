@@ -73,19 +73,19 @@ const deleteService = catchAsync(
   }
 );
 
-const getAllServices = catchAsync(
-  async (req: Request, res: Response, next: NextFunction) => {
-    const result = await ServiceServices.getAllServices();
 
-    sendResponse(res, {
-      success: true,
-      statusCode: httpStatus.CREATED,
-      message: 'All Services Retrieved Successfully',
-      data: result.data,
-      meta: result.meta,
-    });
-  }
-);
+const getAllService = catchAsync(async (req: Request, res: Response) => {
+  const query = req.query as Record<string, string>;
+  const result = await ServiceServices.getAllService(query);
+
+  sendResponse(res, {
+    statusCode: 200,
+    success: true,
+    message: 'All Service retrieved successfully',
+    data: result.data,
+    meta: result.meta,
+  });
+});
 
 const getSingleService = catchAsync(
   async (req: Request, res: Response, next: NextFunction) => {
@@ -101,7 +101,7 @@ const getSingleService = catchAsync(
 );
 export const ServiceControllers = {
   createService,
-  getAllServices,
+  getAllService,
   updateService,
   deleteService,
   getSingleService,

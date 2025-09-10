@@ -7,6 +7,7 @@ import httpStatus from 'http-status-codes'
 import AppError from "../../errorHelpers/appError";
 import type { IMedia } from "../../interfaces/global.interfaces";
 import { deleteImageFromCLoudinary } from "../../config/cloudinary.config";
+import { QueryBuilder } from "../../utils/QueryBuilder";
 
 
 const createPost = async (payload: IPost) => {
@@ -20,26 +21,26 @@ const createPost = async (payload: IPost) => {
   }
 
 const getAllPosts = async (query: Record<string, string>) => {
-  // const queryBuilder = new QueryBuilder(Tour.find(), query);
+  const queryBuilder = new QueryBuilder(Post.find(), query);
 
-  // const tours = await queryBuilder
-  //   .search(tourSearchableFields)
-  //   .filter()
-  //   .sort()
-  //   .fields()
-  //   .paginate();
+  const posts = queryBuilder
+    // .search(postSearchableFields)
+    .filter()
+    .sort()
+    .fields()
+    .paginate();
 
-  // // const meta = await queryBuilder.getMeta()
 
-  // const [data, meta] = await Promise.all([
-  //   tours.build(),
-  //   queryBuilder.getMeta(),
-  // ]);
 
-  // return {
-  //   data,
-  //   meta,
-  // };
+  const [data, meta] = await Promise.all([
+    posts.build(),
+    queryBuilder.getMeta(),
+  ]);
+
+  return {
+    data,
+    meta,
+  };
 };
 const updatePost = async (id: string, payload: IPost) => {
   const isPostExist = await Post.findById(id);

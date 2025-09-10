@@ -15,7 +15,7 @@ router.post(
   validateRequest(createCommentZodValidation),
   commentController.createcomment
 );
-
+router.get('/', commentController.getAllComments);
 router.delete(
   '/:id',
   checkAuth(...Object.values(Role)),
