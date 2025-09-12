@@ -2,25 +2,11 @@ import { createServer } from 'http';
 import mongoose from 'mongoose';
 import app from './app';
 import { connectRedis } from './app/config/redis.config';
-
-import { Server } from 'socket.io';
 import { envVars } from './app/config/env';
+import { initSocket } from './socket';
 
-let server: ReturnType<typeof createServer>;
+let server = createServer(app);
 
-/**
- * io -> manages all connections , can broadcast to everyone
- * socket -> represents a sing client connection
- * emit() -> send data 
- * on()  -> listen data
-*/
-
-
-const userSocketData: { [userId: string]: string } = {};
-export function getReceiverSocketId(userId : string) {
-     return userSocketData[userId]
-   }
-    
 const startServer = async () => {
   try {
     await mongoose.connect(
@@ -28,47 +14,13 @@ const startServer = async () => {
     );
     console.log('Connected to DB');
 
-    // 1 creates http server
-    server = createServer(app);
+    // Initialize Socket.IO
+    initSocket(server);
 
-   
-    
-    //2 initialize socket.io
-    const io = new Server(server, {
-      cors: {
-        origin: [
-          envVars.FRONTEND_URL
-        ],
-        credentials: true,
-      },
-    });
-
-
-
-
-    // 3 socket.io events
-    io.on('connection', (socket) => {
-      console.log("Socket user connected", socket.id);
-
-
-      const userId = socket.handshake.query.userId;
-
-      if (userId) userSocketData[userId as string] = socket.id;
-
-      io.emit("getOnlineUsers", Object.keys(userSocketData))
-      
-      socket.on('disconnect', () => {
-        console.log("Socket user disconnected", socket.id);
-        delete userSocketData[userId as string]
-        io.emit("getOnlineUsers" , Object.keys(userSocketData))
-      })
-    })
- 
-    // 4 listen to server
+    // Start HTTP server
     server.listen(envVars.PORT, () => {
-      console.log(`Server runnin on port ${envVars.PORT}`);
-    })
-   
+      console.log(`Server running on port ${envVars.PORT}`);
+    });
   } catch (error) {
     console.log(error);
   }
@@ -76,8 +28,8 @@ const startServer = async () => {
 
 (() => {
   startServer();
-  connectRedis()
-})()
+  connectRedis();
+})();
 
 /**
  * unhandled rejection error

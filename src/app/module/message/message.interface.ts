@@ -7,3 +7,9 @@ export interface IMessages {
   media?: IMedia[];
   content: string;
 }
+
+ export interface IPayloadGetMessage {
+    userToChatId: string;
+    userId: string;
+  };
+  

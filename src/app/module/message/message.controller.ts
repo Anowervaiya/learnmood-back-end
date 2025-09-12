@@ -2,12 +2,12 @@ import type { Request, Response } from 'express';
 import { catchAsync } from '../../utils/catchAsync';
 import { sendResponse } from '../../utils/sendResponse';
 import type { JwtPayload } from 'jsonwebtoken';
-import type { IMessages } from './message.interface';
+import type { IMessages, IPayloadGetMessage } from './message.interface';
 import { MessageServices } from './message.service';
 
 const sendMessage = catchAsync(async (req: Request, res: Response) => {
   const { id: receiverId } = req.params;
-  const user = req.user as JwtPayload
+  const user = req.user as JwtPayload;
   const payload: IMessages = {
     senderId: user.userId,
     receiverId,
@@ -17,7 +17,6 @@ const sendMessage = catchAsync(async (req: Request, res: Response) => {
       type: 'image',
     })),
   };
- 
 
   const result = await MessageServices.sendMessage(payload);
   sendResponse(res, {
@@ -28,18 +27,35 @@ const sendMessage = catchAsync(async (req: Request, res: Response) => {
   });
 });
 
+const getSidebarUsers = catchAsync(async (req: Request, res: Response) => {
+  const user = req.user as JwtPayload;
 
-const getAllMessages = catchAsync(async (req: Request, res: Response) => {
-  const query = req.query as Record<string, string>;
-  const result = await MessageServices.getAllMessages(query);
+  const result = await MessageServices.getSidebarUsers(user);
+
   sendResponse(res, {
     statusCode: 200,
     success: true,
-    message: 'All Message retrieved successfully',
+    message: 'Sidebar User retrieved successfully',
     data: result.data,
-    meta: result.meta,
   });
 });
+
+const getMessages = catchAsync(async (req: Request, res: Response) => {
+  const { id: userToChatId } = req.params;
+
+  const userId = (req.user as JwtPayload).userId;
+
+  const payload = { userToChatId, userId } as IPayloadGetMessage;
+
+  const result = await MessageServices.getMessages(payload);
+  sendResponse(res, {
+    statusCode: 200,
+    success: true,
+    message: ' Message retrieved successfully',
+    data: result.data,
+  });
+});
+
 const updateMessage = catchAsync(async (req: Request, res: Response) => {
   const id = req.params.id as string;
   const payload: IMessages = {
@@ -49,7 +65,7 @@ const updateMessage = catchAsync(async (req: Request, res: Response) => {
       type: 'image',
     })),
   };
-  const result = await MessageServices.updateMessage(id,payload);
+  const result = await MessageServices.updateMessage(id, payload);
 
   sendResponse(res, {
     statusCode: 200,
@@ -60,7 +76,7 @@ const updateMessage = catchAsync(async (req: Request, res: Response) => {
 });
 
 const deleteMessage = catchAsync(async (req: Request, res: Response) => {
-  const { id} = req.params ;
+  const { id } = req.params;
   const result = await MessageServices.deleteMessage(id as string);
   sendResponse(res, {
     statusCode: 200,
@@ -74,5 +90,6 @@ export const MessageController = {
   sendMessage,
   deleteMessage,
   updateMessage,
-  getAllMessages,
+  getMessages,
+  getSidebarUsers,
 };
