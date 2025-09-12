@@ -14,7 +14,7 @@ import type { JwtPayload } from "jsonwebtoken";
 const credentialsLogin = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
  
   passport.authenticate('local', async (err: any, user: any, info: any) => {
-    console.log('asce but kaj kore na');
+  
     if (err) {
       return next(new AppError(401, err));
     }
