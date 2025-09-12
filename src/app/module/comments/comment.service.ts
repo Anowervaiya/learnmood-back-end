@@ -21,6 +21,7 @@ const createComment = async (payload: IComments) => {
 
  
 };
+
 const getAllComments = async (query: Record<string, string>) => {
   const queryBuilder = new QueryBuilder(Comment.find(), query);
 
