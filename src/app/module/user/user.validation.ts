@@ -1,6 +1,6 @@
 import z from 'zod';
 import { GENDER, IsActive, LANGUAGE, PRONOUN, Role } from './user.constant';
-import {  followersZodValidation, ImageZodValidation } from '../../zod/global.zod';
+import {   ImageZodValidation } from '../../zod/global.zod';
 
 
  const authProviderZodValidation = z.object({
@@ -26,8 +26,9 @@ export const createUserZodValidation = z.object({
   address: z.string().optional(),
   bio: z.string().optional(),
 
-  followers: z.array(followersZodValidation).optional(),
-  followings: z.array(followersZodValidation).optional(),
+  followers: z.array(z.string().regex(/^[0-9a-fA-F]{24}$/, 'Invalid user ObjectId')).optional(),
+  followings: z.array(z.string().regex(/^[0-9a-fA-F]{24}$/, 'Invalid user ObjectId')).optional(),
+  friends: z.array(z.string()).optional(),
 
   role: z.enum(Object.values(Role)).default(Role.USER),
   gender: z.enum(Object.values(GENDER)).optional(),

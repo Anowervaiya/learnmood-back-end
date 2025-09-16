@@ -1,6 +1,6 @@
 import { Types } from 'mongoose';
-import type {  AUTHPROVIDER, GENDER, IsActive, LANGUAGE, PRONOUN, Role } from './user.constant';
-import type {  IFollowers, IImage } from '../../interfaces/global.interfaces';
+import type {  AUTHPROVIDER, FRIEND_REQUEST_STATUS, GENDER, IsActive, LANGUAGE, PRONOUN, Role } from './user.constant';
+import type {   IImage } from '../../interfaces/global.interfaces';
 
 export interface IAuthProvider {
   provider: AUTHPROVIDER; // "Google", "Credential"
@@ -27,8 +27,15 @@ export interface IUser {
   isActive?: IsActive;
   gender: GENDER;
   pronoun?: PRONOUN;
-  followers?: IFollowers[];
-  followings?: IFollowers[];
+  followers?: Types.ObjectId[];
+  followings?: Types.ObjectId[];
   languages?: LANGUAGE[];
   auths?: IAuthProvider[];
+  friends?: Types.ObjectId[];
+}
+export interface IFriendRequest {
+  _id?: Types.ObjectId;
+  sender: Types.ObjectId;
+  recipient: Types.ObjectId;
+  status: FRIEND_REQUEST_STATUS;
 }

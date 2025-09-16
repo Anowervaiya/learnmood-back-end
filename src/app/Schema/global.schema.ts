@@ -1,17 +1,17 @@
 import { Schema } from "mongoose";
-import type {  IFollowers, IImage, IMedia } from "../interfaces/global.interfaces";
+import type {   IImage, IMedia } from "../interfaces/global.interfaces";
 
 
 
-export const followers = new Schema<IFollowers>(
-  {
-    user: { type: Schema.Types.ObjectId, ref: 'User' },
-  },
-  {
-    versionKey: false,
-    _id: false,
-  }
-);
+// export const followers = new Schema<IFollowers>(
+//   {
+//     user: { type: Schema.Types.ObjectId, ref: 'User' },
+//   },
+//   {
+//     versionKey: false,
+//     _id: false,
+//   }
+// );
 
 export const imageSchema = new Schema<IImage>(
   {

@@ -5,7 +5,10 @@ import { checkAuth } from '../../middlewares/checkAuth';
 import { validateRequest } from '../../middlewares/validateRequest';
 import { Role } from './user.constant';
 import { multerUpload } from '../../config/multer.config';
-import { createUserZodValidation, updateUserZodValidation } from './user.validation';
+import {
+  createUserZodValidation,
+  updateUserZodValidation,
+} from './user.validation';
 
 const router = Router();
 router.post(
@@ -18,16 +21,47 @@ router.post(
   UserControllers.createUser
 );
 
-router.get('/all-users',
+router.get(
+  '/',
   // checkAuth(Role.ADMIN),
-  UserControllers.getAllUsers);
+  UserControllers.getAllUsers
+);
 router.get('/me', checkAuth(...Object.values(Role)), UserControllers.getMe);
 
-// router.get(
-//   '/:id',
-//   checkAuth(...Object.values(Role)),
-//   UserControllers.getSingleUser
-// );
+router.get(
+  '/recommended',
+  checkAuth(...Object.values(Role)),
+  UserControllers.getRecommendedUsers
+); // recommended friends
+router.get(
+  '/friends',
+  checkAuth(...Object.values(Role)),
+  UserControllers.getMyFriends
+); //my friends
+
+router.get(
+  '/friend-requests',
+  checkAuth(...Object.values(Role)),
+  UserControllers.getFriendRequests
+); //get friend request(incomming , accepted)
+
+router.get(
+  '/outgoing-friend-requests',
+  checkAuth(...Object.values(Role)),
+  UserControllers.getOutgoingFriendRequest
+); //sent friend request or outgoing request
+
+router.post(
+  '/friend-request/:id',
+  checkAuth(...Object.values(Role)),
+  UserControllers.sendFriendRequest
+); //send friend request
+
+router.patch(
+  '/friend-request-status/:id',
+  checkAuth(...Object.values(Role)),
+  UserControllers.changeStatusOfFreindRequest
+); //change Status Of Freind Request
 
 router.patch(
   '/:id',

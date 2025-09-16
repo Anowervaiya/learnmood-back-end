@@ -6,11 +6,7 @@ import { envVars } from './app/config/env';
 const userSocketData: { [userId: string]: string } = {};
 export let io: Server;
 
-/**
- * Initialize socket.io server
- */
 export const initSocket = (server: HTTPServer) => {
-
   io = new Server(server, {
     cors: {
       origin: [envVars.FRONTEND_URL],
@@ -22,7 +18,9 @@ export const initSocket = (server: HTTPServer) => {
     console.log('Socket user connected', socket.id);
 
     const userId = socket.handshake.query.userId as string;
-    if (userId) userSocketData[userId] = socket.id;
+    if (userId) {
+      userSocketData[userId] = socket.id;
+    }
 
     io.emit('getOnlineUsers', Object.keys(userSocketData));
 
@@ -32,10 +30,9 @@ export const initSocket = (server: HTTPServer) => {
       io.emit('getOnlineUsers', Object.keys(userSocketData));
     });
   });
-
-  
 };
 
 export const getSocketId = (userId: string) => {
   return userSocketData[userId];
 };
+

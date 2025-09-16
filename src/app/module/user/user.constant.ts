@@ -13,6 +13,11 @@ export enum GENDER {
   MALE = 'MALE',
   FEMALE = 'FEMALE',
 }
+export enum FRIEND_REQUEST_STATUS {
+  PENDING = 'PENDING',
+  ACCEPTED = 'ACCEPTED',
+  CANCELLED = 'CANCELLED',
+}
 export enum AUTHPROVIDER {
   google='google',
   credentials='credentials',

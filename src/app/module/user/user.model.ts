@@ -1,13 +1,7 @@
 import { model, Schema, Types } from 'mongoose';
-import {
- 
-
-  type IAuthProvider,
-  type IUser,
-} from './user.interfaces';
-import { GENDER, IsActive, LANGUAGE, PRONOUN, Role } from './user.constant';
-import { followers, imageSchema } from '../../Schema/global.schema';
-
+import { type IAuthProvider, type IFriendRequest, type IUser } from './user.interfaces';
+import { FRIEND_REQUEST_STATUS, GENDER, IsActive, LANGUAGE, PRONOUN, Role } from './user.constant';
+import {  imageSchema } from '../../Schema/global.schema';
 
 export const authProviderSchema = new Schema<IAuthProvider>(
   {
@@ -20,22 +14,21 @@ export const authProviderSchema = new Schema<IAuthProvider>(
   }
 );
 
-
-
 const userSchema = new Schema<IUser>(
   {
     name: { type: String, required: true },
     blood: { type: String, required: true },
-    dob: { type: Date, },
+    dob: { type: Date },
     email: { type: String, required: true, unique: true },
+    friends: [{ type: Schema.Types.ObjectId, ref: 'User' }],
     nickname: { type: String },
     password: { type: String },
     phone: { type: String },
-    image:  imageSchema,
+    image: imageSchema,
     address: { type: String },
     bio: { type: String },
-    followers: [followers],
-    followings: [followers],
+    followers: [{ type: Schema.Types.ObjectId, ref: 'User' }],
+    followings: [{ type: Schema.Types.ObjectId, ref: 'User' }],
     role: {
       type: String,
       enum: Object.values(Role),
@@ -68,5 +61,31 @@ const userSchema = new Schema<IUser>(
     versionKey: false,
   }
 );
+
+const friendRequestSchema = new Schema<IFriendRequest>(
+  {
+    sender: {
+      type: Schema.Types.ObjectId,
+      ref: 'User',
+      required: true,
+    },
+    recipient: {
+      type: Schema.Types.ObjectId,
+      ref: 'User',
+      required: true,
+    },
+    status: {
+      type: String,
+      enum: Object.values(FRIEND_REQUEST_STATUS),
+      default: FRIEND_REQUEST_STATUS.PENDING,
+    },
+  },
+  {
+    timestamps: true,
+    versionKey: false,
+  }
+);
+
+export const FriendRequest = model('FriendRequest', friendRequestSchema);
 
 export const User = model('User', userSchema);
