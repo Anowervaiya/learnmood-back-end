@@ -1,8 +1,9 @@
 import type { Types } from "mongoose";
+import type { MEDIA_TYPE } from "../constant/constant";
 
 export interface IMedia {
   url: string;
-  type: 'image' | 'video';
+  type: MEDIA_TYPE;
 }
 // export interface IFollowers {
 //   user: Types.ObjectId;

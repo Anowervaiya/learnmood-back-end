@@ -10,6 +10,7 @@ import { ChallengeRoutes } from '../module/challenge/challenge.route';
 import { PageRoutes } from '../module/page/page.routes';
 import { ServiceRoutes } from '../module/service/service.routes';
 import { MessageRoutes } from '../module/message/message.route';
+import { ReviewRoutes } from '../module/reviews/review.route';
 
 
 export const mainRoutes = Router();
@@ -42,6 +43,10 @@ const moduleRoutes = [
   {
     path: '/react',
     route: ReactRoutes,
+  },
+  {
+    path: '/review',
+    route: ReviewRoutes,
   },
   {
     path: '/otp',

@@ -18,6 +18,7 @@ const createPost = catchAsync(async (req: Request, res: Response) => {
       type: 'image',
     })),
   };
+
   const result = await PostServices.createPost(payload);
   sendResponse(res, {
     statusCode: 201,
