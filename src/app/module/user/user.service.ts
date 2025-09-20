@@ -60,7 +60,7 @@ const updateUser = async(id : string, payload : IUser ) => {
     runValidators: true,
   });
 
-     if (payload.image.profile && ifUserExist.image.profile) {
+     if (payload?.image?.profile && ifUserExist.image.profile) {
        await deleteImageFromCLoudinary(ifUserExist.image.profile);
      }
      if (payload.image.banner && ifUserExist.image.banner) {
@@ -122,18 +122,33 @@ const deleteUser = async (id: string) => {
 };
 
 const getRecommendedUsers = async (userId: string) => {
-
-  const currentUser = await User.findById(userId)
+  const currentUser = await User.findById(userId);
   if (!currentUser) {
-    throw new AppError(401, "user doesn't exist")
+    throw new AppError(401, "user doesn't exist");
   }
 
+  const friendRequestUsers = await FriendRequest.find({
+    $or: [{ sender: userId }, { recipient: userId }],
+  });
+
+
+  const allFriendRequestUserIds : any = [];
+
+  // Iterate through the array and add sender and recipient IDs to the Set
+  await friendRequestUsers.forEach(request => {
+    allFriendRequestUserIds.push(request.sender.toString());
+    allFriendRequestUserIds.push(request.recipient.toString());
+  });
+
+  
   const recommendedUsers = await User.find({
     $and: [
       { _id: { $ne: currentUser._id } },
-      {_id : {$nin: currentUser.friends }}
-    ]
-  })
+      { _id: { $nin: currentUser.friends } },
+      { _id: { $nin: allFriendRequestUserIds } },
+    ],
+  });
+
   return { data: recommendedUsers };
 }
 

@@ -28,7 +28,10 @@ const getAllPosts = async (query: Record<string, string>) => {
     .filter()
     .sort()
     .fields()
-    .paginate();
+    .paginate()
+    .populate('user', 'name image');
+  
+  
 
 
 

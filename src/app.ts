@@ -8,8 +8,15 @@ import './app/config/passport';
 import { mainRoutes } from './app/mainRoutes/mainRoutes';
 import { globalErrorHandler } from './app/middlewares/globalErrorHandler';
 import notFound from './app/middlewares/notFound';
+import { envVars } from './app/config/env';
 const app = express();
 
+app.use(
+  cors({
+    origin: envVars.FRONTEND_URL,
+    credentials: true, //for cookies
+  })
+);
 // for passport configeration
 app.use(
   expressSession({
@@ -24,7 +31,8 @@ app.use(passport.session());
 app.set('trust proxy', 1);
 
 app.use(express.urlencoded({ extended: true }));//form data handler
-app.use(cors());
+
+
 app.use(cookieParser());
 app.use(express.json());
 

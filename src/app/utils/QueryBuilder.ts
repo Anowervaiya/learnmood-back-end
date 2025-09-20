@@ -15,7 +15,7 @@ export class QueryBuilder<T> {
     for (const field of excludeField) {
       delete filter[field];
     }
-    this.modelQuery = this.modelQuery.find(filter); 
+    this.modelQuery = this.modelQuery.find(filter);
     return this;
   }
 
@@ -53,7 +53,10 @@ export class QueryBuilder<T> {
 
     return this;
   }
-
+  populate(path: string, select?: string): this {
+    this.modelQuery = this.modelQuery.populate(path, select);
+    return this;
+  }
   build() {
     return this.modelQuery;
   }

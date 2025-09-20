@@ -12,7 +12,7 @@ import { Role } from '../user/user.constant';
 const router = Router();
 
 router.post('/login', AuthConrollers.credentialsLogin);
-
+router.post('/logout', AuthConrollers.logout);
 router.post(
   '/set-password',
   checkAuth(...Object.values(Role)),

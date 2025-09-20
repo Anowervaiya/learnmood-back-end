@@ -18,7 +18,7 @@ const createChallenge = catchAsync(async (req: Request, res: Response) => {
       type: 'image',
     })),
   };
-  console.log(payload);
+
   const result = await ChallengeServices.createChallenge(payload);
   sendResponse(res, {
     statusCode: 201,

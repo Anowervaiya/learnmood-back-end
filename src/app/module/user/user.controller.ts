@@ -12,15 +12,13 @@ import type { FRIEND_REQUEST_STATUS } from './user.constant';
 
 const createUser = catchAsync(
   async (req: Request, res: Response, next: NextFunction) => {
-    const files = req.files as {
-      [fieldname: string]: Express.Multer.File[];
-    };
+    const files = req.files as { [fieldname: string]: Express.Multer.File[] };
 
     const payload: IUser = {
       ...req.body,
       image: {
-        profile: files?.profile?.[0]?.path, // Cloudinary URL
-        banner: files?.banner?.[0]?.path, // Cloudinary URL
+        profile: files?.profile?.[0]?.path || null, // Cloudinary URL
+        banner: files?.banner?.[0]?.path || null, // Cloudinary URL
       },
     };
 
@@ -200,7 +198,9 @@ const getFriendRequests = catchAsync(
 const getOutgoingFriendRequest = catchAsync(
   async (req: Request, res: Response, next: NextFunction) => {
     const { userId } = req.user as JwtPayload;
-    const result = await UserServices.getOutgoingFriendRequest(userId as string);
+    const result = await UserServices.getOutgoingFriendRequest(
+      userId as string
+    );
     sendResponse(res, {
       success: true,
       statusCode: httpStatus.OK,
