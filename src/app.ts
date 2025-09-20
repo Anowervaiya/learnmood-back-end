@@ -13,7 +13,7 @@ const app = express();
 
 app.use(
   cors({
-    origin: envVars.FRONTEND_URL,
+    origin: [envVars.FRONTEND_URL, '192.168.0.108:3000'],
     credentials: true, //for cookies
   })
 );

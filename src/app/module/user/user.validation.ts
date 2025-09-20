@@ -9,7 +9,7 @@ import {   ImageZodValidation } from '../../zod/global.zod';
 });
 export const createUserZodValidation = z.object({
   name: z.string().min(1, 'Name is required'),
-  blood: z.string().min(1, 'Blood group is required'),
+  blood: z.string().min(1, 'Blood group is required').optional(),
   dob: z.coerce.date({
     error: 'Date of birth must be a valid date',
   }).optional(),

@@ -17,7 +17,7 @@ export const authProviderSchema = new Schema<IAuthProvider>(
 const userSchema = new Schema<IUser>(
   {
     name: { type: String, required: true },
-    blood: { type: String, required: true },
+    blood: { type: String },
     dob: { type: Date },
     email: { type: String, required: true, unique: true },
     friends: [{ type: Schema.Types.ObjectId, ref: 'User' }],

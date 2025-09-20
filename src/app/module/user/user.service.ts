@@ -11,6 +11,7 @@ import { QueryBuilder } from '../../utils/QueryBuilder';
 import type {  Types } from 'mongoose';
 
 const createUser = async (payload: Partial<IUser>) => {
+
   const { email, password, role, ...rest } = payload;
   const capitalizedRole = role?.toUpperCase();
   if (capitalizedRole === Role.ADMIN) {
@@ -60,10 +61,10 @@ const updateUser = async(id : string, payload : IUser ) => {
     runValidators: true,
   });
 
-     if (payload?.image?.profile && ifUserExist.image.profile) {
+     if (payload?.image?.profile && ifUserExist?.image?.profile) {
        await deleteImageFromCLoudinary(ifUserExist.image.profile);
      }
-     if (payload.image.banner && ifUserExist.image.banner) {
+     if (payload.image?.banner && ifUserExist.image?.banner) {
        await deleteImageFromCLoudinary(ifUserExist.image.banner);
      }
 
@@ -132,7 +133,7 @@ const getRecommendedUsers = async (userId: string) => {
   });
 
 
-  const allFriendRequestUserIds : any = [];
+  const allFriendRequestUserIds : string[] = [];
 
   // Iterate through the array and add sender and recipient IDs to the Set
   await friendRequestUsers.forEach(request => {
@@ -214,22 +215,27 @@ const changeStatusOfFreindRequest = async (payload: {
     throw new AppError(401, 'Friend request not found');
   }
 
-  // Verify the current user is the recipient
-  if (friendRequest.recipient.toString() !== payload.myId) {
-    throw new AppError(401, 'You are not authorized to accept this request');
-  }
+  // // Verify the current user is the recipient
+  // if (friendRequest.recipient.toString() === payload.myId) {
+  //   throw new AppError(401, 'You are not authorized to accept this request');
+  // }
 
   friendRequest.status = payload.status;
   await friendRequest.save();
   
-  // add each user to the other's friends array
-  // $addToSet: adds elements to an array only if they do not already exist.
-  await User.findByIdAndUpdate(friendRequest.sender, {
-    $addToSet: { friends: friendRequest.recipient },
-  });
-  await User.findByIdAndUpdate(friendRequest.recipient, {
-    $addToSet: { friends: friendRequest.sender },
-  });
+  if (friendRequest.status === FRIEND_REQUEST_STATUS.ACCEPTED) {
+    await User.findByIdAndUpdate(friendRequest.sender, {
+      $addToSet: { friends: friendRequest.recipient },
+    });
+    await User.findByIdAndUpdate(friendRequest.recipient, {
+      $addToSet: { friends: friendRequest.sender },
+    });
+  }
+
+
+    // add each user to the other's friends array
+    // $addToSet: adds elements to an array only if they do not already exist.
+    
 };
 
 const getFriendRequests = async (userId: string) => {

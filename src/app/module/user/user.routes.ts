@@ -13,10 +13,6 @@ import {
 const router = Router();
 router.post(
   '/register',
-  multerUpload.fields([
-    { name: 'profile', maxCount: 1  },
-    { name: 'banner', maxCount: 1 },
-  ]),
   validateRequest(createUserZodValidation),
   UserControllers.createUser
 );
@@ -34,13 +30,13 @@ router.get(
   UserControllers.getRecommendedUsers
 ); // recommended friends
 router.get(
-  '/friends',
+  '/my-friends',
   checkAuth(...Object.values(Role)),
   UserControllers.getMyFriends
 ); //my friends
 
 router.get(
-  '/friend-requests',
+  '/incomming-friend-requests',
   checkAuth(...Object.values(Role)),
   UserControllers.getFriendRequests
 ); //get friend request(incomming , accepted)
