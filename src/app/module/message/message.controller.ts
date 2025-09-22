@@ -6,16 +6,15 @@ import type { IMessages, IPayloadGetMessage } from './message.interface';
 import { MessageServices } from './message.service';
 
 const sendMessage = catchAsync(async (req: Request, res: Response) => {
-  const { id: receiverId } = req.params;
   const user = req.user as JwtPayload;
   const payload: IMessages = {
     senderId: user.userId,
-    receiverId,
     ...req.body,
-    media: (req.files as Express.Multer.File[])?.map(file => ({
-      url: file.path, // make url an array
-      type: 'image',
-    })),
+    media:
+      (req?.files as Express.Multer.File[])?.map(file => ({
+        url: file.path, // make url an array
+        type: 'image',
+      })) || null,
   };
 
   const result = await MessageServices.sendMessage(payload);
@@ -41,13 +40,17 @@ const getSidebarUsers = catchAsync(async (req: Request, res: Response) => {
 });
 
 const getMessages = catchAsync(async (req: Request, res: Response) => {
-  const { id: userToChatId } = req.params;
+  const { userToChatId } = req.query;
 
-  const userId = (req.user as JwtPayload).userId;
+  const user = req.user as JwtPayload;
 
-  const payload = { userToChatId, userId } as IPayloadGetMessage;
+  const payload = {
+    userToChatId,
+    userId: user?.userId
+  } as IPayloadGetMessage;
 
   const result = await MessageServices.getMessages(payload);
+
   sendResponse(res, {
     statusCode: 200,
     success: true,

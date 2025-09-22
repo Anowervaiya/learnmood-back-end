@@ -10,13 +10,13 @@ const router = express.Router()
 
 router.get('/users', MessageController.getSidebarUsers);
 
-router.post('/send/:id',
+router.post('/send',
   checkAuth(...Object.values(Role)),
   multerUpload.array("files"),
   validateRequest(createMessageZodValidation),
   MessageController.sendMessage);
 
-router.get('/receive/:id', MessageController.getMessages);//get 1 to 1 message not all message
+router.get('/receive',   checkAuth(...Object.values(Role)), MessageController.getMessages);//get 1 to 1 message not all message
 router.patch('/:id', MessageController.updateMessage);
 router.delete('/:id', MessageController.deleteMessage);
 

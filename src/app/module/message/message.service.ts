@@ -11,11 +11,18 @@ import { getSocketId, io } from '../../../socket';
 
 const sendMessage = async (payload: IMessages) => {
   const newMessage = await Message.create(payload);
-  const receiverSocketId = getSocketId(payload?.receiverId as unknown as string);
+  const receiverSocketId = getSocketId(
+    payload?.receiverId as unknown as string
+  );
+  
   if (receiverSocketId) {
-    io.to(receiverSocketId).emit('newMessage', newMessage
+    io.to(receiverSocketId).emit('newMessage', newMessage);
+  }
 
-    );
+  // Emit to sender (so sender sees own message immediately)
+  const senderSocketId = getSocketId(payload.senderId as unknown as string);
+  if (senderSocketId) {
+    io.to(senderSocketId).emit('newMessage', newMessage);
   }
   return newMessage;
 };
@@ -39,9 +46,12 @@ const getMessages = async (payload: IPayloadGetMessage) => {
   const messages = await Message.find({
     $or: [
       { senderId: payload.userId, receiverId: payload.userToChatId },
-      {senderId: payload.userToChatId, receiverId: payload.userId}
-    ]
+      { senderId: payload.userToChatId, receiverId: payload.userId },
+    ],
   })
+    .populate('senderId', 'name  image') // only pick specific fields
+    .populate('receiverId', 'name  image')
+    .sort({ createdAt: 1 });
 
   return {
     data: messages
