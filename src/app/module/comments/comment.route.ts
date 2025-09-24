@@ -9,13 +9,14 @@ import { multerUpload } from '../../config/multer.config';
 const router = Router();
 
 router.post(
-  '/create',
+  '/',
   checkAuth(...Object.values(Role)),
   multerUpload.array('files'),
   validateRequest(createCommentZodValidation),
   commentController.createcomment
 );
 router.get('/', commentController.getAllComments);
+
 router.delete(
   '/:id',
   checkAuth(...Object.values(Role)),

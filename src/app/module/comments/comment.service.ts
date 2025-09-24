@@ -17,20 +17,19 @@ const createComment = async (payload: IComments) => {
   
  return await Comment.create(payload);
 
-
-
- 
 };
 
 const getAllComments = async (query: Record<string, string>) => {
+  
   const queryBuilder = new QueryBuilder(Comment.find(), query);
 
   const commentData = queryBuilder
-    .search(CommentSearchableFields)
     .filter()
     .sort()
     .fields()
-    .paginate();
+    .paginate()
+  .populate('user' , 'name image')
+  
 
   const [data, meta] = await Promise.all([
     commentData.build(),

@@ -10,18 +10,19 @@ const router = Router();
 /* ------------------ React TYPE ROUTES -------------------- */
 
 router.post(
-  '/create',
+  '/',
   checkAuth(...Object.values(Role)),
-  // multerUpload.array('files'),
-  // validateRequest(createPostZodValidation),
   ReactController.createReact
 );
+
+
+// GET reacts by entityId & entityType
 router.get(
   '/',
-  // checkAuth(...Object.values(Role)),
-  
-  ReactController.getAllReact
+  ReactController.getAllReact // expects query params: entityId, entityType
 );
+
+
 
 router.delete(
   '/:id',
@@ -31,8 +32,6 @@ router.delete(
 router.patch(
   '/:id',
   checkAuth(...Object.values(Role)),
-  // multerUpload.array('files'),
-  // validateRequest(updateTourZodSchema),
   ReactController.updateReact
 );
 

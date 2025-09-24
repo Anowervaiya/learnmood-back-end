@@ -10,7 +10,7 @@ import type { IMedia } from '../../interfaces/global.interfaces';
 import { QueryBuilder } from '../../utils/QueryBuilder';
 
 const createService = async (payload: IService) => {
-  //  console.log(payload);
+
   return await Service.create(payload);
 };
 const updateService = async (id: string, payload: IService) => {

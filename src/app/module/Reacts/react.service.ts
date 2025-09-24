@@ -18,28 +18,34 @@ const createReact = async (payload: IReact) => {
  
 };
 const getAllReact= async (query: Record<string, string>) => {
-  const queryBuilder = new QueryBuilder(React.find(), query);
 
-  const ReactData = queryBuilder
+
+  const data = await React.find(query)
+  const meta = await React.countDocuments(query)
+  // const queryBuilder = new QueryBuilder(React.find(), query);
+  // const ReactData = queryBuilder
     // .search(ReactSearchableFields)
-    .filter()
-    .sort()
-    .fields()
-    .paginate();
+    // .filter()
+    // .sort()
+    // .fields()
+    // .paginate();
 
-  const [data, meta] = await Promise.all([
-    ReactData.build(),
-    queryBuilder.getMeta(),
-  ]);
+  // const [data, meta] = await Promise.all([
+  //   ReactData.build(),
+  //   queryBuilder.getMeta(),
+  // ]);
 
   return {
-    data,
-    meta,
+    data ,
+    meta: {
+      total: meta
+    },
   };
 };
 
 const updateReact = async (id: string, payload: Partial<IReact>) => {
   const isReactExist = await React.findById(id);
+ 
 
   if (!isReactExist) {
     throw new Error('React does not exist.');

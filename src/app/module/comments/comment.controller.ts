@@ -13,7 +13,7 @@ const createcomment = catchAsync(async (req: Request, res: Response) => {
   const payload : IComments = {
     user: user.userId,
     ...req.body,
-    media: (req.files as Express.Multer.File[])?.map(file => ({
+    media: (req?.files as Express.Multer.File[])?.map(file => ({
       url: file.path, // make url an array
       type: 'image',
     })),
