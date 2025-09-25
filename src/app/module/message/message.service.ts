@@ -52,7 +52,6 @@ const getMessages = async (payload: IPayloadGetMessage) => {
     .populate('senderId', 'name  image') // only pick specific fields
     .populate('receiverId', 'name  image')
     .sort({ createdAt: 1 });
-
   return {
     data: messages
   };

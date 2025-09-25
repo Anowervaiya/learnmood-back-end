@@ -28,9 +28,7 @@ const sendMessage = catchAsync(async (req: Request, res: Response) => {
 
 const getSidebarUsers = catchAsync(async (req: Request, res: Response) => {
   const user = req.user as JwtPayload;
-
   const result = await MessageServices.getSidebarUsers(user);
-
   sendResponse(res, {
     statusCode: 200,
     success: true,
@@ -40,10 +38,9 @@ const getSidebarUsers = catchAsync(async (req: Request, res: Response) => {
 });
 
 const getMessages = catchAsync(async (req: Request, res: Response) => {
-  const { userToChatId } = req.query;
 
+  const { userToChatId    } = req.query;
   const user = req.user as JwtPayload;
-
   const payload = {
     userToChatId,
     userId: user?.userId

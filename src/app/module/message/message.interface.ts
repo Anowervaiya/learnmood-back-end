@@ -9,7 +9,8 @@ export interface IMessages {
 }
 
  export interface IPayloadGetMessage {
-    userToChatId: string;
-    userId: string;
-  };
-  
+   userId: string;
+   userToChatId: string;
+   page?: number;
+   limit?: number;
+ }

@@ -25,10 +25,8 @@ const getAllComments = async (query: Record<string, string>) => {
 
   const commentData = queryBuilder
     .filter()
-    .sort()
-    .fields()
     .paginate()
-  .populate('user' , 'name image')
+    .populate('user' , 'name image')
   
 
   const [data, meta] = await Promise.all([

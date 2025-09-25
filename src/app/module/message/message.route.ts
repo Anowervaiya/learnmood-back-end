@@ -18,6 +18,7 @@ router.post('/send',
 
 router.get('/receive',   checkAuth(...Object.values(Role)), MessageController.getMessages);//get 1 to 1 message not all message
 router.patch('/:id', MessageController.updateMessage);
+
 router.delete('/:id', MessageController.deleteMessage);
 
 
