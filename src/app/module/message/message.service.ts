@@ -8,15 +8,29 @@ import { Message } from './message.model';
 import httpStatus from 'http-status-codes';
 import { User } from '../user/user.model';
 import { getSocketId, io } from '../../../socket';
+import { Notification } from '../notifications/notifications.model';
+import { Notification_entityType } from '../notifications/notifications.constant';
 
 const sendMessage = async (payload: IMessages) => {
   const newMessage = await Message.create(payload);
+  
+  const newNotification = await Notification.create({
+    entityId: newMessage._id,
+    entityType: Notification_entityType.message,
+    sender: newMessage.senderId,
+    receiver: newMessage.receiverId,
+    read:false
+  })
+
+  
+
   const receiverSocketId = getSocketId(
     payload?.receiverId as unknown as string
   );
   
   if (receiverSocketId) {
     io.to(receiverSocketId).emit('newMessage', newMessage);
+    io.to(receiverSocketId).emit('newNotification', newNotification);
   }
 
   // Emit to sender (so sender sees own message immediately)

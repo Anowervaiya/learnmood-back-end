@@ -16,7 +16,7 @@ const createUser = catchAsync(
     const payload: IUser = {
       ...req.body };
 
-    const user : any = await UserServices.createUser(payload);
+    const user  = await UserServices.createUser(payload);
 
 
     sendResponse(res, {
@@ -70,6 +70,7 @@ const deleteUser = catchAsync(
 const getAllUsers = catchAsync(
   async (req: Request, res: Response, next: NextFunction) => {
     const query = req.query as Record<string, string>;
+  
     const result = await UserServices.getAllUsers(query);
 
     sendResponse(res, {

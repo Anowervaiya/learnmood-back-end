@@ -74,14 +74,14 @@ const updateUser = async(id : string, payload : IUser ) => {
 
 const getAllUsers = async (query:Record<string,string>) => {
 
-
+ 
+  
   const queryBuilder = new QueryBuilder(User.find(), query)
   
   const userData = queryBuilder
         .search(userSearchableFields)
         .filter()
-        .sort()
-        .fields()
+        .sort()      
         .paginate()
   
     const [data, meta] = await Promise.all([
