@@ -12,6 +12,7 @@ import { ServiceRoutes } from '../module/service/service.routes';
 import { MessageRoutes } from '../module/message/message.route';
 import { ReviewRoutes } from '../module/reviews/review.route';
 import { NotificationRoutes } from '../module/notifications/notification.route';
+import { MentorRoutes } from '../module/mentors/mentor.route';
 
 
 export const mainRoutes = Router();
@@ -72,6 +73,10 @@ const moduleRoutes = [
   {
     path: '/notification',
     route: NotificationRoutes,
+  },
+  {
+    path: '/mentor',
+    route: MentorRoutes,
   },
 ];
 

@@ -145,7 +145,7 @@ const sendFriendRequest = catchAsync(
     const result = await UserServices.sendFriendRequest(
       payload as unknown as {
         myId: Types.ObjectId;
-        recipientId: Types.ObjectId;
+        recipientId: string;
       }
     );
 

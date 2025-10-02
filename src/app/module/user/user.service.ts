@@ -9,6 +9,7 @@ import { AUTHPROVIDER, FRIEND_REQUEST_STATUS, Role, userSearchableFields } from 
 import { deleteImageFromCLoudinary } from '../../config/cloudinary.config';
 import { QueryBuilder } from '../../utils/QueryBuilder';
 import type {  Types } from 'mongoose';
+import { getSocketId, io } from '../../../socket';
 
 const createUser = async (payload: Partial<IUser>) => {
 
@@ -167,7 +168,7 @@ const getMyFriends = async (userId: string) => {
 
 const sendFriendRequest = async (payload: {
   myId: Types.ObjectId;
-  recipientId: Types.ObjectId;
+  recipientId: string;
 }) => {
   const recipient = await User.findById(payload.recipientId);
   if (!recipient) {
@@ -196,6 +197,16 @@ const sendFriendRequest = async (payload: {
         sender: payload.myId,
         recipient: payload.recipientId,
       });
+  
+  
+    // const receiverSocketId = getSocketId(
+    //   payload?.recipientId
+    // );
+    
+    // if (receiverSocketId) {
+    //   io.to(receiverSocketId).emit('newFriendRequest', friendRequest);
+    // }
+  
 
   return {data: friendRequest}
 
