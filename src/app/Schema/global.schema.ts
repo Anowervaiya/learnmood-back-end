@@ -1,21 +1,10 @@
-import { Schema } from "mongoose";
-import type {   IImage, IMedia } from "../interfaces/global.interfaces";
-
-
-
-// export const followers = new Schema<IFollowers>(
-//   {
-//     user: { type: Schema.Types.ObjectId, ref: 'User' },
-//   },
-//   {
-//     versionKey: false,
-//     _id: false,
-//   }
-// );
+import { model, Schema } from 'mongoose';
+import type { IImage, IMedia } from '../interfaces/global.interfaces';
+import { EntityType, MEDIA_TYPE } from '../constant/constant';
 
 export const imageSchema = new Schema<IImage>(
   {
-    profile: { type: String},
+    profile: { type: String },
     banner: { type: String },
   },
   {
@@ -24,11 +13,16 @@ export const imageSchema = new Schema<IImage>(
   }
 );
 
-export  const MediaSchema = new Schema<IMedia>(
+export const MediaSchema = new Schema<IMedia>(
   {
     url: { type: String, required: true },
-    type: { type: String, enum: ['image', 'video'], default: 'image' },
+    type: {
+      type: String,
+      enum: Object.values(MEDIA_TYPE),
+      default: MEDIA_TYPE.image,
+    },
   },
   { _id: false }
 );
+
 

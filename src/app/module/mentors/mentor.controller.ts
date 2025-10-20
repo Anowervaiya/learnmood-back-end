@@ -13,7 +13,7 @@ const createMentor = catchAsync(async (req: Request, res: Response) => {
     ...req.body
   };
 
-  console.log(payload)
+
 
   const result = await MentorServices.createMentor(payload);
   sendResponse(res, {

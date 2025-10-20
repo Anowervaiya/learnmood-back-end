@@ -13,7 +13,10 @@ const app = express();
 
 app.use(
   cors({
-    origin: [envVars.FRONTEND_URL, '192.168.0.108:3000'],
+    origin: [
+      envVars.FRONTEND_URL,
+      'https://anower-private-video.s3.ap-south-1.amazonaws.com',
+    ],
     credentials: true, //for cookies
   })
 );

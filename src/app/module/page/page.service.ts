@@ -12,6 +12,7 @@ import { PageSearchableFields } from './page.constant';
 
 const createPage = async (payload: IPage) => {
  
+
   return  await Page.create(payload);
 
 };

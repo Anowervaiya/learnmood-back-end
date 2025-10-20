@@ -5,7 +5,7 @@ import { ImageZodValidation } from '../../zod/global.zod';
 export const createPageZodValidation = z.object({
   name: z.string().trim().min(1, { message: 'Page name is required' }),
   description: z.string().trim().optional(),
-  owner: z.string().min(1, { message: 'Owner ID is required' }), // You might want to use a more specific validation for ObjectId strings if you have a custom utility for that.
+  owner: z.string().min(1, { message: 'Owner ID is required' }).optional(), // You might want to use a more specific validation for ObjectId strings if you have a custom utility for that.
   category: z.enum(Object.values(PAGE_CATEGORY)).default(PAGE_CATEGORY.other),
   image: z.array(ImageZodValidation).optional(),
   isPublic: z.boolean().default(true),

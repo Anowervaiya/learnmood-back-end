@@ -2,21 +2,16 @@ import type { Request, Response } from "express";
 import { catchAsync } from "../../utils/catchAsync";
 import { sendResponse } from "../../utils/sendResponse";
 import type { JwtPayload } from "jsonwebtoken";
-import type { IChallenge } from "./challenge.interface";
+import type { IChallenge, IChallengeDay } from "./challenge.interface";
 import { ChallengeServices } from "./challenge.service";
 
 
 const createChallenge = catchAsync(async (req: Request, res: Response) => {
-
   const decodedToken = req.user as JwtPayload;
-
   const payload: IChallenge = {
-    user: decodedToken?.userId,
+    createdBy: decodedToken?.userId,
     ...req.body,
-    media: (req.files as Express.Multer.File[])?.map(file => ({
-      url: file.path, 
-      type: 'image',
-    })),
+    banner: (req.file as Express.Multer.File).path
   };
 
   const result = await ChallengeServices.createChallenge(payload);
@@ -24,6 +19,21 @@ const createChallenge = catchAsync(async (req: Request, res: Response) => {
     statusCode: 201,
     success: true,
     message: 'Challenge is created successfully',
+    data:result
+  });
+});
+const createChallengeDay = catchAsync(async (req: Request, res: Response) => {
+  
+  const payload: IChallengeDay = {
+    ...req.body,
+    notes: (req.files as Express.Multer.File[])?.map(file => file.path),
+  };
+  const result = await ChallengeServices.createChallengeDay(payload);
+  
+  sendResponse(res, {
+    statusCode: 201,
+    success: true,
+    message: 'Challenge Day is created successfully',
     data:result
   });
 });
@@ -71,6 +81,7 @@ const deleteChallenge = catchAsync(async (req: Request, res: Response) => {
 
 export const ChallengeController = {
   createChallenge,
+  createChallengeDay,
   getAllChallenges,
   deleteChallenge,
   updateChallenge,

@@ -6,17 +6,26 @@ import { validateRequest } from '../../middlewares/validateRequest';
 import { multerUpload } from '../../config/multer.config';
 import { Role } from '../user/user.constant';
 import { ChallengeController } from './challenge.controller';
-import { createChallengeZodValidation, updateChallengeZodValidation } from './challenge.validation';
+import { createChallengeZodValidation, createdaysZodSchema, updateChallengeZodValidation } from './challenge.validation';
 
 const router = Router();
 
 router.post(
   '/create',
   checkAuth(...Object.values(Role)),
-  multerUpload.array('files'),
+  multerUpload.single('file'),
   validateRequest(createChallengeZodValidation),
   ChallengeController.createChallenge
 );
+
+router.post(
+  '/create-day',
+  checkAuth(...Object.values(Role)),
+  multerUpload.array('files'),
+  validateRequest(createdaysZodSchema),
+  ChallengeController.createChallengeDay
+);
+
 
 router.get('/', ChallengeController.getAllChallenges)
 
@@ -26,11 +35,12 @@ router.delete(
   ChallengeController.deleteChallenge
 );
 router.patch(
-  '/:id',
+  '/update-challenge/:id',
   checkAuth(...Object.values(Role)),
   multerUpload.array('files'),
   validateRequest(updateChallengeZodValidation),
   ChallengeController.updateChallenge
 );
+
 
 export const ChallengeRoutes = router;

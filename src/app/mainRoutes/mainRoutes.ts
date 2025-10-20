@@ -13,6 +13,7 @@ import { MessageRoutes } from '../module/message/message.route';
 import { ReviewRoutes } from '../module/reviews/review.route';
 import { NotificationRoutes } from '../module/notifications/notification.route';
 import { MentorRoutes } from '../module/mentors/mentor.route';
+import { VideoRoutes } from '../module/video/video.route';
 
 
 export const mainRoutes = Router();
@@ -77,6 +78,10 @@ const moduleRoutes = [
   {
     path: '/mentor',
     route: MentorRoutes,
+  },
+  {
+    path: '/video',
+    route: VideoRoutes,
   },
 ];
 

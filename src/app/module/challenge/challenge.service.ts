@@ -3,8 +3,8 @@ import type { JwtPayload } from 'jsonwebtoken';
 import type { Types } from 'mongoose';
 import AppError from '../../errorHelpers/appError';
 import httpStatus from 'http-status-codes';
-import { Challenge } from './challenge.model';
-import type { IChallenge } from './challenge.interface';
+import { Challenge, ChallengeDay } from './challenge.model';
+import type { IChallenge, IChallengeDay } from './challenge.interface';
 import { deleteImageFromCLoudinary } from '../../config/cloudinary.config';
 import type { IMedia } from '../../interfaces/global.interfaces';
 import { QueryBuilder } from '../../utils/QueryBuilder';
@@ -13,6 +13,21 @@ import { ChallengeSearchableFields } from './challenge.contant';
 
 const createChallenge = async (payload: IChallenge) => {
   return await Challenge.create(payload);
+};
+const createChallengeDay = async (payload: IChallengeDay) => {
+  const isExistChallenge = await Challenge.findById(payload.challengeId);
+
+  if (!isExistChallenge) {
+    throw new AppError(400, "you don't have a challenge then how you want to create a ")
+  }
+
+  const result = await ChallengeDay.create({
+    ...payload,
+    challengeId: isExistChallenge._id,
+  });
+  return result;
+
+ 
 };
 
 const getAllChallenges = async (query: Record<string, string>) => {
@@ -48,11 +63,11 @@ const updateChallenge = async (id: string, payload: Partial<IChallenge>) => {
     new: true,
   });
 
-  if (payload.media && isChallengeExist.media) {
-    await Promise.all(
-      isChallengeExist.media.map((media: IMedia)  => deleteImageFromCLoudinary(media.url))
-    );
-  }
+  // if (payload.media && isChallengeExist.media) {
+  //   await Promise.all(
+  //     isChallengeExist.media.map((media: IMedia)  => deleteImageFromCLoudinary(media.url))
+  //   );
+  // }
 
   return updatedChallenge;
 };
@@ -66,7 +81,7 @@ const deleteChallenge = async (id: string) => {
 };
 
 export const ChallengeServices = {
-  createChallenge,
+  createChallenge,createChallengeDay,
   getAllChallenges,
   deleteChallenge,
   updateChallenge,

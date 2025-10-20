@@ -12,14 +12,17 @@ const createPage = catchAsync(
     const files = req.files as {
       [fieldname: string]: Express.Multer.File[];
     };
+    const user = req.user as JwtPayload;
 
     const payload: IPage = {
       ...req.body,
+      owner: user?.userId,
       image: {
-        profile: files?.profile?.[0]?.path, // Cloudinary URL
-        banner: files?.banner?.[0]?.path, // Cloudinary URL
+        profile: files?.profile?.[0]?.path, 
+        banner: files?.banner?.[0]?.path, 
       },
     };
+
     const Page = await PageServices.createPage(payload);
 
     sendResponse(res, {

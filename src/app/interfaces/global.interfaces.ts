@@ -1,5 +1,5 @@
 import type { Types } from "mongoose";
-import type { MEDIA_TYPE } from "../constant/constant";
+import type { EntityType, MEDIA_TYPE } from "../constant/constant";
 
 export interface IMedia {
   url: string;
@@ -13,3 +13,4 @@ export interface IImage {
   profile?: string;
   banner?: string;
 }
+

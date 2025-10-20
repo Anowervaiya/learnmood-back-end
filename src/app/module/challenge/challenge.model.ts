@@ -1,47 +1,53 @@
 import { Schema, model } from 'mongoose';
 import { CHALLENGE_CATEGORY, CHALLENGE_STATUS } from './challenge.contant';
-import type { IChallenge, IParticipant } from './challenge.interface';
-import type { IMedia } from '../../interfaces/global.interfaces';
-import { MediaSchema } from '../../Schema/global.schema';
+import type {
+  IChallenge,
+  IChallengeDay
+} from './challenge.interface';
 
-// participant Schema
-const ParticipantSchema = new Schema<IParticipant>(
+const ChallengeDaySchema = new Schema<IChallengeDay>(
   {
-    user: { type: Schema.Types.ObjectId, ref: 'User', required: true },
-    joinedAt: { type: Date, default: Date.now },
-    progress: { type: Number, default: 0 },
-    completed: { type: Boolean, default: false },
+    challengeId: {
+      type: Schema.Types.ObjectId,
+      ref: 'Challenge',
+      required: true,
+    },
+    dayNumber: { type: Number, required: true },
+    title: { type: String, required: true },
+    notes: { type: [String], default: [] },
+    video: [
+      {
+        fileName: { type: String, required: true },
+        fileType: { type: String, required: true },
+        key: { type: String, required: true },
+        uploadUrl: { type: String, required: true },
+      },
+    ],
+    article: { type: String, default: '' },
+    // quiz: [{ question, options, correctAnswer }]
   },
-  { _id: false }
+  { timestamps: true }
 );
+
+export const ChallengeDay = model('ChallengeDay', ChallengeDaySchema);
+
 
 const ChallengeSchema = new Schema<IChallenge>(
   {
     title: { type: String, required: true, trim: true },
-    description: { type: String, default: '', trim: true },
+    description: { type: String, trim: true },
     category: {
       type: String,
       enum: Object.values(CHALLENGE_CATEGORY),
       default: CHALLENGE_CATEGORY.other,
-    }, // Challenge type
-    media: { type: [MediaSchema], default: [] },
-    durationDays: { type: Number, default: 30 }, // e.g., 30-day challenge
-
+    },
+    banner: { type: String },
+    durationDays: { type: Number, required: true },
+    startsAt: { type: Date, required: true },
+    endsAt: { type: Date },
     createdBy: { type: Schema.Types.ObjectId, ref: 'User', required: true },
-
-    participants: [ParticipantSchema],
-
-    startsAt: { type: Date, default: Date.now },
-    endsAt: { type: Date }, // auto-calc = startsAt + durationDays
-
-  
-
-    // Gamification
-    rewardPoints: { type: Number, default: 100 }, // Points earned if completed
-    badges: { type: [String], default: [] }, // e.g., "Consistency Badge"
     ratings: { type: Number, default: 0 },
-    // Visibility
-    isPublic: { type: Boolean, default: true }, // private or public challenge
+    isPublic: { type: Boolean, default: true },
     status: {
       type: String,
       enum: Object.values(CHALLENGE_STATUS),
@@ -51,7 +57,7 @@ const ChallengeSchema = new Schema<IChallenge>(
   { timestamps: true }
 );
 
-// Auto set endsAt
+// 🕒 Auto calculate end date
 ChallengeSchema.pre('save', function (next) {
   if (this.startsAt && this.durationDays) {
     this.endsAt = new Date(
@@ -61,4 +67,4 @@ ChallengeSchema.pre('save', function (next) {
   next();
 });
 
-export const Challenge= model('Challenge', ChallengeSchema);
+export const Challenge = model('Challenge', ChallengeSchema);
