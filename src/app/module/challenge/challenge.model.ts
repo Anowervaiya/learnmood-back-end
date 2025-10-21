@@ -45,7 +45,7 @@ const ChallengeSchema = new Schema<IChallenge>(
     durationDays: { type: Number, required: true },
     startsAt: { type: Date, required: true },
     endsAt: { type: Date },
-    createdBy: { type: Schema.Types.ObjectId, ref: 'User', required: true },
+    createdBy: { type: Schema.Types.ObjectId, ref: 'Page', required: true },
     ratings: { type: Number, default: 0 },
     isPublic: { type: Boolean, default: true },
     status: {

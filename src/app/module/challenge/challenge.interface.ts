@@ -33,6 +33,7 @@ export interface IChallengeDay {
 }
 // Challenge interface
 export interface IChallenge {
+  _id?: Types.ObjectId;
   title: string;
   description?: string;
   category: CHALLENGE_CATEGORY;

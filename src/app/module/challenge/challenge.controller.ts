@@ -7,9 +7,8 @@ import { ChallengeServices } from "./challenge.service";
 
 
 const createChallenge = catchAsync(async (req: Request, res: Response) => {
-  const decodedToken = req.user as JwtPayload;
+  
   const payload: IChallenge = {
-    createdBy: decodedToken?.userId,
     ...req.body,
     banner: (req.file as Express.Multer.File).path
   };
@@ -49,6 +48,17 @@ const getAllChallenges = catchAsync(async (req: Request, res: Response) => {
     meta: result.meta,
   });
 });
+const getChallengeDetails = catchAsync(async (req: Request, res: Response) => {
+  const { id } = req.params;
+
+  const result = await ChallengeServices.getChallengeDetails(id as string);
+  sendResponse(res, {
+    statusCode: 200,
+    success: true,
+    message: 'Challenge Details retrieved successfully',
+    data: result,
+  });
+});
 const updateChallenge = catchAsync(async (req: Request, res: Response) => {
   const id = req.params.id as string
   const payload: IChallenge = {
@@ -82,7 +92,7 @@ const deleteChallenge = catchAsync(async (req: Request, res: Response) => {
 export const ChallengeController = {
   createChallenge,
   createChallengeDay,
-  getAllChallenges,
+  getAllChallenges,getChallengeDetails,
   deleteChallenge,
   updateChallenge,
 };

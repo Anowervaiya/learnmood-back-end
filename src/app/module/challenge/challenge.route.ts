@@ -28,6 +28,7 @@ router.post(
 
 
 router.get('/', ChallengeController.getAllChallenges)
+router.get('/:id', ChallengeController.getChallengeDetails)
 
 router.delete(
   '/:id',

@@ -31,26 +31,45 @@ const createChallengeDay = async (payload: IChallengeDay) => {
 };
 
 const getAllChallenges = async (query: Record<string, string>) => {
-    const queryBuilder = new QueryBuilder(Challenge.find(), query)
+  const queryBuilder = new QueryBuilder(Challenge.find(), query)
     
-    const challengeData = queryBuilder
-          .search(ChallengeSearchableFields)
-          .filter()
-          .sort()
-          .fields()
-          .paginate()
+  const challengeData = queryBuilder
+    .search(ChallengeSearchableFields)
+    .filter()
+    .sort()
+    .fields()
+    .paginate()
     
-      const [data, meta] = await Promise.all([
-        challengeData.build(),
-        queryBuilder.getMeta(),
-      ]);
+  const [data, meta] = await Promise.all([
+    challengeData.build(),
+    queryBuilder.getMeta(),
+  ]);
   
-      return {
-        data,
-        meta,
-      };
+  return {
+    data,
+    meta,
+  };
+}
   
-};
+
+const getChallengeDetails = async (id: string) => {
+   
+  const challenge = await Challenge.findById(id);
+  if (!challenge) {
+    throw new AppError(400,'Challenge is not found')
+  }
+  const days = await ChallengeDay.find({ challengeId: challenge._id })
+ 
+  const result = { challenge, days }
+  
+  return {
+    challenge,
+    days
+  }
+
+  
+  };
+  
 const updateChallenge = async (id: string, payload: Partial<IChallenge>) => {
   const isChallengeExist = await Challenge.findById({ _id: id });
 
@@ -84,5 +103,5 @@ export const ChallengeServices = {
   createChallenge,createChallengeDay,
   getAllChallenges,
   deleteChallenge,
-  updateChallenge,
+  updateChallenge,getChallengeDetails
 };
