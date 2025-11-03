@@ -113,6 +113,20 @@ const getAllPages = catchAsync(
     });
   }
 );
+const getMyPage = catchAsync(
+  async (req: Request, res: Response, next: NextFunction) => {
+    const user = req.user as JwtPayload;
+
+    const result = await PageServices.getMyPage(user.userId);
+
+    sendResponse(res, {
+      success: true,
+      statusCode: httpStatus.CREATED,
+      message: 'My Pages Retrieved Successfully',
+      data: result,
+    });
+  }
+);
 const getAllPageMembers = catchAsync(
   async (req: Request, res: Response, next: NextFunction) => {
     const query = req.query as Record<string, string>;
@@ -135,5 +149,5 @@ export const PageControllers = {
   updatePage,
   createPageMember,
   getAllPageMembers,
-  deletePageMember,
+  deletePageMember,getMyPage
 };

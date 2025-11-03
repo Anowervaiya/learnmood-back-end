@@ -70,7 +70,9 @@ const getChallengeDetails = async (id: string) => {
   
   };
   
-const updateChallenge = async (id: string, payload: Partial<IChallenge>) => {
+
+
+  const updateChallenge = async (id: string, payload: Partial<IChallenge>) => {
   const isChallengeExist = await Challenge.findById({ _id: id });
 
   if (!isChallengeExist) {

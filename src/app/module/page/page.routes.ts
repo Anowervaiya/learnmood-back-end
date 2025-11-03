@@ -28,6 +28,11 @@ router.post(
 router.get('/',
   // checkAuth(Role.ADMIN),
   PageControllers.getAllPages);
+router.get(
+  '/my-page',
+  checkAuth(...Object.values(Role)),
+  PageControllers.getMyPage
+);
 
 router.post(
   '/member/create',

@@ -11,6 +11,7 @@ export enum EntityType {
   SERVICE = 'SERVICE',
   COURSE='COURSE'
 }
+
 export enum MEDIA_TYPE {
   image = 'image',
   video = 'video',

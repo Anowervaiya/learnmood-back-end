@@ -15,7 +15,6 @@ export interface IUser {
   name: string;
   nickname?: string;
   email: string;
-  blood?: string;
   password?: string;
   phone?: string;
   image?: IImage;
@@ -32,6 +31,7 @@ export interface IUser {
   languages?: LANGUAGE[];
   auths?: IAuthProvider[];
   friends?: Types.ObjectId[];
+  interests?: Map<string, number>;
 }
 export interface IFriendRequest {
   _id?: Types.ObjectId;

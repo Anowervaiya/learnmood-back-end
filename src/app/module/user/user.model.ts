@@ -17,13 +17,13 @@ export const authProviderSchema = new Schema<IAuthProvider>(
 const userSchema = new Schema<IUser>(
   {
     name: { type: String, required: true },
-    blood: { type: String },
     dob: { type: Date },
     email: { type: String, required: true, unique: true },
     friends: [{ type: Schema.Types.ObjectId, ref: 'User' }],
     nickname: { type: String },
     password: { type: String },
     phone: { type: String },
+    interests: { type: Map, of: Number, default: {} } ,
     image: imageSchema,
     address: { type: String },
     bio: { type: String },

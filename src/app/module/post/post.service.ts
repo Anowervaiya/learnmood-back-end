@@ -1,20 +1,24 @@
 import type { JwtPayload } from "jsonwebtoken";
 import type { IPost } from "./post.interface";
 import { Post } from "./post.model";
-
-
 import httpStatus from 'http-status-codes'
 import AppError from "../../errorHelpers/appError";
 import type { IMedia } from "../../interfaces/global.interfaces";
 import { deleteImageFromCLoudinary } from "../../config/cloudinary.config";
 import { QueryBuilder } from "../../utils/QueryBuilder";
+import { extractKeywordsAdvanced } from "../../utils/keyWordGenerator";
 
 
 const createPost = async (payload: IPost) => {
 
-  const post = await Post.create(
-    payload
-  )
+   const {  content, ...rest } = payload;
+
+  const tag = extractKeywordsAdvanced(content);
+
+
+
+  
+ const post = await Post.create({ content,  tag , ...rest });
 
   return post;
 
