@@ -11,11 +11,39 @@ export class QueryBuilder<T> {
   }
 
   filter(): this {
-    const filter = { ...this.query };
+    const filter: Record<string, any> = { ...this.query };
+
+    // 1️⃣ Remove excluded fields
     for (const field of excludeField) {
       delete filter[field];
     }
+
+    // 2️⃣ Remove empty or undefined/null values
+    Object.keys(filter).forEach(key => {
+      if (
+        filter[key] === '' ||
+        filter[key] === undefined ||
+        filter[key] === null
+      ) {
+        delete filter[key];
+      }
+    });
+
+    // 3️⃣ Handle minAge (convert to dob filter)
+    if (filter.minAge) {
+      const today = new Date();
+      const cutoffDate = new Date(
+        today.getFullYear() - Number(filter.minAge),
+        today.getMonth(),
+        today.getDate()
+      );
+      filter.dob = { $lte: cutoffDate }; // only users older than minAge
+      delete filter.minAge; // remove to avoid conflicts
+    }
+
+    // 4️⃣ Apply the filter to the query
     this.modelQuery = this.modelQuery.find(filter);
+
     return this;
   }
 
@@ -26,7 +54,9 @@ export class QueryBuilder<T> {
         [field]: { $regex: searchTerm, $options: 'i' },
       })),
     };
-    this.modelQuery = this.modelQuery.find(searchQuery);
+    if (searchTerm) {
+      this.modelQuery = this.modelQuery.find(searchQuery);
+    }
     return this;
   }
 
@@ -65,7 +95,7 @@ export class QueryBuilder<T> {
     const totalDocuments = await this.modelQuery.model.countDocuments(
       (this.modelQuery as any)._conditions
     );
-    
+
     const page = Number(this.query.page) || 1;
     const limit = Number(this.query.limit) || 10;
 

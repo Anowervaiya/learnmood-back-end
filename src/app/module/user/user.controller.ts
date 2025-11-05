@@ -13,8 +13,17 @@ import type { FRIEND_REQUEST_STATUS } from './user.constant';
 const createUser = catchAsync(
   async (req: Request, res: Response, next: NextFunction) => {
 
+  const files = req.files as {
+    [fieldname: string]: Express.Multer.File[];
+    };
+    
     const payload: IUser = {
-      ...req.body };
+      ...req.body,
+      image: {
+        profile: files?.profile?.[0]?.path, 
+        banner: files?.banner?.[0]?.path, 
+      },
+    };
 
     const user  = await UserServices.createUser(payload);
 

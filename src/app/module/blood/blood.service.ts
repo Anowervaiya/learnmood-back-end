@@ -7,6 +7,8 @@ import { deleteImageFromCLoudinary } from '../../config/cloudinary.config';
 import { QueryBuilder } from '../../utils/QueryBuilder';
 import { BloodDonor,  BloodRequest } from './blood.model';
 import type { IBloodDonor, IBloodRequest } from './blood.interfaces';
+import { User } from '../user/user.model';
+import { BloodSearchableFields } from './blood.constant';
 
 
 const createBloodDonor = async (payload: IBloodDonor) => {
@@ -32,15 +34,18 @@ const createBloodRequest = async (payload: IBloodRequest) => {
 };
 
 const getAllBloodDonors = async (query: Record<string, string>) => {
-  const queryBuilder = new QueryBuilder(BloodDonor.find(), query);
+  if (!query.minAge) query.minAge = '18';
+
+  const queryBuilder = new QueryBuilder(User.find(), query);
 
   const BloodDonorData = queryBuilder
-    // .search(BloodDonorSearchableFields)
     .filter()
+    .search(BloodSearchableFields)
     .sort()
     .fields()
-    .paginate();
-
+    .paginate()
+    // .populate('requestedBy', '_id name image');
+  
   const [data, meta] = await Promise.all([
     BloodDonorData.build(),
     queryBuilder.getMeta(),
@@ -53,13 +58,16 @@ const getAllBloodDonors = async (query: Record<string, string>) => {
 };
 
 const getAllBloodRequests = async (query: Record<string, string>) => {
-  const queryBuilder = new QueryBuilder(BloodRequest.find(), query);
 
+  const queryBuilder = new QueryBuilder(BloodRequest.find(), query);
   const BloodRequestData = queryBuilder
     .filter()
+    .search(BloodSearchableFields)
     .sort()
     .fields()
-    .paginate();
+    .paginate()
+    .populate('requestedBy', '_id name image');
+  
 
   const [data, meta] = await Promise.all([
     BloodRequestData.build(),
@@ -71,11 +79,6 @@ const getAllBloodRequests = async (query: Record<string, string>) => {
     meta,
   };
 };
-
-
-
-
-
 const deleteBloodDonor = async (id: string) => {
   const bloodDonor = await BloodDonor.findById(id);
 

@@ -101,7 +101,7 @@ const getAllBloodDonors = catchAsync(
     sendResponse(res, {
       success: true,
       statusCode: httpStatus.CREATED,
-      message: 'All BloodDonors Retrieved Successfully',
+      message: 'All Blood Donors Retrieved Successfully',
       data: result.data,
       meta: result.meta,
     });
@@ -116,7 +116,7 @@ const getAllBloodRequests = catchAsync(
     sendResponse(res, {
       success: true,
       statusCode: httpStatus.CREATED,
-      message: 'All BloodDonor Members Retrieved Successfully',
+      message: 'All Blood Request Retrieved Successfully',
       data: result.data,
       meta: result.meta,
     });

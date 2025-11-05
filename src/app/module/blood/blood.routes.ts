@@ -15,7 +15,7 @@ router.post(
 );
 
 router.get(
-  '/become-donor',
+  '/blood-donor',
   // checkAuth(Role.ADMIN),
   BloodControllers.getAllBloodDonors
 );
