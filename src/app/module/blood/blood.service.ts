@@ -1,14 +1,12 @@
 import { envVars } from '../../config/env';
 import AppError from '../../errorHelpers/appError';
-
-import bcryptjs from 'bcryptjs';
 import httpStatus from 'http-status-codes';
 import { deleteImageFromCLoudinary } from '../../config/cloudinary.config';
 import { QueryBuilder } from '../../utils/QueryBuilder';
 import { BloodDonor,  BloodRequest } from './blood.model';
 import type { IBloodDonor, IBloodRequest } from './blood.interfaces';
 import { User } from '../user/user.model';
-import { BloodSearchableFields } from './blood.constant';
+import { BloodDonorSearchableFields, BloodReqSearchableFields } from './blood.constant';
 
 
 const createBloodDonor = async (payload: IBloodDonor) => {
@@ -40,10 +38,10 @@ const getAllBloodDonors = async (query: Record<string, string>) => {
 
   const BloodDonorData = queryBuilder
     .filter()
-    .search(BloodSearchableFields)
+    .search(BloodDonorSearchableFields)
     .sort()
     .fields()
-    .paginate()
+    .paginate();
     // .populate('requestedBy', '_id name image');
   
   const [data, meta] = await Promise.all([
@@ -62,7 +60,7 @@ const getAllBloodRequests = async (query: Record<string, string>) => {
   const queryBuilder = new QueryBuilder(BloodRequest.find(), query);
   const BloodRequestData = queryBuilder
     .filter()
-    .search(BloodSearchableFields)
+    .search(BloodReqSearchableFields)
     .sort()
     .fields()
     .paginate()

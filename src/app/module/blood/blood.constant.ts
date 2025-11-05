@@ -20,4 +20,5 @@ export enum BLOOD_URGENCY_LEVEL {
   critical = 'critical',
 }
 
-export const BloodSearchableFields = ['location'];
+export const BloodReqSearchableFields = ['location'];
+export const BloodDonorSearchableFields = ['address'];
