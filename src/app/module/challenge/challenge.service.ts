@@ -10,6 +10,8 @@ import type { IMedia } from '../../interfaces/global.interfaces';
 import { QueryBuilder } from '../../utils/QueryBuilder';
 import { userSearchableFields } from '../user/user.constant';
 import { ChallengeSearchableFields } from './challenge.contant';
+import { Participant } from '../participant/participant.model';
+import { EntityType } from '../../constant/constant';
 
 const createChallenge = async (payload: IChallenge) => {
   return await Challenge.create(payload);
@@ -30,27 +32,58 @@ const createChallengeDay = async (payload: IChallengeDay) => {
  
 };
 
-const getAllChallenges = async (query: Record<string, string>) => {
+export const getAllChallenges = async (query: Record<string, string>) => {
   const queryBuilder = new QueryBuilder(Challenge.find(), query)
-    
-  const challengeData = queryBuilder
     .search(ChallengeSearchableFields)
     .filter()
     .sort()
     .fields()
     .paginate()
-    
-  const [data, meta] = await Promise.all([
-    challengeData.build(),
+    .populate('createdBy', 'name image');
+
+  const [challenges, meta] = await Promise.all([
+    queryBuilder.build(),
     queryBuilder.getMeta(),
   ]);
-  
-  return {
-    data,
-    meta,
-  };
-}
-  
+
+  const challengeIds = challenges.map((ch: any) => ch._id);
+
+  // ✅ Count how many users participated in each challenge
+  const participantCounts = await Participant.aggregate([
+    {
+      $match: {
+        entityId: { $in: challengeIds },
+        entityType: EntityType.CHALLENGE,
+      },
+    },
+    {
+      $group: {
+        _id: '$entityId',
+        uniqueUsers: { $addToSet: '$user' }, // ensure no duplicates
+      },
+    },
+    {
+      $project: {
+        _id: 1,
+        count: { $size: '$uniqueUsers' }, // count unique users
+      },
+    },
+  ]);
+
+  // Create a map for quick access
+  const countMap: Record<string, number> = {};
+  participantCounts.forEach(p => {
+    countMap[p._id.toString()] = p.count;
+  });
+
+  // ✅ Attach participantCount to each challenge
+  const mergedData = challenges.map((challenge: any) => ({
+    ...challenge.toObject(),
+    participantCount: countMap[challenge._id.toString()] || 0,
+  }));
+
+  return { data: mergedData, meta };
+};
 
 const getChallengeDetails = async (id: string) => {
    

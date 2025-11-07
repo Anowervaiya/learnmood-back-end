@@ -1,0 +1,1 @@
+export const MentorSearchableFields = ['location', 'subject', 'userName'];

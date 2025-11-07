@@ -47,16 +47,31 @@ export class QueryBuilder<T> {
     return this;
   }
 
-  search(searchableField: string[]): this {
-    const searchTerm = this.query.searchTerm || '';
-    const searchQuery = {
-      $or: searchableField.map(field => ({
-        [field]: { $regex: searchTerm, $options: 'i' },
-      })),
-    };
+  search(searchableFields: string[]): this {
+    const searchTerm = this.query.searchTerm?.trim() || '';
+
     if (searchTerm) {
-      this.modelQuery = this.modelQuery.find(searchQuery);
+      const orConditions = searchableFields.map(field => {
+        // for array fields like subject
+        if (field === 'subject') {
+          return {
+            [field]: { $elemMatch: { $regex: searchTerm, $options: 'i' } },
+          };
+        }
+        // for populated fields like userId.name
+        else if (field.includes('.')) {
+          const [parent, child] = field.split('.');
+          return {
+            [`${parent}.${child}`]: { $regex: searchTerm, $options: 'i' },
+          };
+        }
+        // normal string fields
+        return { [field]: { $regex: searchTerm, $options: 'i' } };
+      });
+
+      this.modelQuery = this.modelQuery.find({ $or: orConditions });
     }
+
     return this;
   }
 

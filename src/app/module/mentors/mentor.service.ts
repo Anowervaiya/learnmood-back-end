@@ -3,11 +3,19 @@ import { Mentor } from './mentor.model';
 import httpStatus from 'http-status-codes';
 import AppError from '../../errorHelpers/appError';
 import { QueryBuilder } from '../../utils/QueryBuilder';
+import { MentorSearchableFields } from './mentor.constant';
+import { User } from '../user/user.model';
 
-const createMentor = async (payload: IMentor) => {
-  const existing = await Mentor.findOne({ userId: payload.userId });
+const createMentor = async (data: IMentor) => {
+  const existing = await Mentor.findOne({ userId: data.userId })
+  const user = await User.findOne({_id : data.userId })
   if (existing) {
-    throw new AppError(400, 'You already applied as a mentor');
+    throw new AppError(400, 'You already applied as a tutor');
+  }
+  
+  const payload = {
+    ...data,
+    userName : user?.name
   }
 
   return await Mentor.create(payload);
@@ -17,7 +25,7 @@ const getAllMentors = async (query: Record<string, string>) => {
   const queryBuilder = new QueryBuilder(Mentor.find(), query);
 
   const Mentors = queryBuilder
-    // .search(MentorSearchableFields)
+    .search(MentorSearchableFields)
     .filter()
     .sort()
     .fields()
