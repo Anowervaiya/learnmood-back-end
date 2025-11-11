@@ -32,6 +32,8 @@ const PageSchema = new Schema<IPage>(
       enum: Object.values(PAGE_CATEGORY),
       default: PAGE_CATEGORY.other,
     },
+    followersCount: { type: Number, default: 0 },
+    followingsCount: { type: Number, default: 0 },
     // Branding
     image: imageSchema,
     isPublic: { type: Boolean, default: true },

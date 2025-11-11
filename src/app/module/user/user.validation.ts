@@ -24,11 +24,7 @@ export const createUserZodValidation = z.object({
   image: z.array(ImageZodValidation).optional(),
   address: z.string().optional(),
   bio: z.string().optional(),
-
-  followers: z.array(z.string().regex(/^[0-9a-fA-F]{24}$/, 'Invalid user ObjectId')).optional(),
-  followings: z.array(z.string().regex(/^[0-9a-fA-F]{24}$/, 'Invalid user ObjectId')).optional(),
   friends: z.array(z.string()).optional(),
-
   role: z.enum(Object.values(Role)).default(Role.USER),
   gender: z.enum(Object.values(GENDER)).optional(),
   pronoun: z.enum(Object.values(PRONOUN)).optional(),

@@ -5,7 +5,7 @@ import { MediaSchema } from '../../Schema/global.schema';
 
 const CommentSchema = new Schema<IComments>(
   {
-    entityId: { type: Schema.Types.ObjectId, required: true, index: true },
+    entityId: { type: Schema.Types.ObjectId, required: true, refPath: 'entityType', index: true },
     entityType: {
       type: String,
       enum: Object.values(EntityType),

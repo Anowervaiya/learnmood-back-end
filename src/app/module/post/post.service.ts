@@ -34,6 +34,7 @@ const getAllPosts = async (query: Record<string, string>) => {
     .fields()
     .paginate()
     .populate('user', 'name image');
+ 
   
   const [data, meta] = await Promise.all([
     posts.build(),

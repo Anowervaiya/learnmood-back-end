@@ -13,7 +13,7 @@ const ChallengeDaySchema = new Schema<IChallengeDay>(
       required: true,
     },
     dayNumber: { type: Number, required: true },
-    title: { type: String, required: true },
+    title: { type: String, required: true , trim:true },
     notes: { type: [String], default: [] },
     video: [
       {
@@ -35,7 +35,7 @@ export const ChallengeDay = model('ChallengeDay', ChallengeDaySchema);
 const ChallengeSchema = new Schema<IChallenge>(
   {
     title: { type: String, required: true, trim: true },
-    description: { type: String, trim: true },
+    description: { type: String },
     category: {
       type: String,
       enum: Object.values(CHALLENGE_CATEGORY),
@@ -51,7 +51,7 @@ const ChallengeSchema = new Schema<IChallenge>(
     status: {
       type: String,
       enum: Object.values(CHALLENGE_STATUS),
-      default: CHALLENGE_STATUS.ongoing,
+      default: CHALLENGE_STATUS.upcoming,
     },
   },
   { timestamps: true }

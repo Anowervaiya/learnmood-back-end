@@ -9,7 +9,7 @@ import { EntityType } from '../../constant/constant';
 
 
 export const createCommentZodValidation = z.object({
-  entityType: z.enum(EntityType, {
+  entityType: z.enum(Object.values(EntityType), {
     error: 'Entity type is required',
   }),
   entityId: z.any(), // Same as above, for Mongoose ObjectId

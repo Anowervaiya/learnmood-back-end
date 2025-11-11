@@ -21,13 +21,12 @@ export interface IUser {
   address?: string;
   isDeleted?: string;
   isVerified?: boolean;
+  followingCount?: number;
   role?: Role;
   dob?: Date;
   isActive?: IsActive;
   gender?: GENDER;
   pronoun?: PRONOUN;
-  followers?: Types.ObjectId[];
-  followings?: Types.ObjectId[];
   languages?: LANGUAGE[];
   auths?: IAuthProvider[];
   friends?: Types.ObjectId[];

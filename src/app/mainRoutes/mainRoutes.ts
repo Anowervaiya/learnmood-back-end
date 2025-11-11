@@ -15,10 +15,9 @@ import { NotificationRoutes } from '../module/notifications/notification.route';
 import { MentorRoutes } from '../module/mentors/mentor.route';
 import { VideoRoutes } from '../module/video/video.route';
 import { BloodRoutes } from '../module/blood/blood.routes';
-
+import { FollowRoutes } from '../module/follow/follow.route';
 
 export const mainRoutes = Router();
-
 
 const moduleRoutes = [
   {
@@ -83,6 +82,10 @@ const moduleRoutes = [
   {
     path: '/blood',
     route: BloodRoutes,
+  },
+  {
+    path: '/follow',
+    route: FollowRoutes,
   },
   {
     path: '/video',

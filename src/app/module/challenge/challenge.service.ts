@@ -53,7 +53,7 @@ export const getAllChallenges = async (query: Record<string, string>) => {
     {
       $match: {
         entityId: { $in: challengeIds },
-        entityType: EntityType.CHALLENGE,
+        entityType: EntityType.Challenge,
       },
     },
     {
@@ -87,13 +87,13 @@ export const getAllChallenges = async (query: Record<string, string>) => {
 
 const getChallengeDetails = async (id: string) => {
    
-  const challenge = await Challenge.findById(id);
+  const challenge = await Challenge.findById(id).populate('createdBy', 'name image followersCount');
   if (!challenge) {
     throw new AppError(400,'Challenge is not found')
   }
   const days = await ChallengeDay.find({ challengeId: challenge._id })
  
-  const result = { challenge, days }
+ 
   
   return {
     challenge,

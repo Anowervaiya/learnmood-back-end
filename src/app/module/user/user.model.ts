@@ -26,9 +26,8 @@ const userSchema = new Schema<IUser>(
     interests: { type: Map, of: Number, default: {} },
     image: imageSchema,
     address: { type: String },
+    followingCount: { type: Number, default: 0 },
     bio: { type: String },
-    followers: [{ type: Schema.Types.ObjectId, ref: 'User' }],
-    followings: [{ type: Schema.Types.ObjectId, ref: 'User' }],
     role: {
       type: String,
       enum: Object.values(Role),

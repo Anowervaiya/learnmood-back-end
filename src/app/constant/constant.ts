@@ -5,11 +5,11 @@ export enum VISIBILITY {
   ONLY_ME = 'ONLY_ME',
 }
 export enum EntityType {
-  POST = 'Post',
-  CHALLENGE = 'Challenge',
-  STORY = 'Story',
-  SERVICE = 'Service',
-  COURSE='Course'
+  Post = 'Post',
+  Challenge = 'Challenge',
+  Story = 'Story',
+  Service = 'Service',
+  Course='Course'
 }
 
 export enum MEDIA_TYPE {
