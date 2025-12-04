@@ -12,6 +12,7 @@ export enum Role {
 export enum GENDER {
   MALE = 'MALE',
   FEMALE = 'FEMALE',
+  OTHER = 'OTHER',
 }
 export enum FRIEND_REQUEST_STATUS {
   PENDING = 'PENDING',

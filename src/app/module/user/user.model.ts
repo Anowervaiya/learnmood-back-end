@@ -2,6 +2,7 @@ import { model, Schema, Types } from 'mongoose';
 import { type IAuthProvider, type IFriendRequest, type IUser } from './user.interfaces';
 import { FRIEND_REQUEST_STATUS, GENDER, IsActive, LANGUAGE, PRONOUN, Role } from './user.constant';
 import {  imageSchema } from '../../Schema/global.schema';
+import { BLOOD_GROUP } from '../blood/blood.constant';
 
 export const authProviderSchema = new Schema<IAuthProvider>(
   {
@@ -24,7 +25,7 @@ const userSchema = new Schema<IUser>(
     password: { type: String },
     phone: { type: String },
     interests: { type: Map, of: Number, default: {} },
-    image: imageSchema,
+    image: imageSchema ,
     address: { type: String },
     followingCount: { type: Number, default: 0 },
     bio: { type: String },
@@ -36,6 +37,10 @@ const userSchema = new Schema<IUser>(
     gender: {
       type: String,
       enum: Object.values(GENDER),
+    },
+    bloodGroup: {
+      type: String,
+      enum: Object.values(BLOOD_GROUP),
     },
     pronoun: {
       type: String,

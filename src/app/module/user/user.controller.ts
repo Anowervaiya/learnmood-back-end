@@ -9,20 +9,14 @@ import type { IUser } from './user.interfaces';
 import AppError from '../../errorHelpers/appError';
 import type { Types } from 'mongoose';
 import type { FRIEND_REQUEST_STATUS } from './user.constant';
+import { redis } from 'bun';
 
 const createUser = catchAsync(
   async (req: Request, res: Response, next: NextFunction) => {
 
-  const files = req.files as {
-    [fieldname: string]: Express.Multer.File[];
-    };
-    
+ 
     const payload: IUser = {
       ...req.body,
-      image: {
-        profile: files?.profile?.[0]?.path, 
-        banner: files?.banner?.[0]?.path, 
-      },
     };
 
     const user  = await UserServices.createUser(payload);
@@ -43,13 +37,17 @@ const updateUser = catchAsync(
     const files = req.files as {
       [fieldname: string]: Express.Multer.File[];
     };
-    const payload = {
-      ...req.body,
-      image: {
-        profile: files?.profile?.[0]?.path, // Cloudinary URL
-        banner: files?.banner?.[0]?.path, // Cloudinary URL
-      },
-    };
+
+const payload: IUser = { 
+  ...req.body,
+  image: {
+    profile: files?.profile?.[0]?.path,
+    banner: files?.banner?.[0]?.path,
+  },
+};
+
+
+
     const user = await UserServices.updateUser(id, payload);
 
     sendResponse(res, {

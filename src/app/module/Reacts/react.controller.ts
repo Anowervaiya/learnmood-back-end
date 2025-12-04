@@ -17,8 +17,6 @@ const createReact = catchAsync(async (req: Request, res: Response) => {
     user: user.userId,
     ...req.body,
   };
-
-
  
   const result : any = await ReactServices.createReact(payload);
   sendResponse(res, {
@@ -38,6 +36,18 @@ const getAllReact = catchAsync(async (req: Request, res: Response) => {
     message: ' All React  retrieved successfully',
     data: result.data,
     meta: result.meta
+  });
+});
+const getMyReact = catchAsync(async (req: Request, res: Response) => {
+  const query = req.query as Record<string, string>;
+  
+  const result = await ReactServices.getMyReact(query);
+  sendResponse(res, {
+    statusCode: 201,
+    success: true,
+    message: ' My React  retrieved successfully',
+    data: result,
+ 
   });
 });
 
@@ -78,5 +88,6 @@ export const ReactController = {
   deleteReact,
   updateReact,
   getAllReact,
+  getMyReact
 
 };

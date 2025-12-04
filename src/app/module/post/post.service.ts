@@ -15,8 +15,6 @@ const createPost = async (payload: IPost) => {
 
   const tag = extractKeywordsAdvanced(content);
 
-
-
   
  const post = await Post.create({ content,  tag , ...rest });
 

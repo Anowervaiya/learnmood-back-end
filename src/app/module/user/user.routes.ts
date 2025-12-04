@@ -13,10 +13,6 @@ import {
 const router = Router();
 router.post(
   '/register',
-  multerUpload.fields([
-    { name: 'profile', maxCount: 1 },
-    { name: 'banner', maxCount: 1 },
-  ]),
   validateRequest(createUserZodValidation),
   UserControllers.createUser
 );
@@ -73,6 +69,7 @@ router.patch(
   validateRequest(updateUserZodValidation),
   UserControllers.updateUser
 );
+
 router.delete('/delete/:id', checkAuth(Role.ADMIN), UserControllers.deleteUser);
 
 export const UserRoutes = router;

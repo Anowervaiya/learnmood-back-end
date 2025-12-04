@@ -1,6 +1,7 @@
 import z from 'zod';
 import { GENDER, IsActive, LANGUAGE, PRONOUN, Role } from './user.constant';
 import {   ImageZodValidation } from '../../zod/global.zod';
+import { BLOOD_GROUP } from '../blood/blood.constant';
 
 
  const authProviderZodValidation = z.object({
@@ -11,8 +12,10 @@ export const createUserZodValidation = z.object({
   name: z.string().min(1, 'Name is required'),
   dob: z.coerce.date({
     error: 'Date of birth must be a valid date',
-  }).optional(),
+  }),
   email: z.email('Invalid email'),
+  gender: z.enum(Object.values(GENDER)),
+  bloodGroup: z.enum(Object.values(BLOOD_GROUP)),
   nickname: z.string().optional(),
   password: z
     .string()
@@ -26,10 +29,8 @@ export const createUserZodValidation = z.object({
   bio: z.string().optional(),
   friends: z.array(z.string()).optional(),
   role: z.enum(Object.values(Role)).default(Role.USER),
-  gender: z.enum(Object.values(GENDER)).optional(),
   pronoun: z.enum(Object.values(PRONOUN)).optional(),
   languages: z.array(z.enum(Object.values(LANGUAGE))).optional(),
-
   isActive: z.enum(Object.values(IsActive)).default(IsActive.ACTIVE),
   isVerified: z.boolean().default(false),
   isDeleted: z.boolean().default(false),

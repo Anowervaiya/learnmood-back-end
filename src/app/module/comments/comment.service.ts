@@ -11,12 +11,44 @@ import { deleteImageFromCLoudinary } from '../../config/cloudinary.config';
 import type { IMedia } from '../../interfaces/global.interfaces';
 import { QueryBuilder } from '../../utils/QueryBuilder';
 import { CommentSearchableFields } from './comment.constant';
+import mongoose from 'mongoose';
 
 
-const createComment = async (payload: IComments) => {
-  
- return await Comment.create(payload);
+export const createComment = async (payload: IComments) => {
+  const session = await mongoose.startSession();
 
+  try {
+    session.startTransaction();
+
+    const { user, entityId, entityType, content } = payload;
+
+    // 1️⃣ Create the comment
+    const newComment = await Comment.create(
+      [{ user, entityId, entityType, content }],
+      { session }
+    );
+
+    // 2️⃣ Increment post's commentCount
+    if (entityType === 'Post') {
+      const post = await Post.findById(entityId).session(session);
+      if (!post) throw new AppError(httpStatus.NOT_FOUND, 'Post not found');
+
+      post.commentCount = (post.commentCount || 0) + 1;
+      await post.save({ session });
+    }
+
+    await session.commitTransaction();
+    session.endSession();
+
+    return {
+      success: true,
+      comment: newComment[0],
+    };
+  } catch (error) {
+    await session.abortTransaction();
+    session.endSession();
+    throw error;
+  }
 };
 
 const getAllComments = async (query: Record<string, string>) => {

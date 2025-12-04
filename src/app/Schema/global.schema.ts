@@ -4,8 +4,8 @@ import { EntityType, MEDIA_TYPE } from '../constant/constant';
 
 export const imageSchema = new Schema<IImage>(
   {
-    profile: { type: String },
-    banner: { type: String },
+    profile: { type: String , default: '' },
+    banner: { type: String , default: '' },
   },
   {
     versionKey: false,

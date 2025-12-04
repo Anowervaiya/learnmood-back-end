@@ -24,23 +24,42 @@ const updatePage = async (id: string, payload: IPage) => {
     throw new AppError(httpStatus.NOT_FOUND, 'Page Not Found');
   }
 
-  const updatedPage = await Page.findByIdAndUpdate(id, payload, {
-    new: true,
-    runValidators: true,
-  });
-
-  if (!payload.image || !ifPageExist.image) {
-  throw new AppError(401, "image not found")
-  }
+ 
+    // Build update object with $set for nested fields
+    const updateData: any = { ...payload };
+    
+    // Handle image updates separately to preserve existing values
+    if (payload?.image) {
+      delete updateData.image; // Remove image from main update
+      
+      // Only update the fields that are provided
+      if (payload.image.profile) {
+        updateData['image.profile'] = payload.image.profile;
+        // Delete old profile image from cloudinary
+        if (ifPageExist?.image?.profile) {
+          await deleteImageFromCLoudinary(ifPageExist.image.profile);
+        }
+      }
+      
+      if (payload.image.banner) {
+        updateData['image.banner'] = payload.image.banner;
+        // Delete old banner image from cloudinary
+        if (ifPageExist?.image?.banner) {
+          await deleteImageFromCLoudinary(ifPageExist.image.banner);
+        }
+      }
+    }
   
-  if (payload.image.profile && ifPageExist.image.profile) {
-    await deleteImageFromCLoudinary(ifPageExist.image.profile);
-  }
-  if (payload.image.banner && ifPageExist.image.banner) {
-    await deleteImageFromCLoudinary(ifPageExist.image.banner);
-  }
-
-  return updatedPage;
+    const updatedPage = await Page.findByIdAndUpdate(
+      id, 
+      { $set: updateData },
+      {
+        new: true,
+        runValidators: true,
+      }
+    );
+  
+    return updatedPage;
 };
 const createPageMember = async (payload: IPageMember) => {
   return await PageMember.create(payload);

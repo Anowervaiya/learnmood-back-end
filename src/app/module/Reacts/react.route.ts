@@ -18,10 +18,13 @@ router.post(
 
 // GET reacts by entityId & entityType
 router.get(
-  '/',
+  '/all-reacts',
   ReactController.getAllReact // expects query params: entityId, entityType
 );
-
+router.get(
+  '/',
+  ReactController.getMyReact // expects query params: entityId, entityType, userId
+);
 
 
 router.delete(

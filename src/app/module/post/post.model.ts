@@ -10,14 +10,24 @@ const PostSchema = new Schema<IPost>(
     content: { type: String, default: '' },
     media: { type: [MediaSchema], default: [] },
     tag: { type: [String], default: [] },
+
+    // Reaction counts for all types
+   reactions: {
+  type: Object,
+  default:{ }, // or new Map()
+},
+    commentCount: { type: Number, default: 0 },
+    shareCount: { type: Number, default: 0 },
+
     visibility: {
       type: String,
       enum: [...Object.values(VISIBILITY)],
       default: VISIBILITY.PUBLIC,
     },
-    
+
   },
   { timestamps: true }
 );
+
 
 export const Post = model('Post', PostSchema);

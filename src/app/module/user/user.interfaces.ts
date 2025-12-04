@@ -1,6 +1,7 @@
 import { Types } from 'mongoose';
 import type {  AUTHPROVIDER, FRIEND_REQUEST_STATUS, GENDER, IsActive, LANGUAGE, PRONOUN, Role } from './user.constant';
 import type {   IImage } from '../../interfaces/global.interfaces';
+import type { BLOOD_GROUP } from '../blood/blood.constant';
 
 export interface IAuthProvider {
   provider: AUTHPROVIDER; // "Google", "Credential"
@@ -13,6 +14,7 @@ export interface IUser {
   _id?: Types.ObjectId;
   bio?: string;
   name: string;
+  bloodGroup:BLOOD_GROUP;
   nickname?: string;
   email: string;
   password?: string;

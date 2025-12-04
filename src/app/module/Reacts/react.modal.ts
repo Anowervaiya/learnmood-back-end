@@ -19,7 +19,7 @@ const ReactSchema = new Schema<IReact>(
     reactType: {
       type: String,
       enum: Object.values(ReactType),
-      default: ReactType.LIKE,
+      default: ReactType.like,
     },
   },
   { timestamps: true }

@@ -37,6 +37,7 @@ const createUser = async (payload: Partial<IUser>) => {
     provider: AUTHPROVIDER.credentials,
     providerId: email as string,
   };
+  
   const user = await User.create({
     email,
     password: hashedPassword,
@@ -48,31 +49,48 @@ const createUser = async (payload: Partial<IUser>) => {
 };
 
 const updateUser = async(id : string, payload : IUser ) => {
-
-
   const ifUserExist = await User.findById(id);
 
   if (!ifUserExist) {
     throw new AppError(httpStatus.NOT_FOUND, 'User Not Found');
   }
   
+  // Build update object with $set for nested fields
+  const updateData: any = { ...payload };
+  
+  // Handle image updates separately to preserve existing values
+  if (payload?.image) {
+    delete updateData.image; // Remove image from main update
+    
+    // Only update the fields that are provided
+    if (payload.image.profile) {
+      updateData['image.profile'] = payload.image.profile;
+      // Delete old profile image from cloudinary
+      if (ifUserExist?.image?.profile) {
+        await deleteImageFromCLoudinary(ifUserExist.image.profile);
+      }
+    }
+    
+    if (payload.image.banner) {
+      updateData['image.banner'] = payload.image.banner;
+      // Delete old banner image from cloudinary
+      if (ifUserExist?.image?.banner) {
+        await deleteImageFromCLoudinary(ifUserExist.image.banner);
+      }
+    }
+  }
 
-  const updatedUser = await User.findByIdAndUpdate(id, payload, {
-    new: true,
-    runValidators: true,
-  });
-
-     if (payload?.image?.profile && ifUserExist?.image?.profile) {
-       await deleteImageFromCLoudinary(ifUserExist.image.profile);
-     }
-     if (payload.image?.banner && ifUserExist.image?.banner) {
-       await deleteImageFromCLoudinary(ifUserExist.image.banner);
-     }
+  const updatedUser = await User.findByIdAndUpdate(
+    id, 
+    { $set: updateData },
+    {
+      new: true,
+      runValidators: true,
+    }
+  );
 
   return updatedUser;
-
 };
-
 const getAllUsers = async (query:Record<string,string>) => {
 
  
