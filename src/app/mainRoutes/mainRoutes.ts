@@ -16,6 +16,8 @@ import { MentorRoutes } from '../module/mentors/mentor.route';
 import { VideoRoutes } from '../module/video/video.route';
 import { BloodRoutes } from '../module/blood/blood.routes';
 import { FollowRoutes } from '../module/follow/follow.route';
+import { BookingRoutes } from '../module/booking/booking.route';
+import { PaymentRoutes } from '../module/payment/payment.route';
 
 export const mainRoutes = Router();
 
@@ -90,6 +92,14 @@ const moduleRoutes = [
   {
     path: '/video',
     route: VideoRoutes,
+  },
+  {
+    path: '/booking',
+    route: BookingRoutes,
+  },
+  {
+    path: '/payment',
+    route: PaymentRoutes,
   },
 ];
 

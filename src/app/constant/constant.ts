@@ -9,7 +9,8 @@ export enum EntityType {
   Challenge = 'Challenge',
   Story = 'Story',
   Service = 'Service',
-  Course='Course'
+  Course='Course',
+  Mentor='Mentor',
 }
 
 export enum MEDIA_TYPE {
