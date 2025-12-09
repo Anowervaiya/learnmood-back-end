@@ -2,11 +2,11 @@
 
 import AppError from '../../errorHelpers/appError';
 import httpStatus from 'http-status-codes';
-import type { IReact } from './react.interface';
-import { React } from './react.modal';
+import type { IReact } from './reaction.interface';
+import { React } from './reaction.modal';
 import mongoose from 'mongoose';
 import { Post } from '../post/post.model';
-import type { ReactType } from './react.contant';
+import type { ReactType } from './reaction.contant';
 
 
 

@@ -8,8 +8,8 @@ import { sendResponse } from '../../utils/sendResponse';
 
 
 import type { JwtPayload } from 'jsonwebtoken';
-import type { IReact } from './react.interface';
-import { ReactServices } from './react.service';
+import type { IReact } from './reaction.interface';
+import { ReactServices } from './reaction.service';
 
 const createReact = catchAsync(async (req: Request, res: Response) => {
   const user = req.user as JwtPayload

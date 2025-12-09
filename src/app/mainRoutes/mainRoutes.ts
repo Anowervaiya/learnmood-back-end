@@ -17,7 +17,7 @@ import { BloodRoutes } from '../module/blood/blood.routes';
 import { FollowRoutes } from '../module/follow/follow.route';
 import { BookingRoutes } from '../module/booking/booking.route';
 import { PaymentRoutes } from '../module/payment/payment.route';
-import { ReactRoutes } from '../module/reacts/react.route';
+import { ReactRoutes } from '../module/reaction/reaction.route';
 
 export const mainRoutes = Router();
 

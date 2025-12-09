@@ -1,6 +1,6 @@
 import { Schema, model, Types } from 'mongoose';
-import type { IReact } from './react.interface';
-import { ReactType   } from './react.contant';
+import type { IReact } from './reaction.interface';
+import { ReactType   } from './reaction.contant';
 import { EntityType } from '../../constant/constant';
 
 

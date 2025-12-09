@@ -1,5 +1,5 @@
 import type { Types } from "mongoose";
-import type { ReactType } from "./react.contant";
+import type { ReactType } from "./reaction.contant";
 import type { EntityType,  } from "../../constant/constant";
 
 

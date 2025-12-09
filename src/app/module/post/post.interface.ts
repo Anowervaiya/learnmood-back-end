@@ -2,7 +2,7 @@ import type { Types } from 'mongoose';
 
 import type { VISIBILITY } from '../../constant/constant';
 import type { IMedia } from '../../interfaces/global.interfaces';
-import type { ReactType } from '../reacts/react.contant';
+import type { ReactType } from '../reaction/reaction.contant';
 
 
 
