@@ -3,9 +3,14 @@
   "module": "index.ts",
   "type": "module",
   "private": true,
-  "scripts": {
-    "dev": "bun --watch src/server.ts"
-  },
+
+
+"scripts": {
+  "dev": "bun --watch src/server.ts",
+  "build": "bun build src/server.ts --outdir dist --target node",
+  "start": "node dist/server.js"
+}
+,
   "devDependencies": {
     "@types/bcryptjs": "^3.0.0",
     "@types/bun": "latest",
@@ -24,8 +29,11 @@
     "@types/streamifier": "^0.1.2",
     "bcryptjs": "^3.0.2",
     "eslint": "^9.33.0",
+    "nodemon": "^3.1.11",
     "passport-google-oauth20": "^2.0.0",
-    "passport-local": "^1.0.0"
+    "passport-local": "^1.0.0",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.9.3"
   },
   "peerDependencies": {
     "typescript": "^5"

@@ -1,6 +1,6 @@
 import type mongoose from "mongoose";
 
-export interface IMentor extends Document {
+export interface IMentor {
   userId: mongoose.Types.ObjectId;
   userName: string;
   subject: string[];
