@@ -7,7 +7,6 @@
   "build": "tsc",
   "start": "bun run src/server.ts"
 }
-
 ,
   "devDependencies": {
     "@types/bcryptjs": "^3.0.0",
