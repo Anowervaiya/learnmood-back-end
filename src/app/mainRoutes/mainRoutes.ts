@@ -17,6 +17,7 @@ import { BloodRoutes } from '../module/blood/blood.routes';
 import { FollowRoutes } from '../module/follow/follow.route';
 import { BookingRoutes } from '../module/booking/booking.route';
 import { PaymentRoutes } from '../module/payment/payment.route';
+import { ReactRoutes } from '../module/reacts/react.route';
 
 export const mainRoutes = Router();
 
@@ -44,10 +45,10 @@ const moduleRoutes = [
     route: CommentRoutes,
   },
 
-  // {
-  //   path: '/react',
-  //   route: ReactRoutes,
-  // },
+  {
+    path: '/react',
+    route: ReactRoutes,
+  },
   {
     path: '/review',
     route: ReviewRoutes,
