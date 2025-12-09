@@ -4,10 +4,11 @@
   "type": "module",
   "private": true,
 "scripts": {
-  "dev": "bun --watch src/server.ts",
-  "build": "bun build src/server.ts --outdir dist --target node",
-  "start": "node dist/server.js"
+  "start": "node dist/server.js",
+  "dev": "ts-node src/server.ts",
+  "build": "tsc"
 }
+
 ,
   "devDependencies": {
     "@types/bcryptjs": "^3.0.0",

@@ -4,23 +4,22 @@ import { connectRedis } from './app/config/redis.config';
 import { envVars } from './app/config/env';
 import { initSocket } from './socket';
 import app from './app';
-const PORT = process.env.PORT || envVars.PORT || 5000;
 let server = createServer(app);
 
 const startServer = async () => {
   try {
-    
-    await mongoose.connect(envVars.DB_URL);
-
+    await mongoose.connect(
+      'mongodb+srv://L2A5:PASS_L2A5@cluster0.zsn3kat.mongodb.net/learnmood?'
+    );
     console.log('Connected to DB');
 
     // Initialize Socket.IO
     initSocket(server);
 
     // Start HTTP server
-   server.listen(PORT, () => {
-  console.log(`Server running on port ${PORT}`);
-});
+    server.listen(envVars.PORT, () => {
+      console.log(`Server running on port ${envVars.PORT}`);
+    });
   } catch (error) {
     console.log(error);
   }
