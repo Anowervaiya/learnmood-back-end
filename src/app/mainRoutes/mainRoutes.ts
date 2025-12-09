@@ -3,7 +3,6 @@ import { UserRoutes } from '../module/user/user.routes';
 import { AuthRoutes } from '../module/auth/auth.route';
 import { PostRoutes } from '../module/post/post.route';
 import { CommentRoutes } from '../module/comments/comment.route';
-import { ReactRoutes } from '../module/reacts/react.route';
 import { OtpRoutes } from '../module/otp/otp.route';
 import { StoryRoutes } from '../module/story/story.route';
 import { ChallengeRoutes } from '../module/challenge/challenge.route';
@@ -45,10 +44,10 @@ const moduleRoutes = [
     route: CommentRoutes,
   },
 
-  {
-    path: '/react',
-    route: ReactRoutes,
-  },
+  // {
+  //   path: '/react',
+  //   route: ReactRoutes,
+  // },
   {
     path: '/review',
     route: ReviewRoutes,
