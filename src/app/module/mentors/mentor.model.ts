@@ -15,6 +15,7 @@ const MentorSchema = new mongoose.Schema<IMentor>({
   education: { type: String, required: true },
   location: { type: String, required: true },
   duration: { type: String, required: true },
+  studentCount: {type:Number , default:0},
   monthlyRate: { type: Number, required: true },
   createdAt: { type: Date, default: Date.now },
 });

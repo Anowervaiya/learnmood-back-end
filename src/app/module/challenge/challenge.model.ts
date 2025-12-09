@@ -41,6 +41,7 @@ const ChallengeSchema = new Schema<IChallenge>(
       enum: Object.values(CHALLENGE_CATEGORY),
       default: CHALLENGE_CATEGORY.other,
     },
+    price: {type:Number , default: 10},
     banner: { type: String },
     durationDays: { type: Number, required: true },
     startsAt: { type: Date, required: true },

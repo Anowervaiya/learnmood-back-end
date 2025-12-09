@@ -73,7 +73,8 @@ const getAllPages = async (query: Record<string, string>) => {
     .filter()
     .sort()
     .fields()
-    .paginate();
+    .paginate()
+    .populate('owner', 'name email image')
 
   const [data, meta] = await Promise.all([
     PageData.build(),

@@ -8,6 +8,7 @@ export interface IMentor extends Document {
   education: string;
   location: string;
   duration: string;
+  studentCount?:number;
   monthlyRate: number;
   createdAt: Date;
 }

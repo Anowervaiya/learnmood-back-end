@@ -19,7 +19,7 @@ router.post(
 
 router.get(
   '/',
-  // checkAuth(Role.ADMIN),
+  checkAuth(Role.ADMIN),
   UserControllers.getAllUsers
 );
 router.get('/me', checkAuth(...Object.values(Role)), UserControllers.getMe);

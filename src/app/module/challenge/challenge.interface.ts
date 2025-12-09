@@ -37,6 +37,7 @@ export interface IChallenge {
   title: string;
   description?: string;
   category: CHALLENGE_CATEGORY;
+  price:number;
   durationDays: number;
   createdBy: Types.ObjectId;
   startsAt: Date;

@@ -37,7 +37,6 @@ const getUploadUrl = catchAsync(async (req: Request, res: Response) => {
   const uploadUrl = await getSignedUrl(s3, command, { expiresIn: 3600 })
 
  
-
   const result = { uploadUrl, key, fileName, fileType };
   
 

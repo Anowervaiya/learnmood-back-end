@@ -25,6 +25,7 @@ export const createChallengeZodValidation = z.object({
   title: z.string().min(1, 'Title is required'),
   description: z.string().optional(),
   category: z.enum(Object.values(CHALLENGE_CATEGORY)),
+  price:z.number().min(1,'price is required'),
   durationDays: z.number().min(1).default(30),
   createdBy: z.any().optional(),
   startsAt: z.string().optional(),

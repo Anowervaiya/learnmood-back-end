@@ -11,6 +11,7 @@ import type { ISSLCommerz } from "../sslCommerz/sslCommerz.interface";
 import { generatePdf, type IInvoiceData } from "../../utils/invoice";
 import type { IUser } from "../user/user.interfaces";
 import { uploadBufferToCloudinary } from "../../config/cloudinary.config";
+import { Mentor } from "../mentors/mentor.model";
 
 
 
@@ -81,6 +82,12 @@ const successPayment = async (query: Record<string, string>) => {
             throw new AppError(401, "Booking not found")
         }
 
+        // 🔥 Increase mentor student count
+await Mentor.findByIdAndUpdate(
+    updatedBooking.entityId,
+    { $inc: { studentCount: 1 } },
+    { new: true, session }
+);
         const invoiceData: IInvoiceData = {
             bookingDate: updatedBooking.createdAt as Date,
             totalAmount: updatedPayment.amount,

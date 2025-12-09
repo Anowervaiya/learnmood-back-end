@@ -4,6 +4,7 @@ import AppError from '../../errorHelpers/appError';
 import { User } from '../user/user.model';
 import { envVars } from '../../config/env';
 import { type IAuthProvider } from '../user/user.interfaces';
+import { AUTHPROVIDER } from '../user/user.constant';
 
 const setPassword = async (userId: string, plainPassword: string) => {
   const user = await User.findById(userId);
@@ -28,7 +29,7 @@ const setPassword = async (userId: string, plainPassword: string) => {
   );
 
   const credentialProvider: IAuthProvider = {
-    provider: 'credentials',
+    provider: AUTHPROVIDER.credentials,
     providerId: user.email,
   };
 

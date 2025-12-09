@@ -49,9 +49,11 @@ const getAllChallenges = catchAsync(async (req: Request, res: Response) => {
   });
 });
 const getChallengeDetails = catchAsync(async (req: Request, res: Response) => {
+  const decodedToken = req.user as JwtPayload;
   const { id } = req.params;
 
-  const result = await ChallengeServices.getChallengeDetails(id as string);
+  
+  const result = await ChallengeServices.getChallengeDetails(id as string , decodedToken.userId);
   sendResponse(res, {
     statusCode: 200,
     success: true,

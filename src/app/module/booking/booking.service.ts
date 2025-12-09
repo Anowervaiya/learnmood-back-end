@@ -10,6 +10,8 @@ import AppError from "../../errorHelpers/appError";
 import { getTransactionId } from "../../utils/getTransactionId";
 import { Mentor } from "../mentors/mentor.model";
 import type { ISSLCommerz } from "../sslCommerz/sslCommerz.interface";
+import { QueryBuilder } from "../../utils/QueryBuilder";
+import { Challenge } from "../challenge/challenge.model";
 
 
 
@@ -34,21 +36,35 @@ const createBooking = async (payload: Partial<IBooking>, userId: string) => {
         }
 
         let mentor;
-
+        let challenge;
+        let amount = 0 ;
         if(payload.entityType==='Mentor'){
             mentor = await Mentor.findById(payload.entityId)
+        }
+        
+        if(payload.entityType==='Challenge'){
+            challenge = await Challenge.findById(payload.entityId)
         }
         
 
     //   const mentor = await Mentor.findById(payload.entityId)
         
 
-
-        if (!mentor?.monthlyRate) {
+        if (mentor && !mentor?.monthlyRate) {
             throw new AppError(httpStatus.BAD_REQUEST, "No Mentor Cost Found!")
         }
+        if (challenge && !challenge?.price) {
+            throw new AppError(httpStatus.BAD_REQUEST, "No Challenge Price Found!")
+        }
 
-        const amount = mentor.monthlyRate;
+         if(mentor){
+            amount = (mentor.monthlyRate) * (5/100);
+         }
+         if(challenge){
+            amount= (challenge.price)* (5/100)
+         }
+
+
 
         const booking = await Booking.create([{
             user: userId,
@@ -91,8 +107,6 @@ const createBooking = async (payload: Partial<IBooking>, userId: string) => {
 
         const sslPayment = await SSLService.sslPaymentInit(sslPayload)
 
-        console.log(sslPayment);
-
         await session.commitTransaction(); //transaction
         session.endSession()
         return {
@@ -127,10 +141,27 @@ const updateBookingStatus = async (
     return {}
 };
 
-const getAllBookings = async () => {
+const getAllBookings = async (query:Record<string,string>) => {
+  const queryBuilder = new QueryBuilder(Booking.find(), query)
+  
+  const userData = queryBuilder
+        // .search(userSearchableFields)
+        .filter()
+        .sort()      
+        .paginate()
+  
+    const [data, meta] = await Promise.all([
+      userData.build(),
+      queryBuilder.getMeta(),
+    ]);
 
-    return {}
+    return {
+      data,
+      meta,
+    };
+
 };
+
 
 export const BookingService = {
     createBooking,

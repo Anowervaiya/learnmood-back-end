@@ -12,6 +12,7 @@ import { userSearchableFields } from '../user/user.constant';
 import { ChallengeSearchableFields } from './challenge.contant';
 import { Participant } from '../participant/participant.model';
 import { EntityType } from '../../constant/constant';
+import { Follow } from '../follow/follow.model';
 
 const createChallenge = async (payload: IChallenge) => {
   return await Challenge.create(payload);
@@ -85,19 +86,28 @@ export const getAllChallenges = async (query: Record<string, string>) => {
   return { data: mergedData, meta };
 };
 
-const getChallengeDetails = async (id: string) => {
+const getChallengeDetails = async (id: string , userId: string) => {
    
   const challenge = await Challenge.findById(id).populate('createdBy', 'name image followersCount');
   if (!challenge) {
     throw new AppError(400,'Challenge is not found')
   }
+
+  const followCheck = await Follow.findOne({
+    "follower.id": userId,
+    "following.id": challenge.createdBy
+  });
+
+  const isFollowing = !!followCheck;
+
   const days = await ChallengeDay.find({ challengeId: challenge._id })
  
  
   
   return {
     challenge,
-    days
+    days,
+     isFollowing
   }
 
   

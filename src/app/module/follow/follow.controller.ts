@@ -5,12 +5,14 @@ import type { Request, Response } from 'express';
 import { FollowService } from './follow.service';
 import { sendResponse } from '../../utils/sendResponse';
 import type { FOLLOWER_TYPE } from './follow.constant';
+import type { JwtPayload } from 'jsonwebtoken';
 
 // ✅ Follow a Page
  const followPage = catchAsync(async (req: Request, res: Response) => {
-  const { followerId, followerType, followingId } = req.body;
+   const decodeToken = req.user as JwtPayload
+  const { followerType, followingId } = req.body;
+   const payload = { followerId : decodeToken?.userId, followerType, followingId };
 
-   const payload = { followerId, followerType, followingId };
   const result = await FollowService.followPage(payload);
 
   sendResponse(res, {
@@ -23,8 +25,9 @@ import type { FOLLOWER_TYPE } from './follow.constant';
 
 // ✅ Unfollow a Page
  const unfollowPage = catchAsync(async (req: Request, res: Response) => {
-   const { followerId, followerType, followingId } = req.body;
-   const payload = { followerId, followerType, followingId };
+   const decodeToken = req.user as JwtPayload
+  const { followerType, followingId } = req.body;
+   const payload = { followerId : decodeToken?.userId, followerType, followingId };
 
   await FollowService.unfollowPage(payload);
 
@@ -61,9 +64,31 @@ import type { FOLLOWER_TYPE } from './follow.constant';
     data: result,
   });
  });
+
+ 
+// ✅ Get all follow status
+ const getFollowStatus  = catchAsync(async (req: Request, res: Response) => {
+  const decodedToken = req.user as JwtPayload
+  const followingId  = req?.query?.followingId as string
+  const payload = {
+    followerId: decodedToken.userId,
+    followingId: followingId
+  }
+  const result = await FollowService.getFollowStatus(payload);
+
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: 'Follow Status fetched successfully',
+    data: result,
+  });
+ });
+
+
 export const FollowController = {
   followPage,
   unfollowPage,   
   getFollowers,
   getFollowings,
+  getFollowStatus 
 };  

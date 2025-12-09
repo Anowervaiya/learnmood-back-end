@@ -26,8 +26,10 @@ router.post(
   PageControllers.createPage
 );
 router.get('/',
-  // checkAuth(Role.ADMIN),
+  checkAuth(Role.ADMIN),
   PageControllers.getAllPages);
+
+  
 router.get(
   '/my-page',
   checkAuth(...Object.values(Role)),

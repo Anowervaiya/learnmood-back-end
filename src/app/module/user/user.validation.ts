@@ -34,7 +34,6 @@ export const createUserZodValidation = z.object({
   isActive: z.enum(Object.values(IsActive)).default(IsActive.ACTIVE),
   isVerified: z.boolean().default(false),
   isDeleted: z.boolean().default(false),
-
   auths: z.array(authProviderZodValidation).optional(),
 });
 

@@ -17,7 +17,7 @@ router.post("/",
 );
 
 // api/v1/booking
-router.get("/",
+router.get("/all-booking",
     // checkAuth(Role.ADMIN),
     BookingController.getAllBookings
 );
