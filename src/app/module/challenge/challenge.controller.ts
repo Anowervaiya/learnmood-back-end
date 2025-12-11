@@ -4,6 +4,7 @@ import { sendResponse } from "../../utils/sendResponse";
 import type { JwtPayload } from "jsonwebtoken";
 import type { IChallenge, IChallengeDay } from "./challenge.interface";
 import { ChallengeServices } from "./challenge.service";
+import { IDecodedPayload } from "../../interfaces/global.interfaces";
 
 
 const createChallenge = catchAsync(async (req: Request, res: Response) => {
@@ -44,6 +45,18 @@ const getAllChallenges = catchAsync(async (req: Request, res: Response) => {
     statusCode: 200,
     success: true,
     message: 'All Challenge retrieved successfully',
+    data: result.data,
+    meta: result.meta,
+  });
+});
+const getMyPurchasedChallenges = catchAsync(async (req: Request, res: Response) => {
+  const decodedToken = req.user as IDecodedPayload
+  const query = req.query as Record<string, string>;
+  const result = await ChallengeServices.getMyPurchasedChallenges(decodedToken.accountId, query);
+  sendResponse(res, {
+    statusCode: 200,
+    success: true,
+    message: 'My purchased Challenge retrieved successfully',
     data: result.data,
     meta: result.meta,
   });
@@ -96,5 +109,5 @@ export const ChallengeController = {
   createChallengeDay,
   getAllChallenges,getChallengeDetails,
   deleteChallenge,
-  updateChallenge,
+  updateChallenge,getMyPurchasedChallenges
 };

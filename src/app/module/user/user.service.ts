@@ -125,6 +125,9 @@ const getMe = async (userId: string) => {
 };
 const getSingleUser = async (id: string) => {
   const user = await User.findById(id).select('-password');
+  if(!user){
+    throw new AppError(httpStatus.NOT_FOUND, 'User Not Found');
+  }
   return {
     data: user,
   };

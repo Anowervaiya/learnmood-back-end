@@ -29,14 +29,17 @@ router.post(
 
 
 router.get('/', ChallengeController.getAllChallenges)
+router.get('/my-purchased-challenges',
+  checkAuth([...Object.values(Role), ...Object.values(PAGE_ROLE)]),
+  ChallengeController.getMyPurchasedChallenges)
 
 router.get('/:id',
   checkAuth([...Object.values(Role), ...Object.values(PAGE_ROLE)]),
-   ChallengeController.getChallengeDetails)
+  ChallengeController.getChallengeDetails)
 
 router.delete(
   '/:id',
-  checkAuth([...Object.values(PAGE_ROLE) , Role.ADMIN]),
+  checkAuth([...Object.values(PAGE_ROLE), Role.ADMIN]),
   ChallengeController.deleteChallenge
 );
 router.patch(

@@ -144,6 +144,15 @@ const getMyPage = async (userId: string) => {
  return await Page.find({ owner: userId });
   
 };
+const getSinglePage = async (id: string) => {
+  const page = await Page.findById(id)
+  if(!page){
+    throw new AppError(httpStatus.NOT_FOUND, 'Page Not Found');
+  }
+  return {
+    data: page,
+  };
+};
 const getAllPageMembers = async (query: Record<string, string>) => {
   const queryBuilder = new QueryBuilder(PageMember.find(), query);
 
@@ -199,4 +208,5 @@ export const PageServices = {
   getAllPageMembers,
   createPageMember,
   getMyPage,
+  getSinglePage
 };

@@ -37,7 +37,7 @@ router.get('/me', checkAuth(Object.values(PAGE_ROLE)), PageControllers.getMe);
 
 
 router.get('/',
-  checkAuth([PAGE_ROLE.admin , Role.ADMIN]),
+  checkAuth([Role.ADMIN]),
   PageControllers.getAllPages);
 
 
@@ -61,6 +61,10 @@ router.get(
   PageControllers.getAllPageMembers
 );
 
+router.get(
+  '/:id',
+  PageControllers.getSinglePage
+);
 
 router.patch(
   '/:id',

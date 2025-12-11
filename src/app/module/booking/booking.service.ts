@@ -111,16 +111,6 @@ const createBooking = async (payload: Partial<IBooking>, decodedToken: IDecodedP
 
         
 
-        console.log(sslPayload,'sslPayload')
-        // const sslPayload: ISSLCommerz = {
-        //     address: account.address || "",
-        //     email: account.email || "",
-        //     phoneNumber: account.phone || "",
-        //     name: account.name || account.title || "Page",
-        //     amount,
-        //     transactionId
-        // };
-
         const sslPayment = await SSLService.sslPaymentInit(sslPayload)
 
         await session.commitTransaction(); //transaction

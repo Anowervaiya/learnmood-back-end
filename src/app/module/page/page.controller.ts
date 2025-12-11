@@ -9,12 +9,12 @@ import type { IPage } from './page.interfaces';
 import { setAuthCookie } from '../../utils/setCookie';
 
 const switchToPage = catchAsync(
-  
+
   async (req: Request, res: Response, next: NextFunction) => {
     const user = req.user as JwtPayload;
     const { pageId } = req.body;
 
-    const result = await PageServices.switchToPage( user.userId, pageId);
+    const result = await PageServices.switchToPage(user.userId, pageId);
 
     setAuthCookie(res, result.pageTokens);
 
@@ -52,8 +52,8 @@ const createPage = catchAsync(
       ...req.body,
       owner: user?.userId,
       image: {
-        profile: files?.profile?.[0]?.path, 
-        banner: files?.banner?.[0]?.path, 
+        profile: files?.profile?.[0]?.path,
+        banner: files?.banner?.[0]?.path,
       },
     };
 
@@ -161,6 +161,18 @@ const getMyPage = catchAsync(
     });
   }
 );
+const getSinglePage = catchAsync(
+  async (req: Request, res: Response, next: NextFunction) => {
+    const id = req?.params?.id as string;
+    const result = await PageServices.getSinglePage(id);
+    sendResponse(res, {
+      success: true,
+      statusCode: httpStatus.CREATED,
+      message: 'Page Retrieved Successfully',
+      data: result.data,
+    });
+  }
+);
 const getAllPageMembers = catchAsync(
   async (req: Request, res: Response, next: NextFunction) => {
     const query = req.query as Record<string, string>;
@@ -185,5 +197,7 @@ export const PageControllers = {
   updatePage,
   createPageMember,
   getAllPageMembers,
-  deletePageMember,getMyPage
+  deletePageMember, 
+  getMyPage,
+   getSinglePage
 };

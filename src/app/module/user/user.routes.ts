@@ -9,6 +9,7 @@ import {
   createUserZodValidation,
   updateUserZodValidation,
 } from './user.validation';
+import { PAGE_ROLE } from '../page/page.constant';
 
 const router = Router();
 router.post(
@@ -22,6 +23,7 @@ router.get(
   checkAuth([Role.ADMIN]),
   UserControllers.getAllUsers
 );
+
 
 router.get('/me', checkAuth(Object.values(Role)), UserControllers.getMe);
 
@@ -59,6 +61,11 @@ router.patch(
   checkAuth(Object.values(Role)),
   UserControllers.changeStatusOfFreindRequest
 ); //change Status Of Freind Request
+
+router.get(
+  '/:id',
+  UserControllers.getSingleUser
+);
 
 router.patch(
   '/:id',

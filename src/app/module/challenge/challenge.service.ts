@@ -13,6 +13,8 @@ import { ChallengeSearchableFields } from './challenge.contant';
 import { Participant } from '../participant/participant.model';
 import { EntityType } from '../../constant/constant';
 import { Follow } from '../follow/follow.model';
+import { Booking } from '../booking/booking.model';
+import { BOOKING_STATUS, IBooking } from '../booking/booking.interface';
 
 const createChallenge = async (payload: IChallenge) => {
   return await Challenge.create(payload);
@@ -86,6 +88,41 @@ export const getAllChallenges = async (query: Record<string, string>) => {
   return { data: mergedData, meta };
 };
 
+export const getMyPurchasedChallenges = async (
+  accountId: string,
+  query: Record<string, string>
+) => {
+
+  // Base filter for purchased challenges
+  const baseFilter = {
+    accountId,
+    entityType: EntityType.Challenge,
+    status: BOOKING_STATUS.COMPLETE,  // only successful payments
+  };
+
+  // QueryBuilder expects query object, so merge baseFilter → query
+  const finalQuery = { ...query, ...baseFilter };
+
+  const queryBuilder = new QueryBuilder(Booking.find(), finalQuery)
+    .search(ChallengeSearchableFields)     // search Title, Category, Level etc.
+    .filter()                               // apply filters (with baseFilter merged)
+    .sort()                                 // sorting
+    .fields()                               // selected fields
+    .paginate()                             // page, limit
+    .populate("entityId")                   // fetch challenge data
+    .populate("accountId", "name image");   // fetch user info (optional)
+
+  const [bookings, meta] = await Promise.all([
+    queryBuilder.build(),
+    queryBuilder.getMeta(),
+  ]);
+
+  return {
+    data : bookings.map(booking => booking?.entityId),
+    meta,
+  };
+};
+
 const getChallengeDetails = async (id: string , userId: string) => {
    
   const challenge = await Challenge.findById(id).populate('createdBy', 'name image followersCount');
@@ -148,5 +185,5 @@ export const ChallengeServices = {
   createChallenge,createChallengeDay,
   getAllChallenges,
   deleteChallenge,
-  updateChallenge,getChallengeDetails
+  updateChallenge,getChallengeDetails,getMyPurchasedChallenges
 };

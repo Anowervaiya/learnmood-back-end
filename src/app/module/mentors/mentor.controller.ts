@@ -4,6 +4,7 @@ import { MentorServices } from './mentor.service';
 import { sendResponse } from '../../utils/sendResponse';
 import type { IMentor } from './mentor.interface';
 import type { JwtPayload } from 'jsonwebtoken';
+import { IDecodedPayload } from '../../interfaces/global.interfaces';
 
 const createMentor = catchAsync(async (req: Request, res: Response) => {
   const decodedToken = req.user as JwtPayload;
@@ -33,6 +34,20 @@ const getAllMentors = catchAsync(async (req: Request, res: Response) => {
     success: true,
     message: 'All Mentors retrieved successfully',
     data: result.data,
+    meta: result.meta,
+  });
+});
+
+const getMyPurchasedMentors = catchAsync(async (req: Request, res: Response) => {
+  const decodedToken = req.user as IDecodedPayload
+  const query = req.query as Record<string, string>;
+
+  const result = await MentorServices.getMyPurchasedMentors(decodedToken.accountId, query);
+  sendResponse(res, {
+    statusCode: 200,
+    success: true,
+    message: 'My purchased Mentor retrieved successfully',
+    data: result.data ,
     meta: result.meta,
   });
 });
@@ -66,4 +81,5 @@ export const MentorController = {
   getAllMentors,
   deleteMentor,
   updateMentor,
+  getMyPurchasedMentors
 };

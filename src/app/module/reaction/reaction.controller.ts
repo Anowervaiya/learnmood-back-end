@@ -16,7 +16,6 @@ import { IDecodedPayload } from '../../interfaces/global.interfaces';
 
 const createReact = catchAsync(async (req: Request, res: Response) => {
   const user = req.user as IDecodedPayload
-  console.log(user)
   const payload : IReact = {
     accountId: user.accountId,
     accountType: user.accountType,

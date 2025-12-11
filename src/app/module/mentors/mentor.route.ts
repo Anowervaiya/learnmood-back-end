@@ -19,6 +19,10 @@ router.post(
 
 router.get('/', MentorController.getAllMentors);
 
+router.get('/my-purchased-mentors',
+  checkAuth(Object.values(Role)),
+  MentorController.getMyPurchasedMentors)
+
 router.delete(
   '/:id',
   checkAuth(Object.values(Role)),

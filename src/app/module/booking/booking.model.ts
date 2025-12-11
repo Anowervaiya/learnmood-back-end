@@ -20,6 +20,7 @@ const bookingSchema = new Schema<IBooking>({
         enum: Object.values(EntityType), // Add more entity names if needed
         required: true,
     },
+    
     payment: {
         type: Schema.Types.ObjectId,
         ref: "Payment"

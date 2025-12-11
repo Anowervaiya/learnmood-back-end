@@ -29,10 +29,10 @@ const initPayment = async (bookingId: string) => {
         throw new AppError(httpStatus.NOT_FOUND, "Booking Not Found. You have not booked this tour")
     }
 
-    const userAddress = (booking?.user as any)?.address || ""
-    const userEmail = (booking?.user as any)?.email
-    const userPhoneNumber = (booking?.user as any)?.phone
-    const userName = (booking?.user as any)?.name
+    const userAddress = (booking?.accountId as any)?.address || ""
+    const userEmail = (booking?.accountId as any)?.email
+    const userPhoneNumber = (booking?.accountId as any)?.phone
+    const userName = (booking?.accountId as any)?.name
 
     const sslPayload: ISSLCommerz = {
         address: userAddress,
@@ -76,7 +76,7 @@ const successPayment = async (query: Record<string, string>) => {
                 { new: true, runValidators: true, session }
             )
             .populate("entityId")
-            .populate("user")
+            .populate("accountId")
 
         if (!updatedBooking) {
             throw new AppError(401, "Booking not found")
@@ -91,9 +91,9 @@ await Mentor.findByIdAndUpdate(
         const invoiceData: IInvoiceData = {
             bookingDate: updatedBooking.createdAt as Date,
             totalAmount: updatedPayment.amount,
-            Title: (updatedBooking.user as unknown as IUser).name,
+            Title: (updatedBooking.accountId as unknown as IUser).name,
             transactionId: updatedPayment.transactionId,
-            userName: (updatedBooking.user as unknown as IUser).name
+            userName: (updatedBooking.accountId as unknown as IUser).name
         }
 
         const pdfBuffer = await generatePdf(invoiceData)
