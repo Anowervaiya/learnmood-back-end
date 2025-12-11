@@ -10,11 +10,16 @@ import { sendResponse } from '../../utils/sendResponse';
 import type { JwtPayload } from 'jsonwebtoken';
 import type { IReact } from './reaction.interface';
 import { ReactServices } from './reaction.service';
+import { id } from 'zod/v4/locales/index.cjs';
+import { IDecodedPayload } from '../../interfaces/global.interfaces';
+
 
 const createReact = catchAsync(async (req: Request, res: Response) => {
-  const user = req.user as JwtPayload
-  const payload = {
-    user: user.userId,
+  const user = req.user as IDecodedPayload
+  console.log(user)
+  const payload : IReact = {
+    accountId: user.accountId,
+    accountType: user.accountType,
     ...req.body,
   };
  
@@ -51,42 +56,40 @@ const getMyReact = catchAsync(async (req: Request, res: Response) => {
   });
 });
 
-const updateReact = catchAsync(async (req: Request, res: Response) => {
+// const updateReact = catchAsync(async (req: Request, res: Response) => {
 
-  const payload: IReact = {
-    ...req.body,
-  };
-  const result = await ReactServices.updateReact(
-    req.params.id as string,
-    payload
-  );
+//   const payload: IReact = {
+//     ...req.body,
+//   };
+//   const result = await ReactServices.updateReact(
+//     req.params.id as string,
+//     payload
+//   );
   
 
-  sendResponse(res, {
-    statusCode: 200,
-    success: true,
-    message: 'React is updated successfully',
-    data: result
-  });
-});
+//   sendResponse(res, {
+//     statusCode: 200,
+//     success: true,
+//     message: 'React is updated successfully',
+//     data: result
+//   });
+// });
 
-const deleteReact = catchAsync(async (req: Request, res: Response) => {
-  const { id} = req.params ;
-  const result = await ReactServices.deleteReact(id as string);
-  sendResponse(res, {
-    statusCode: 200,
-    success: true,
-    message: 'React is deleted successfully',
-    data: result,
-  });
-});
+// const deleteReact = catchAsync(async (req: Request, res: Response) => {
+//   const { id} = req.params ;
+//   const result = await ReactServices.deleteReact(id as string);
+//   sendResponse(res, {
+//     statusCode: 200,
+//     success: true,
+//     message: 'React is deleted successfully',
+//     data: result,
+//   });
+// });
 
 
 
 export const ReactController = {
   createReact,
-  deleteReact,
-  updateReact,
   getAllReact,
   getMyReact
 

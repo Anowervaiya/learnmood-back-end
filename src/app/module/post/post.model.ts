@@ -12,10 +12,11 @@ const PostSchema = new Schema<IPost>(
     tag: { type: [String], default: [] },
 
     // Reaction counts for all types
-   reactions: {
-  type: Object,
-  default:{ }, // or new Map()
-},
+    reactions: {
+      type: Object,
+      default: {}, // or new Map()
+    },
+    
     commentCount: { type: Number, default: 0 },
     shareCount: { type: Number, default: 0 },
 

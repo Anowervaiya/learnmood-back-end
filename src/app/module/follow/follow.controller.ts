@@ -11,9 +11,9 @@ import type { JwtPayload } from 'jsonwebtoken';
  const followPage = catchAsync(async (req: Request, res: Response) => {
    const decodeToken = req.user as JwtPayload
   const { followerType, followingId } = req.body;
-   const payload = { followerId : decodeToken?.userId, followerType, followingId };
+   const payload = { followerId : decodeToken?.accountId, followerType, followingId };
 
-  const result = await FollowService.followPage(payload);
+   const result = await FollowService.followPage(payload);
 
   sendResponse(res, {
     statusCode: httpStatus.CREATED,
@@ -27,7 +27,7 @@ import type { JwtPayload } from 'jsonwebtoken';
  const unfollowPage = catchAsync(async (req: Request, res: Response) => {
    const decodeToken = req.user as JwtPayload
   const { followerType, followingId } = req.body;
-   const payload = { followerId : decodeToken?.userId, followerType, followingId };
+   const payload = { followerId : decodeToken?.accountId, followerType, followingId };
 
   await FollowService.unfollowPage(payload);
 
@@ -71,9 +71,10 @@ import type { JwtPayload } from 'jsonwebtoken';
   const decodedToken = req.user as JwtPayload
   const followingId  = req?.query?.followingId as string
   const payload = {
-    followerId: decodedToken.userId,
+    followerId: decodedToken?.accountId,
     followingId: followingId
   }
+
   const result = await FollowService.getFollowStatus(payload);
 
   sendResponse(res, {

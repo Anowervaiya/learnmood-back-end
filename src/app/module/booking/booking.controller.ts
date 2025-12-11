@@ -3,12 +3,12 @@ import type { Request, Response } from "express";
 import { catchAsync } from "../../utils/catchAsync";
 import { sendResponse } from "../../utils/sendResponse";
 import { BookingService } from "./booking.service";
-import type { JwtPayload } from "jsonwebtoken";
+import { IDecodedPayload } from "../../interfaces/global.interfaces";
 
 const createBooking = catchAsync(async (req: Request, res: Response) => {
-    const decodeToken = req.user as JwtPayload
+    const decodeToken = req.user as IDecodedPayload
    
-    const booking = await BookingService.createBooking(req.body, decodeToken.userId);
+    const booking = await BookingService.createBooking(req.body, decodeToken);
     sendResponse(res, {
         statusCode: 201,
         success: true,

@@ -18,4 +18,8 @@ export enum MEDIA_TYPE {
   video = 'video',
   raw = 'raw',
 }
+export enum ACCOUNT_TYPE {
+  User = 'User',
+  Page = 'Page',
+}
 export const excludeField = ['searchTerm', 'sort', 'fields', 'page', 'limit'];

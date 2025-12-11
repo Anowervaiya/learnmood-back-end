@@ -14,7 +14,7 @@ const router = Router();
 router.post(
   '/create',
 
-  checkAuth(...Object.values(Role)),
+  checkAuth(Object.values(Role)),
   multerUpload.array('files'),
   validateRequest(createServiceZodSchema),
   ServiceControllers.createService
@@ -28,12 +28,12 @@ router.get(
 );
 router.get(
   '/:id',
-  checkAuth(...Object.values(Role)),
+  checkAuth(Object.values(Role)),
   ServiceControllers.getSingleService
 );
 router.patch(
   '/:id',
-  checkAuth(...Object.values(Role)),
+  checkAuth(Object.values(Role)),
   multerUpload.array('files'),
   validateRequest(updateServiceZodSchema),
   ServiceControllers.updateService
@@ -41,7 +41,7 @@ router.patch(
 
 router.delete(
   '/:id',
-  checkAuth(...Object.values(Role)),
+  checkAuth(Object.values(Role)),
   ServiceControllers.deleteService
 );
 

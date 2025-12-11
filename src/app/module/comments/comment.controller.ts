@@ -11,7 +11,8 @@ import type { JwtPayload } from 'jsonwebtoken';
 const createcomment = catchAsync(async (req: Request, res: Response) => {
   const user = req.user as JwtPayload
   const payload : IComments = {
-    user: user.userId,
+    accountId: user.accountId,
+    accountType: user.accountType,
     ...req.body,
     media: (req?.files as Express.Multer.File[])?.map(file => ({
       url: file.path, // make url an array

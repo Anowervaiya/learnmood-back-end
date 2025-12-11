@@ -2,57 +2,66 @@ import httpStatus from 'http-status-codes';
 import AppError from '../errorHelpers/appError';
 import { verifyToken } from '../utils/jwt';
 import { envVars } from '../config/env';
-
 import { User } from '../module/user/user.model';
 import type { JwtPayload } from 'jsonwebtoken';
 import type { NextFunction, Request, Response } from 'express';
 import { IsActive } from '../module/user/user.constant';
+import { PageMember } from '../module/page/page.model';
 
 export const checkAuth =
-  (...authRoles: string[]) =>
+  (requiredRoles: string[]) =>
   async (req: Request, res: Response, next: NextFunction) => {
     try {
       const accessToken = req.headers.authorization || req.cookies.accessToken;
 
-      if (!accessToken) {
-        throw new AppError(403, 'No Token Recieved');
+      if (!accessToken) throw new AppError(403, "No Token Recieved");
+ 
+      const decoded = verifyToken(accessToken, envVars.JWT_ACCESS_SECRET) as JwtPayload;
+
+      req.user = decoded;
+
+      const user = await User.findById(decoded.userId);
+
+      if (!user) throw new AppError(400, "User does not exist");
+      if (user.isDeleted) throw new AppError(400, "User is deleted");
+
+      // -------------------------------
+      // USER MODE ROLE CHECK
+      // -------------------------------
+      if (decoded.accountType === "User") {
+        if (requiredRoles.length > 0 && !requiredRoles.includes(decoded.role)) {
+          throw new AppError(403, "Permission denied! (User Mode)");
+        }
+        return next();
       }
 
-      const verifiedToken = verifyToken(
-        accessToken,
-        envVars.JWT_ACCESS_SECRET
-      ) as JwtPayload;
+      // -------------------------------
+      // PAGE MODE CHECK + ROLE CHECK
+      // -------------------------------
+      
+      if (decoded.accountType === "Page") {
+        const membership = await PageMember.findOne({
+          user: decoded.userId,
+          page: decoded.accountId,
+        });
 
-      const isUserExist = await User.findOne({ email: verifiedToken.email });
 
-      if (!isUserExist) {
-        throw new AppError(httpStatus.BAD_REQUEST, 'User does not exist');
-      }
-      // if (!isUserExist.isVerified) {
-      //   throw new AppError(httpStatus.BAD_REQUEST, 'User is not verified');
-      // }
-      if (
-        isUserExist.isActive === IsActive.BLOCKED ||
-        isUserExist.isActive === IsActive.INACTIVE
-      ) {
-        throw new AppError(
-          httpStatus.BAD_REQUEST,
-          `User is ${isUserExist.isActive}`
-        );
-      }
+        if (!membership) {
+          throw new AppError(401, "You are not a member of any page!");
+        }
 
-      if (isUserExist.isDeleted) {
-        throw new AppError(httpStatus.BAD_REQUEST, 'User is deleted');
+        const pageRole = membership.role; // admin, moderator
+
+        if (requiredRoles.length > 0 && !requiredRoles.includes(pageRole)) {
+          throw new AppError(403, "Permission denied! (Page Mode)");
+        }
+
+        return next();
       }
 
-      if (!authRoles.includes(verifiedToken.role)) {
-        throw new AppError(403, 'You are not permitted to view this route!!!');
-      }
-
-      req.user = verifiedToken;
       next();
     } catch (error) {
-      console.log('jwt error', error);
+      console.log("Auth error", error);
       next(error);
     }
   };

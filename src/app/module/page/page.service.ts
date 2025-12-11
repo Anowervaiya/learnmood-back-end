@@ -7,13 +7,66 @@ import { Page, PageMember } from './page.model';
 import type { IPage, IPageMember } from './page.interfaces';
 import { deleteImageFromCLoudinary } from '../../config/cloudinary.config';
 import { QueryBuilder } from '../../utils/QueryBuilder';
-import { PageSearchableFields } from './page.constant';
+import { PAGE_ROLE, PageSearchableFields } from './page.constant';
 
+
+import jwt from "jsonwebtoken";
+import { generateToken } from '../../utils/jwt';
+import { createPageTokens } from '../../utils/userTokens';
+import { setAuthCookie } from '../../utils/setCookie';
+
+const switchToPage = async ( userId: string, pageId: string) => {
+  
+  // 1. Page exists check
+  const page = await Page.findById(pageId);
+  if (!page) {
+    throw new AppError(httpStatus.NOT_FOUND, 'Page Not Found');
+  }
+  const pageMember = await PageMember.findOne({
+    page: pageId,
+    user: userId,
+  });
+
+   if(!pageMember){
+    throw new AppError(httpStatus.UNAUTHORIZED, "You are not page member");
+  }
+
+
+
+  // 3. Create Page Identity Token
+ const pageTokens = createPageTokens({userId, pageId , role: pageMember?.role});
+  
+  return {
+   pageTokens,
+    page: {
+      id: page._id,
+      name: page.name,
+      profile: page.image?.profile,
+      banner: page.image?.banner,
+    }
+  };
+};
+
+
+const getMe = async (pageId: string) => {
+  const user = await Page.findById(pageId).select('-password');
+  return {
+    data: user,
+  };
+};
 
 const createPage = async (payload: IPage) => {
  
+  const page=  await Page.create(payload);
 
-  return  await Page.create(payload);
+   await PageMember.create({
+    page: page._id,
+    user: payload.owner,
+    role: PAGE_ROLE.admin,
+  });
+
+  return page;
+
 
 };
 
@@ -137,6 +190,7 @@ const deletePageMember = async (id: string) => {
 };
 
 export const PageServices = {
+  switchToPage,getMe,
   createPage,
   getAllPages,
   deletePage,

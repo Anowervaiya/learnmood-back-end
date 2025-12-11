@@ -12,7 +12,7 @@ const router = Router()
 
 router.post(
   '/create',
-  checkAuth(...Object.values(Role)),
+  checkAuth(Object.values(Role)),
   multerUpload.array('files'),
   validateRequest(createStoryZodValidation),
   StoryController.createStory
@@ -22,12 +22,12 @@ router.get('/', StoryController.getAllStories);
 
 router.delete(
   '/:id',
-  checkAuth(...Object.values(Role)),
+  checkAuth(Object.values(Role)),
   StoryController.deleteStory
 );
 router.patch(
   '/:id',
-  checkAuth(...Object.values(Role)),
+  checkAuth(Object.values(Role)),
   multerUpload.array('files'),
   validateRequest(updateStoryZodValidation),
   StoryController.updateStory

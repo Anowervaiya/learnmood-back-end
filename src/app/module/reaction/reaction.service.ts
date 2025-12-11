@@ -16,10 +16,10 @@ export const createReact = async (payload: IReact) => {
   try {
     session.startTransaction();
 
-    const { user, entityId, entityType, reactType } = payload;
+    const { accountId, accountType, entityId, entityType, reactType } = payload;
 
     // Check if user already reacted
-    const existingReact = await React.findOne({ user, entityId, entityType }, null, { session });
+    const existingReact = await React.findOne({ accountId, accountType, entityId, entityType }, null, { session });
 
     // Fetch post
     const post = await Post.findById(entityId).session(session);
@@ -59,7 +59,7 @@ export const createReact = async (payload: IReact) => {
     }
     // 3️⃣ Create new reaction
     else {
-      await React.create([{ user, entityId, entityType, reactType }], { session });
+      await React.create([{ accountId, accountType, entityId, entityType, reactType }], { session });
 
       reactions[reactType] = (reactions[reactType] || 0) + 1;
 
@@ -117,48 +117,45 @@ const getAllReact= async (query: Record<string, string>) => {
 };
 const getMyReact= async (query: Record<string, string>) => {
 
-  const { entityId, entityType, userId } = query;
+  const { entityId, entityType, accountId } = query;
 
-    if (!entityId || !entityType || !userId) {
+    if (!entityId || !entityType || !accountId) {
       throw new AppError(httpStatus.BAD_REQUEST, "Missing parameters");
     }
 
     const userReact = await React.findOne({
       entityId,
       entityType,
-      user: userId,
+      accountId,
     });
+
     return userReact;
 
 };
 
-const updateReact = async (id: string, payload: Partial<IReact>) => {
-  const isReactExist = await React.findById(id);
- 
+// const updateReact = async (id: string, payload: Partial<IReact>) => {
+//   const isReactExist = await React.findById(id);
+//   if (!isReactExist) {
+//     throw new Error('React does not exist.');
+//   }
 
-  if (!isReactExist) {
-    throw new Error('React does not exist.');
-  }
+//   const updatedReact = await React.findByIdAndUpdate(id, payload, {
+//     new: true,
+//   });
+//   return updatedReact;
+// };
 
-  const updatedReact = await React.findByIdAndUpdate(id, payload, {
-    new: true,
-  });
-  return updatedReact;
-};
+// const deleteReact = async (id: string) => {
+//   const isReactExist = await React.findById(id);
+//   if (!isReactExist) {
+//     throw new AppError(httpStatus.BAD_REQUEST, "React doesn't exist");
+//   }
 
-const deleteReact = async (id: string) => {
-  const isReactExist = await React.findById(id);
-  if (!isReactExist) {
-    throw new AppError(httpStatus.BAD_REQUEST, "React doesn't exist");
-  }
-
-  return await React.findByIdAndDelete(id);
-};
+//   return await React.findByIdAndDelete(id);
+// };
 
 export const ReactServices = {
   createReact,
-  updateReact,
-  deleteReact,
   getAllReact,
   getMyReact,
 };

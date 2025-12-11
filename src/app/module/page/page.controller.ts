@@ -6,6 +6,40 @@ import httpStatus from 'http-status-codes';
 import type { NextFunction, Request, Response } from 'express';
 import type { JwtPayload } from 'jsonwebtoken';
 import type { IPage } from './page.interfaces';
+import { setAuthCookie } from '../../utils/setCookie';
+
+const switchToPage = catchAsync(
+  
+  async (req: Request, res: Response, next: NextFunction) => {
+    const user = req.user as JwtPayload;
+    const { pageId } = req.body;
+
+    const result = await PageServices.switchToPage( user.userId, pageId);
+
+    setAuthCookie(res, result.pageTokens);
+
+    sendResponse(res, {
+      success: true,
+      statusCode: httpStatus.OK,
+      message: "Page switched successfully",
+      data: null, // will contain pageToken + pageInfo
+    });
+  }
+);
+
+const getMe = catchAsync(
+  async (req: Request, res: Response, next: NextFunction) => {
+    const decodedToken = req.user as JwtPayload;
+    const result = await PageServices.getMe(decodedToken.accountId);
+
+    sendResponse(res, {
+      success: true,
+      statusCode: httpStatus.CREATED,
+      message: 'Your profile Retrieved Successfully',
+      data: result.data,
+    });
+  }
+);
 
 const createPage = catchAsync(
   async (req: Request, res: Response, next: NextFunction) => {
@@ -143,6 +177,8 @@ const getAllPageMembers = catchAsync(
 );
 
 export const PageControllers = {
+  switchToPage,
+  getMe,
   createPage,
   getAllPages,
   deletePage,

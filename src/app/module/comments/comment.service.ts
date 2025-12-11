@@ -20,11 +20,11 @@ export const createComment = async (payload: IComments) => {
   try {
     session.startTransaction();
 
-    const { user, entityId, entityType, content } = payload;
+    const { accountId, accountType, entityId, entityType, content } = payload;
 
     // 1️⃣ Create the comment
     const newComment = await Comment.create(
-      [{ user, entityId, entityType, content }],
+      [{ accountId, accountType, entityId, entityType, content }],
       { session }
     );
 
@@ -58,7 +58,7 @@ const getAllComments = async (query: Record<string, string>) => {
   const commentData = queryBuilder
     .filter()
     .paginate()
-    .populate('user', 'name image')
+    .populate('accountId', 'name image')
     .populate('entityId', 'content');
   
 

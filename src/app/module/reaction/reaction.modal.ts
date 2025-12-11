@@ -1,7 +1,7 @@
 import { Schema, model, Types } from 'mongoose';
 import type { IReact } from './reaction.interface';
-import { ReactType   } from './reaction.contant';
-import { EntityType } from '../../constant/constant';
+import { ReactType } from './reaction.contant';
+import { ACCOUNT_TYPE, EntityType } from '../../constant/constant';
 
 
 
@@ -15,7 +15,17 @@ const ReactSchema = new Schema<IReact>(
       enum: Object.values(EntityType), // Add more entity names if needed
       required: true,
     },
-    user: { type: Schema.Types.ObjectId, ref: 'User', required: true },
+
+    accountId: {
+      type: Schema.Types.ObjectId,
+      required: true,
+      refPath: 'accountType'
+    },
+    accountType: {
+      type: String,
+      enum: Object.values(ACCOUNT_TYPE),
+      required: true
+    }, 
     reactType: {
       type: String,
       enum: Object.values(ReactType),

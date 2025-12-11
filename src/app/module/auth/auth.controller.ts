@@ -24,7 +24,7 @@ const credentialsLogin = catchAsync(async (req: Request, res: Response, next: Ne
       return next(new AppError(401, info.message));
     }
 
-    const userTokens = await createUserTokens(user);
+    const userTokens =  createUserTokens(user);
 
     setAuthCookie(res, userTokens);
 

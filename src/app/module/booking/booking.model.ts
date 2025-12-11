@@ -1,14 +1,19 @@
 import { model, Schema } from "mongoose";
 import { BOOKING_STATUS, type IBooking } from "./booking.interface";
-import { EntityType } from "../../constant/constant";
+import { ACCOUNT_TYPE, EntityType } from "../../constant/constant";
 
 
 const bookingSchema = new Schema<IBooking>({
-    user: {
-        type: Schema.Types.ObjectId,
-        ref: "User",
-        required: true,
-    },
+    accountId: {
+          type: Schema.Types.ObjectId,
+          required: true,
+          refPath: 'accountType'
+        },
+        accountType: {
+          type: String,
+          enum: Object.values(ACCOUNT_TYPE),
+          required: true
+        },
     entityId: { type: Schema.Types.ObjectId, refPath: 'entityType', required: true, index: true },
     entityType: {
         type: String,

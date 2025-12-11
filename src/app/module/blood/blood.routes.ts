@@ -9,7 +9,7 @@ const router = Router();
 
 router.post(
   '/become-donor',
-  checkAuth(...Object.values(Role)),
+  checkAuth(Object.values(Role)),
   validateRequest(createBloodDonorZodValidation),
   BloodControllers.createBloodDonor
 );
@@ -23,7 +23,7 @@ router.get(
 
 router.post(
   '/blood-request',
-  checkAuth(...Object.values(Role)),
+  checkAuth(Object.values(Role)),
   validateRequest(createBloodRequestZodValidation),
   BloodControllers.createBloodRequest
 );
@@ -37,13 +37,13 @@ router.get(
 
 router.patch(
   '/become-donor/:id',
-  checkAuth(...Object.values(Role)),
+  checkAuth(Object.values(Role)),
   validateRequest(updateBloodDonorZodValidatoin),
   BloodControllers.updateBloodDonor
 );
 router.patch(
   '/blood-request/:id',
-  checkAuth(...Object.values(Role)),
+  checkAuth(Object.values(Role)),
   validateRequest(updateBloodDonorZodValidatoin),
   BloodControllers.updateBloodDonor
 );
@@ -55,7 +55,7 @@ router.delete(
 );
 router.delete(
   '/blood-request/:id',
-  checkAuth(Role.USER),
+  checkAuth([Role.USER]),
   BloodControllers.deleteBloodRequest
 );
 export const BloodRoutes = router;

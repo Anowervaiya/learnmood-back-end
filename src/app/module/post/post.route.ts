@@ -10,7 +10,7 @@ const router = Router();
 
 router.post(
   '/create',
-  checkAuth(...Object.values(Role)),
+  checkAuth(Object.values(Role)),
   multerUpload.array('files'),
   validateRequest(createPostZodValidation),
   PostController.createPost
@@ -20,12 +20,12 @@ router.get('/', PostController.getAllPosts)
 
 router.delete(
   '/:id',
-  checkAuth(...Object.values(Role)),
+  checkAuth(Object.values(Role)),
   PostController.deletePost
 );
 router.patch(
   '/:id',
-  checkAuth(...Object.values(Role)),
+  checkAuth(Object.values(Role)),
   multerUpload.array('files'),
   validateRequest(updatePostZodValidation),
   PostController.updatePost

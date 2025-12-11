@@ -1,7 +1,7 @@
 // User - Booking(Pending) -> Payment (Unpaid) -> SSLCommerz -> Booking update = confirm -> Payment update = Paid
 
 import { Types } from "mongoose";
-import type { EntityType } from "../../constant/constant";
+import type { ACCOUNT_TYPE, EntityType } from "../../constant/constant";
 
 
 export enum BOOKING_STATUS {
@@ -12,7 +12,8 @@ export enum BOOKING_STATUS {
 }
 
 export interface IBooking {
-    user: Types.ObjectId,
+    accountId: Types.ObjectId,
+    accountType:ACCOUNT_TYPE,
     entityType:EntityType,
     entityId: Types.ObjectId,
     payment?: Types.ObjectId,

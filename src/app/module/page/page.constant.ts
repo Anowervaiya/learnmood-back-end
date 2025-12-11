@@ -8,8 +8,7 @@ export enum PAGE_CATEGORY {
 }
 export enum PAGE_ROLE {
   admin='admin',
-  moderator='moderator',
-  user='user',
+  moderator='moderator'
 }
 
 export const PageSearchableFields = ['name','category'];

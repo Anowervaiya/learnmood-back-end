@@ -8,11 +8,10 @@ const PageMemberSchema = new Schema<IPageMember>(
   {
     page: { type: Schema.Types.ObjectId, ref: 'Page', required: true },
     user: { type: Schema.Types.ObjectId, ref: 'User', required: true },
-    bio: {type: String, trim: true},
     role: {
       type: String,
       enum: Object.values(PAGE_ROLE),
-      default: PAGE_ROLE.user,
+      default: PAGE_ROLE.moderator,
     },
     joinedAt: { type: Date, default: Date.now },
   },
@@ -24,7 +23,9 @@ export const PageMember = model('PageMember', PageMemberSchema);
 
 const PageSchema = new Schema<IPage>(
   {
-    name: { type: String, required: true, trim: true }, // Page/Academy name
+    name: { type: String, required: true, trim: true },
+    email: { type: String, required: true, trim: true },
+    phone: { type: Number, required: true },
     description: { type: String, default: '', trim: true },
     owner: { type: Schema.Types.ObjectId, ref: 'User', required: true }, // Who created this page
     category: {

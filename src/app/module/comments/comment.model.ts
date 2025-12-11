@@ -1,5 +1,5 @@
 import { Schema, model } from 'mongoose';
-import { EntityType } from '../../constant/constant';
+import { ACCOUNT_TYPE, EntityType } from '../../constant/constant';
 import type { IComments } from './comment.interface';
 import { MediaSchema } from '../../Schema/global.schema';
 
@@ -12,7 +12,16 @@ const CommentSchema = new Schema<IComments>(
       required: true,
     },
     media: { type: [MediaSchema], default: [] },
-    user: { type: Schema.Types.ObjectId, ref: 'User', required: true },
+    accountId: {
+      type: Schema.Types.ObjectId,
+      required: true,
+      refPath: 'accountType'
+    },
+    accountType: {
+      type: String,
+      enum: Object.values(ACCOUNT_TYPE),
+      required: true
+    },
     content: { type: String, required: true },
 
   },

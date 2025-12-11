@@ -12,7 +12,7 @@ const router = Router();
 
 router.post(
   '/create',
-  checkAuth(...Object.values(Role)),
+  checkAuth(Object.values(Role)),
   validateRequest(createMentorZodSchema),
   MentorController.createMentor
 );
@@ -21,12 +21,12 @@ router.get('/', MentorController.getAllMentors);
 
 router.delete(
   '/:id',
-  checkAuth(...Object.values(Role)),
+  checkAuth(Object.values(Role)),
   MentorController.deleteMentor
 );
 router.patch(
   '/:id',
-  checkAuth(...Object.values(Role)),
+  checkAuth(Object.values(Role)),
   validateRequest(updateMentorZodValidation),
   MentorController.updateMentor
 );

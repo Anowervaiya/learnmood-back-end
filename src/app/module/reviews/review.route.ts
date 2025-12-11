@@ -10,25 +10,25 @@ const router = Router();
 
 router.post(
   '/create',
-  checkAuth(...Object.values(Role)),
+  checkAuth(Object.values(Role)),
   validateRequest(createReviewZodValidation),
   ReviewController.createReview
 );
 
 router.get(
   '/',
-  checkAuth(...Object.values(Role)),
+  checkAuth(Object.values(Role)),
   ReviewController.getAllReview
 );
 
 router.delete(
   '/:id',
-  checkAuth(...Object.values(Role)),
+  checkAuth(Object.values(Role)),
   ReviewController.deleteReview
 );
 router.patch(
   '/:id',
-  checkAuth(...Object.values(Role)),
+  checkAuth(Object.values(Role)),
   ReviewController.updateReview
 );
 

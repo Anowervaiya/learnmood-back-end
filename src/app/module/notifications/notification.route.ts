@@ -6,7 +6,7 @@ import { NotificationController } from './notification.controller';
 
 const router = express.Router()
 
-router.get('/', checkAuth(...Object.values(Role)), NotificationController.getNotifications);
-router.patch('/:notificationId', checkAuth(...Object.values(Role)), NotificationController.markAsRead);
+router.get('/', checkAuth(Object.values(Role)), NotificationController.getNotifications);
+router.patch('/:notificationId', checkAuth(Object.values(Role)), NotificationController.markAsRead);
 
 export const NotificationRoutes = router;

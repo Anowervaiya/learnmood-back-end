@@ -4,6 +4,8 @@ import type { IImage } from "../../interfaces/global.interfaces";
 
 export interface IPage {
   name: string;
+  email:string;
+  phone:number;
   description?: string;
   owner: Types.ObjectId; // Who created this page
   category: PAGE_CATEGORY;
@@ -16,7 +18,6 @@ export interface IPage {
 export interface IPageMember {
   page: Types.ObjectId;
   user: Types.ObjectId;
-  bio?: string;
   role: PAGE_ROLE;
   joinedAt?: Date;
 }

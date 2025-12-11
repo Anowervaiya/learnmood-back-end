@@ -7,12 +7,43 @@ import { envVars } from '../config/env';
 import { type IUser } from '../module/user/user.interfaces';
 import { User } from '../module/user/user.model';
 import { IsActive } from '../module/user/user.constant';
+import { create } from 'domain';
+import { PAGE_ROLE } from '../module/page/page.constant';
+import { ACCOUNT_TYPE } from '../constant/constant';
 
 export const createUserTokens = (user: Partial<IUser>) => {
   const jwtPayload = {
     userId: user._id,
     email: user.email,
+    accountType:ACCOUNT_TYPE.User,
+    accountId: user._id,
     role: user.role,
+  };
+
+  const accessToken = generateToken(
+    jwtPayload,
+    envVars.JWT_ACCESS_SECRET,
+    envVars.JWT_ACCESS_EXPIRES
+  );
+
+  const refreshToken = generateToken(
+    jwtPayload,
+    envVars.JWT_REFRESH_SECRET,
+    envVars.JWT_REFRESH_EXPIRES
+  );
+
+  return {
+    accessToken,
+    refreshToken,
+  };
+};
+
+export const createPageTokens = (payload: {userId:string,  pageId:string , role:PAGE_ROLE}) => {
+  const jwtPayload = {
+    userId: payload.userId,
+    accountType: ACCOUNT_TYPE.Page,
+    accountId: payload.pageId,
+    role: payload.role,
   };
 
   const accessToken = generateToken(

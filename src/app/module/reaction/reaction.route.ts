@@ -2,6 +2,7 @@ import { Router } from "express";
 import { checkAuth } from "../../middlewares/checkAuth";
 import { Role } from "../user/user.constant";
 import { ReactController } from "./reaction.controller";
+import { PAGE_ROLE } from "../page/page.constant";
 
 
 const router = Router();
@@ -11,7 +12,7 @@ const router = Router();
 
 router.post(
   '/',
-  checkAuth(...Object.values(Role)),
+  checkAuth([...Object.values(Role), ...Object.values(PAGE_ROLE)]),
   ReactController.createReact
 );
 
@@ -21,22 +22,23 @@ router.get(
   '/all-reacts',
   ReactController.getAllReact // expects query params: entityId, entityType
 );
+
 router.get(
   '/',
-  ReactController.getMyReact // expects query params: entityId, entityType, userId
+  ReactController.getMyReact // expects query params: entityId, entityType, accountId
 );
 
 
-router.delete(
-  '/:id',
-  checkAuth(...Object.values(Role)),
-  ReactController.deleteReact
-);
-router.patch(
-  '/:id',
-  checkAuth(...Object.values(Role)),
-  ReactController.updateReact
-);
+// router.delete(
+//   '/:id',
+//   checkAuth([...Object.values(Role), ...Object.values(PAGE_ROLE)]),
+//   ReactController.deleteReact
+// );
+// router.patch(
+//   '/:id',
+//   checkAuth([...Object.values(Role), ...Object.values(PAGE_ROLE)]),
+//   ReactController.updateReact
+// );
 
 
 

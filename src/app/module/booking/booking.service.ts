@@ -12,6 +12,9 @@ import { Mentor } from "../mentors/mentor.model";
 import type { ISSLCommerz } from "../sslCommerz/sslCommerz.interface";
 import { QueryBuilder } from "../../utils/QueryBuilder";
 import { Challenge } from "../challenge/challenge.model";
+import { IDecodedPayload } from "../../interfaces/global.interfaces";
+import { Page } from "../page/page.model";
+import { IUser } from "../user/user.interfaces";
 
 
 
@@ -21,58 +24,58 @@ import { Challenge } from "../challenge/challenge.model";
  * Relica DB -> [ Create Booking -> Create Payment ->  Update Booking -> Error] -> Real DB
  */
 
-const createBooking = async (payload: Partial<IBooking>, userId: string) => {
-
+const createBooking = async (payload: Partial<IBooking>, decodedToken: IDecodedPayload) => {
     const transactionId = getTransactionId()
 
     const session = await Booking.startSession();
     session.startTransaction()
 
     try {
-        const user = await User.findById(userId);
+        let account;
 
-        if (!user?.phone || !user.address) {
-            throw new AppError(httpStatus.BAD_REQUEST, "Please add address to your Profile to proceed with booking.")
+        if (decodedToken.accountType === "User") {
+            account = await User.findById(decodedToken.userId);
         }
 
-        let mentor;
-        let challenge;
-        let amount = 0 ;
-        if(payload.entityType==='Mentor'){
-            mentor = await Mentor.findById(payload.entityId)
+        if (decodedToken.accountType === "Page") {
+            account = await Page.findById(decodedToken.accountId);
         }
-        
-        if(payload.entityType==='Challenge'){
-            challenge = await Challenge.findById(payload.entityId)
-        }
-        
-
-    //   const mentor = await Mentor.findById(payload.entityId)
-        
-
-        if (mentor && !mentor?.monthlyRate) {
-            throw new AppError(httpStatus.BAD_REQUEST, "No Mentor Cost Found!")
-        }
-        if (challenge && !challenge?.price) {
-            throw new AppError(httpStatus.BAD_REQUEST, "No Challenge Price Found!")
+        if (!account) {
+            throw new AppError(httpStatus.BAD_REQUEST, "Account not found!");
         }
 
-         if(mentor){
-            amount = (mentor.monthlyRate) * (5/100);
+        // 🔥 Page হলে phone না থাকলেও allow করা যায়
+      
+         
+        if (!account.phone) {
+                throw new AppError(400, "Please update your phone before booking.");
          }
-         if(challenge){
-            amount= (challenge.price)* (5/100)
-         }
+      
 
+        let entityInfo;
+        let amount = 0;
+
+        if (payload.entityType === "Mentor") {
+            entityInfo = await Mentor.findById(payload.entityId);
+            if (!entityInfo?.monthlyRate) throw new AppError(400, "No mentor rate found");
+            amount = entityInfo.monthlyRate * 0.05;
+        }
+
+        if (payload.entityType === "Challenge") {
+            entityInfo = await Challenge.findById(payload.entityId);
+            if (!entityInfo?.price) throw new AppError(400, "No challenge price found");
+            amount = entityInfo.price * 0.05;
+        }
 
 
         const booking = await Booking.create([{
-            user: userId,
+            accountId: decodedToken.accountId,
+            accountType: decodedToken.accountType,
             status: BOOKING_STATUS.PENDING,
             ...payload
         }], { session })
 
-      
+
 
         const payment = await Payment.create([{
             booking: booking[0]!._id,
@@ -87,14 +90,15 @@ const createBooking = async (payload: Partial<IBooking>, userId: string) => {
                 { payment: payment[0]!._id },
                 { new: true, runValidators: true, session }
             )
-            .populate("user")
+            .populate("accountId")
             .populate("entityId")
             .populate("payment");
 
-        const userAddress = (updatedBooking?.user as any)?.address
-        const userEmail = (updatedBooking?.user as any)?.email
-        const userPhoneNumber = (updatedBooking?.user as any)?.phone
-        const userName = (updatedBooking?.user as any)?.name
+
+        const userAddress = (updatedBooking?.accountId as any)?.address || ""
+        const userEmail = (updatedBooking?.accountId as any)?.email  || ""
+        const userPhoneNumber = (updatedBooking?.accountId as any)?.phone || ""
+        const userName = (updatedBooking?.accountId as any)?.name 
 
         const sslPayload: ISSLCommerz = {
             address: userAddress,
@@ -104,6 +108,18 @@ const createBooking = async (payload: Partial<IBooking>, userId: string) => {
             amount: amount,
             transactionId: transactionId
         }
+
+        
+
+        console.log(sslPayload,'sslPayload')
+        // const sslPayload: ISSLCommerz = {
+        //     address: account.address || "",
+        //     email: account.email || "",
+        //     phoneNumber: account.phone || "",
+        //     name: account.name || account.title || "Page",
+        //     amount,
+        //     transactionId
+        // };
 
         const sslPayment = await SSLService.sslPaymentInit(sslPayload)
 
@@ -141,23 +157,23 @@ const updateBookingStatus = async (
     return {}
 };
 
-const getAllBookings = async (query:Record<string,string>) => {
-  const queryBuilder = new QueryBuilder(Booking.find(), query)
-  
-  const userData = queryBuilder
+const getAllBookings = async (query: Record<string, string>) => {
+    const queryBuilder = new QueryBuilder(Booking.find(), query)
+
+    const userData = queryBuilder
         // .search(userSearchableFields)
         .filter()
-        .sort()      
+        .sort()
         .paginate()
-  
+
     const [data, meta] = await Promise.all([
-      userData.build(),
-      queryBuilder.getMeta(),
+        userData.build(),
+        queryBuilder.getMeta(),
     ]);
 
     return {
-      data,
-      meta,
+        data,
+        meta,
     };
 
 };
