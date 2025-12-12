@@ -4,14 +4,16 @@ import { PostServices } from "./post.service";
 import { sendResponse } from "../../utils/sendResponse";
 import type {  IPost } from "./post.interface";
 import type { JwtPayload } from "jsonwebtoken";
+import { IDecodedPayload } from "../../interfaces/global.interfaces";
 
 
 const createPost = catchAsync(async (req: Request, res: Response) => {
 
-  const decodedToken = req.user as JwtPayload;
+  const decodedToken = req.user as IDecodedPayload;
 
   const payload: IPost = {
-    user: decodedToken?.userId,
+    accountId: decodedToken?.accountId,
+    accountType: decodedToken?.accountType,
     ...req.body,
     media: (req.files as Express.Multer.File[])?.map(file => ({
       url: file.path, // make url an array
@@ -60,12 +62,12 @@ const updatePost = catchAsync(async (req: Request, res: Response) => {
 
 const deletePost = catchAsync(async (req: Request, res: Response) => {
   const { id} = req.params ;
-  const result = await PostServices.deletePost(id as string);
+   await PostServices.deletePost(id as string);
   sendResponse(res, {
     statusCode: 200,
     success: true,
     message: 'Post is deleted successfully',
-    data: result,
+    data: null,
   });
 });
 

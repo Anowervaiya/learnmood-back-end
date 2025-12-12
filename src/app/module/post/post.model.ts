@@ -1,12 +1,21 @@
 import { Schema, model, Types } from 'mongoose';
-import { VISIBILITY } from '../../constant/constant';
+import { ACCOUNT_TYPE, VISIBILITY } from '../../constant/constant';
 import type { IPost } from './post.interface';
 import { MediaSchema } from '../../Schema/global.schema';
 
 
 const PostSchema = new Schema<IPost>(
   {
-    user: { type: Schema.Types.ObjectId, ref: 'User', required: true, index: true },
+    accountId: {
+      type: Schema.Types.ObjectId,
+      required: true,
+      refPath: 'accountType'
+    },
+    accountType: {
+      type: String,
+      enum: Object.values(ACCOUNT_TYPE),
+      required: true
+    },
     content: { type: String, default: '' },
     media: { type: [MediaSchema], default: [] },
     tag: { type: [String], default: [] },
@@ -16,7 +25,7 @@ const PostSchema = new Schema<IPost>(
       type: Object,
       default: {}, // or new Map()
     },
-    
+
     commentCount: { type: Number, default: 0 },
     shareCount: { type: Number, default: 0 },
 

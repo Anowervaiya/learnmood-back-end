@@ -31,7 +31,7 @@ const getAllPosts = async (query: Record<string, string>) => {
     .sort()
     .fields()
     .paginate()
-    .populate('user', 'name image');
+    .populate('accountId', 'name image');
  
   
   const [data, meta] = await Promise.all([
@@ -62,13 +62,12 @@ const updatePost = async (id: string, payload: IPost) => {
   return updatedPost;
 };
 const deletePost = async (id: string) => {
-
   const post = await Post.findById(id);
   if (!post) {
     throw new AppError(httpStatus.BAD_REQUEST, "post doesn't exist")
   }
 
-  return await Post.findByIdAndDelete(id);
+   await Post.findByIdAndDelete(id);
 };
 
 export const PostServices = {
