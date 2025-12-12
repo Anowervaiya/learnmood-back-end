@@ -44,7 +44,8 @@ const getAllReact = catchAsync(async (req: Request, res: Response) => {
 });
 const getMyReact = catchAsync(async (req: Request, res: Response) => {
   const query = req.query as Record<string, string>;
-  
+  const decodedToken = req.user as IDecodedPayload;
+  query.accountId = decodedToken.accountId;
   const result = await ReactServices.getMyReact(query);
   sendResponse(res, {
     statusCode: 201,

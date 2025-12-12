@@ -19,14 +19,16 @@ router.post(
 
 router.get('/', PostController.getAllPosts)
 
+
+
 router.delete(
   '/:id',
-  checkAuth(Object.values(Role)),
+  checkAuth([...Object.values(Role),...Object.values(PAGE_ROLE)]),
   PostController.deletePost
 );
 router.patch(
   '/:id',
-  checkAuth(Object.values(Role)),
+  checkAuth([...Object.values(Role),...Object.values(PAGE_ROLE)]),
   multerUpload.array('files'),
   validateRequest(updatePostZodValidation),
   PostController.updatePost

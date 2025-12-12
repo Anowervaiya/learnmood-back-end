@@ -25,6 +25,7 @@ router.get(
 
 router.get(
   '/',
+  checkAuth([...Object.values(Role), ...Object.values(PAGE_ROLE)]),
   ReactController.getMyReact // expects query params: entityId, entityType, accountId
 );
 

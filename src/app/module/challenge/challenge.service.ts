@@ -109,8 +109,13 @@ export const getMyPurchasedChallenges = async (
     .sort()                                 // sorting
     .fields()                               // selected fields
     .paginate()                             // page, limit
-    .populate("entityId")                   // fetch challenge data
-    .populate("accountId", "name image");   // fetch user info (optional)
+     .populate({
+    path: "entityId",      
+    populate: {
+      path: "createdBy",       
+      select: "name image"
+    }
+  })  // fetch user info (optional)
 
   const [bookings, meta] = await Promise.all([
     queryBuilder.build(),
