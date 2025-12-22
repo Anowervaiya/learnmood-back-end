@@ -43,7 +43,7 @@ router.get('/',
 
 router.get(
   '/my-page',
-  checkAuth(["ADMIN", "USER", "MODERATOR", "admin"]),
+  checkAuth([...Object.values(Role),...Object.values(PAGE_ROLE)]),
   PageControllers.getMyPage
 );
 
@@ -68,7 +68,7 @@ router.get(
 
 router.patch(
   '/:id',
-  checkAuth(Object.values(Role)),
+  checkAuth(Object.values(PAGE_ROLE)),
   multerUpload.fields([
     { name: 'profile', maxCount: 1 },
     { name: 'banner', maxCount: 1 },

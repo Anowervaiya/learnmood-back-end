@@ -11,16 +11,16 @@ import { extractKeywordsAdvanced } from "../../utils/keyWordGenerator";
 
 const createPost = async (payload: IPost) => {
 
-   const {  content, ...rest } = payload;
+  const { content, ...rest } = payload;
 
   const tag = extractKeywordsAdvanced(content);
 
-  
- const post = await Post.create({ content,  tag , ...rest });
+
+  const post = await Post.create({ content, tag, ...rest });
 
   return post;
 
-  }
+}
 
 const getAllPosts = async (query: Record<string, string>) => {
   const queryBuilder = new QueryBuilder(Post.find(), query);
@@ -32,8 +32,8 @@ const getAllPosts = async (query: Record<string, string>) => {
     .fields()
     .paginate()
     .populate('accountId', 'name image');
- 
-  
+
+
   const [data, meta] = await Promise.all([
     posts.build(),
     queryBuilder.getMeta(),
@@ -44,6 +44,15 @@ const getAllPosts = async (query: Record<string, string>) => {
     meta,
   };
 };
+
+const getPostDetails = async (id: string) => {
+  const post = await Post.findById(id).populate('accountId', 'name image');
+  if (!post) {
+    throw new AppError(400, 'Post is not found')
+  }
+  return post;
+};
+
 const updatePost = async (id: string, payload: IPost) => {
   const isPostExist = await Post.findById(id);
 
@@ -67,12 +76,13 @@ const deletePost = async (id: string) => {
     throw new AppError(httpStatus.BAD_REQUEST, "post doesn't exist")
   }
 
-   await Post.findByIdAndDelete(id);
+  await Post.findByIdAndDelete(id);
 };
 
 export const PostServices = {
   createPost,
   getAllPosts,
+  getPostDetails,
   deletePost,
   updatePost,
 };

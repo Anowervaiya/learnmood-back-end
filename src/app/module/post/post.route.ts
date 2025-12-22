@@ -20,6 +20,9 @@ router.post(
 router.get('/', PostController.getAllPosts)
 
 
+router.get('/:id',
+  // checkAuth([...Object.values(Role), ...Object.values(PAGE_ROLE)]),
+  PostController.getPostDetails)
 
 router.delete(
   '/:id',

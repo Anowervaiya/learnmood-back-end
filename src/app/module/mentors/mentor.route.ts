@@ -28,6 +28,7 @@ router.delete(
   checkAuth(Object.values(Role)),
   MentorController.deleteMentor
 );
+
 router.patch(
   '/:id',
   checkAuth(Object.values(Role)),

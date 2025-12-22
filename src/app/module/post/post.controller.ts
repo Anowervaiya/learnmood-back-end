@@ -3,7 +3,6 @@ import { catchAsync } from "../../utils/catchAsync";
 import { PostServices } from "./post.service";
 import { sendResponse } from "../../utils/sendResponse";
 import type {  IPost } from "./post.interface";
-import type { JwtPayload } from "jsonwebtoken";
 import { IDecodedPayload } from "../../interfaces/global.interfaces";
 
 
@@ -42,6 +41,16 @@ const getAllPosts = catchAsync(async (req: Request, res: Response) => {
     meta: result.meta,
   });
 });
+const getPostDetails = catchAsync(async (req: Request, res: Response) => {
+  const { id } = req.params;
+  const result = await PostServices.getPostDetails(id as string );
+  sendResponse(res, {
+    statusCode: 200,
+    success: true,
+    message: 'Post Details retrieved successfully',
+    data: result,
+  });
+});
 const updatePost = catchAsync(async (req: Request, res: Response) => {
   const id = req.params.id as string
   const payload: IPost = {
@@ -75,6 +84,7 @@ const deletePost = catchAsync(async (req: Request, res: Response) => {
 export const PostController = {
   createPost,
   getAllPosts,
+  getPostDetails,
   deletePost,
   updatePost,
 };
